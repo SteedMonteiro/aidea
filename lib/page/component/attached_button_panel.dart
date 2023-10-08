@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AttachedButtonPanel extends StatelessWidget {
   final List<TextButton> buttons;
 
-  const AttachedButtonPanel({super.key, required this.buttons});
+  const AttachedButtonPanel({Key? key, required this.buttons});
 
   @override
   Widget build(BuildContext context) {

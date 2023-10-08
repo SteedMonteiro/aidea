@@ -36,7 +36,7 @@ class CreativeIslandRepository {
     );
   }
 
-  /// 更新
+  /// Update
   Future<void> update(int id, CreativeIslandHistory his) async {
     await _dataProvider.update(id, his);
   }

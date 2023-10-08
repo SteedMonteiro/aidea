@@ -14,7 +14,7 @@ class _AvatarSelectorScreenState extends State<AvatarSelectorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('选择头像'),
+        title: const Text('Select Avatar'),
         centerTitle: true,
       ),
       body: GridView.count(

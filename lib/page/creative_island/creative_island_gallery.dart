@@ -14,7 +14,7 @@ import 'package:sizer/sizer.dart';
 class CreativeIslandGalleryScreen extends StatefulWidget {
   final SettingRepository setting;
 
-  const CreativeIslandGalleryScreen({super.key, required this.setting});
+  const CreativeIslandGalleryScreen({Key? key, required this.setting});
 
   @override
   State<CreativeIslandGalleryScreen> createState() =>
@@ -38,7 +38,7 @@ class _CreativeIslandGalleryScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '创作岛 Gallery',
+          'Creative Island Gallery',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,

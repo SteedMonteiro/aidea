@@ -68,39 +68,39 @@ class _SettingScreenState extends State<SettingScreen> {
           child: BlocBuilder<AccountBloc, AccountState>(
             builder: (_, state) {
               return buildSettingsList([
-                // 智慧果信息、充值入口
+                // Wisdom fruit information, recharge entrance
                 if (state is AccountLoaded && state.user != null)
                   _buildAccountQuotaCard(context, state),
 
-                // 账号信息
+                // Account information
                 SettingsSection(
                   title: Text(AppLocale.accountInfo.getString(context)),
                   tiles: _buildAccountSetting(state, customColors),
                 ),
 
-                // 邀请卡片
+                // Invitation card
                 if (state is AccountLoaded && state.user != null)
                   _buildInviteCard(context, state),
 
-                // 自定义设置
+                // Custom settings
                 SettingsSection(
                   title: Text(AppLocale.custom.getString(context)),
                   tiles: [
-                    // 主题设置
+                    // Theme settings
                     _buildCommonThemeSetting(customColors),
-                    // 语言设置
+                    // Language settings
                     _buildCommonLanguageSetting(),
-                    // OpenAI 自定义配置
+                    // OpenAI custom configuration
                     if (Ability().enableOpenAI)
                       _buildOpenAISelfHostedSetting(customColors),
                   ],
                 ),
 
-                // 系统信息
+                // System information
                 SettingsSection(
                   title: Text(AppLocale.systemInfo.getString(context)),
                   tiles: [
-                    // 清空缓存
+                    // Clear cache
                     SettingsTile(
                       title: Text(AppLocale.clearCache.getString(context)),
                       trailing: Icon(
@@ -124,7 +124,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         );
                       },
                     ),
-                    // 诊断
+                    // Diagnosis
                     SettingsTile(
                       title: Text(AppLocale.diagnostic.getString(context)),
                       trailing: Icon(
@@ -136,7 +136,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         context.push('/diagnosis');
                       },
                     ),
-                    // 检查更新
+                    // Check for updates
                     if (!PlatformTool.isIOS())
                       SettingsTile(
                         title: Text(AppLocale.updateCheck.getString(context)),
@@ -152,14 +152,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                 context,
                                 type: QuickAlertType.success,
                                 text: resp.message,
-                                confirmBtnText: '去更新',
+                                confirmBtnText: 'Go to update',
                                 onConfirmBtnTap: () {
                                   launchUrlString(
                                     resp.url,
                                     mode: LaunchMode.externalApplication,
                                   );
                                 },
-                                cancelBtnText: '暂不更新',
+                                cancelBtnText: 'Update later',
                                 showCancelBtn: true,
                               );
                             } else {
@@ -169,7 +169,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           });
                         },
                       ),
-                    // 用户协议
+                    // User agreement
                     SettingsTile(
                       title: Text(AppLocale.userTerms.getString(context)),
                       trailing: Icon(
@@ -182,7 +182,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             Uri.parse('https://ai.aicode.cc/terms-user.html'));
                       },
                     ),
-                    // 隐私政策
+                    // Privacy policy
                     SettingsTile(
                       title: Text(AppLocale.privacyPolicy.getString(context)),
                       trailing: Icon(
@@ -196,7 +196,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       },
                     ),
 
-                    // 关于
+                    // About
                     SettingsTile(
                       title: Text(AppLocale.about.getString(context)),
                       trailing: Icon(
@@ -225,10 +225,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     state.user != null &&
                     state.user!.control.withLab)
                   SettingsSection(
-                    title: const Text('实验室'),
+                    title: const Text('Laboratory'),
                     tiles: [
                       SettingsTile(
-                        title: const Text('模型 Gallery'),
+                        title: const Text('Model Gallery'),
                         trailing: Icon(
                           CupertinoIcons.chevron_forward,
                           size: MediaQuery.of(context).textScaleFactor * 18,
@@ -239,7 +239,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         },
                       ),
                       SettingsTile(
-                        title: const Text('画板'),
+                        title: const Text('Drawing board'),
                         trailing: Icon(
                           CupertinoIcons.chevron_forward,
                           size: MediaQuery.of(context).textScaleFactor * 18,
@@ -250,7 +250,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         },
                       ),
                       // SettingsTile(
-                      //   title: const Text('用户中心'),
+                      //   title: const Text('User center'),
                       //   trailing: Icon(
                       //     CupertinoIcons.chevron_forward,
                       //     size: MediaQuery.of(context).textScaleFactor * 18,
@@ -261,11 +261,11 @@ class _SettingScreenState extends State<SettingScreen> {
                       //   },
                       // ),
 
-                      // 自定义服务器
+                      // Custom server
                       _buildServerSelfHostedSetting(customColors),
                     ],
                   ),
-                // 社交媒体图标
+                // Social media icons
                 _buildSocialIcons(context),
               ]);
             },
@@ -344,7 +344,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('简体中文'),
+                      const Text('Simplified Chinese'),
                       current == 'zh-CHS'
                           ? const Icon(Icons.check, color: Colors.green)
                           : const SizedBox(),
@@ -387,7 +387,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Future<List<SelectorItem<String>>> _defaultServerList() async {
     return [
-      SelectorItem(const Text('默认服务器'), apiServerURL),
+      SelectorItem(const Text('Default server'), apiServerURL),
     ];
   }
 
@@ -435,7 +435,7 @@ class _SettingScreenState extends State<SettingScreen> {
           },
         ),
         SettingsTile(
-          title: const Text('免费畅享额度'),
+          title: const Text('Free Enjoyment Quota'),
           trailing: Icon(
             CupertinoIcons.chevron_forward,
             size: MediaQuery.of(context).textScaleFactor * 18,
@@ -569,7 +569,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   SettingsTile _buildServerSelfHostedSetting(CustomColors customColors) {
     return SettingsTile(
-      title: const Text('自定义服务器'),
+      title: const Text('Custom Server'),
       trailing: Icon(
         CupertinoIcons.chevron_forward,
         size: MediaQuery.of(context).textScaleFactor * 18,
@@ -578,7 +578,7 @@ class _SettingScreenState extends State<SettingScreen> {
       onPressed: (_) {
         openTextFieldDialog(
           context,
-          title: '服务器地址',
+          title: 'Server Address',
           defaultValue:
               widget.settings.stringDefault(settingServerURL, apiServerURL),
           withSuffixIcon: true,
@@ -588,18 +588,18 @@ class _SettingScreenState extends State<SettingScreen> {
             widget.settings.set(settingServerURL, value.trim()).then((value) {
               openConfirmDialog(
                 context,
-                '设置成功，应用重启后生效',
+                'Settings successful, effective after application restart',
                 () {
                   try {
                     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                   } catch (e) {
                     Logger.instance.e(e);
-                    showErrorMessage('应用重启失败，请手动重启');
+                    showErrorMessage('Application restart failed, please restart manually');
                   }
                 },
                 danger: true,
-                confirmText: '立即重启',
-                cancelText: '稍后我自己重启',
+                confirmText: 'Restart Now',
+                cancelText: 'I will restart later',
               );
             });
             return true;

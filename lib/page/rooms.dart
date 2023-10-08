@@ -18,7 +18,7 @@ import 'package:go_router/go_router.dart';
 
 class RoomItem extends StatelessWidget {
   final Room room;
-  const RoomItem({super.key, required this.room});
+  const RoomItem({Key? key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class RoomItem extends StatelessWidget {
           children: [
             const SizedBox(width: 10),
             SlidableAction(
-              label: '编辑',
+              label: 'Edit',
               backgroundColor: Colors.green,
               borderRadius: room.category == 'system'
                   ? BorderRadius.all(

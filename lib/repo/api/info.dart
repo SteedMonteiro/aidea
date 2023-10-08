@@ -1,21 +1,21 @@
-/// 服务器支持的能力信息
+/// Server-supported capability information
 class Capabilities {
-  /// 是否支持 Apple Pay
+  /// Whether Apple Pay is supported
   final bool applePayEnabled;
 
-  /// 是否支持支付宝
+  /// Whether Alipay is supported
   final bool alipayEnabled;
 
-  /// 是否支持翻译
+  /// Whether translation is supported
   final bool translateEnabled;
 
-  /// 是否支持邮箱
+  /// Whether email is supported
   final bool mailEnabled;
 
-  /// 是否支持 OpenAI
+  /// Whether OpenAI is supported
   final bool openaiEnabled;
 
-  /// 首页显示的模型信息
+  /// Models information displayed on the home page
   final List<HomeModel> homeModels;
 
   Capabilities({
@@ -52,21 +52,21 @@ class Capabilities {
   }
 }
 
-/// 首页显示的模型信息
+/// Model information displayed on the home page
 class HomeModel {
-  /// 模型名称
+  /// Model name
   final String name;
 
-  /// 模型 ID
+  /// Model ID
   final String modelId;
 
-  /// 模型描述
+  /// Model description
   final String desc;
 
-  /// 模型代表色
+  /// Model representative color
   final String color;
 
-  /// 是否是强大的模型
+  /// Whether it is a powerful model
   final bool powerful;
 
   HomeModel({

@@ -3,7 +3,7 @@ import 'package:askaide/repo/api/creative.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-/// 创作岛列表
+/// Creative Island List
 class CreativeIslandList extends StatelessWidget {
   final List<CreativeIslandItem> items;
   final Color? color;

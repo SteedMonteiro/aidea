@@ -17,7 +17,7 @@ class VoiceRecord extends StatefulWidget {
   final Function(String text) onFinished;
   final Function() onStart;
   const VoiceRecord(
-      {super.key, required this.onFinished, required this.onStart});
+      {Key? key, required this.onFinished, required this.onStart});
 
   @override
   State<VoiceRecord> createState() => _VoiceRecordState();
@@ -35,7 +35,7 @@ class _VoiceRecordState extends State<VoiceRecord> {
     super.initState();
     record.hasPermission().then((hasPermission) {
       if (!hasPermission) {
-        showErrorMessage('请授予录音权限');
+        showErrorMessage('Please grant recording permission');
       }
     });
   }
@@ -75,7 +75,7 @@ class _VoiceRecordState extends State<VoiceRecord> {
             widget.onStart();
 
             if (await record.hasPermission()) {
-              // 震动反馈
+              // Haptic feedback
               HapticFeedbackHelper.heavyImpact();
 
               setState(() {
@@ -157,20 +157,20 @@ class _VoiceRecordState extends State<VoiceRecord> {
 
     var resPath = await record.stop();
     if (resPath == null) {
-      showErrorMessage('语音输入失败');
+      showErrorMessage('Voice input failed');
       return;
     }
 
     final voiceDuration = DateTime.now().difference(_voiceStartTime!).inSeconds;
     if (voiceDuration < 2) {
-      showErrorMessage('说话时间太短');
+      showErrorMessage('Speaking time is too short');
       _voiceStartTime = null;
       File.fromUri(Uri.parse(resPath)).delete();
       return;
     }
 
     if (voiceDuration > 60) {
-      showErrorMessage('说话时间太长');
+      showErrorMessage('Speaking time is too long');
       _voiceStartTime = null;
       File.fromUri(Uri.parse(resPath)).delete();
       return;
@@ -196,7 +196,7 @@ class _VoiceRecordState extends State<VoiceRecord> {
       showErrorMessageEnhanced(context, e);
     } finally {
       cancel();
-      // 删除临时文件
+      // Delete temporary file
       if (!resPath.startsWith('blob:')) {
         File.fromUri(Uri.parse(resPath)).delete();
       }

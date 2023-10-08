@@ -54,7 +54,7 @@ class InviteCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '邀新有礼',
+                    'Invite & Win',
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class InviteCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    userInfo.control.inviteCardSlogan ?? '邀请好友注册，双方都可获得奖励',
+                    userInfo.control.inviteCardSlogan ?? 'Invite your friends to register and both can get rewards',
                     strutStyle: const StrutStyle(height: 1.3),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 4,
@@ -80,7 +80,7 @@ class InviteCard extends StatelessWidget {
               ),
             ),
             EnhancedButton(
-              title: '立即邀请',
+              title: 'Invite Now',
               fontSize: 14,
               height: 35,
               width: 80,
@@ -89,8 +89,8 @@ class InviteCard extends StatelessWidget {
                 shareTo(
                   context,
                   content: userInfo.control.inviteMessage ??
-                      '邀请码 ${userInfo.user.inviteCode}',
-                  title: '邀请码分享',
+                      'Invite code: ${userInfo.user.inviteCode}',
+                  title: 'Share Invite Code',
                 );
               },
             ),

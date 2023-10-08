@@ -4,7 +4,7 @@ import 'package:askaide/helper/platform.dart';
 import 'package:askaide/repo/data/settings_data.dart';
 import 'package:http/http.dart' as http;
 
-/// StabilityAI 模型
+/// StabilityAI Model
 class StabilityAIRepository {
   final SettingDataProvider settings;
 
@@ -53,7 +53,7 @@ class StabilityAIRepository {
     }
   }
 
-  /// 创建请求头
+  /// Create request headers
   Map<String, String> _buildRequestHeaders() {
     var headers = <String, String>{
       'Authorization': 'Bearer $apiKey',
@@ -68,7 +68,7 @@ class StabilityAIRepository {
     return headers;
   }
 
-  /// 默认的模型列表
+  /// Default model list
   // static List<Model> supportModels() {
   //   return [
   //     // Model(
@@ -134,7 +134,7 @@ class StabilityAIRepository {
   //   ];
   // }
 
-  /// 查询模型列表
+  /// Query model list
   // Future<List<Model>> models() async {
   //   var resp = await http.get(
   //     Uri.parse('$serverURL/v1/engines/list'),
@@ -165,9 +165,9 @@ class StabilityAIRepository {
   //   return models;
   // }
 
-  /// 创建图片，返回图片的 base64 编码
-  /// 不同模型价格表： https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
-  /// width,height+steps+engine 决定价格
+  /// Create image and return the base64 encoding of the image
+  /// Different models have different pricing: https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
+  /// width,height+steps+engine determine the price
   Future<List<String>> createImageBase64(
     String engine,
     List<StabilityAIPrompt> prompts, {
@@ -180,150 +180,4 @@ class StabilityAIRepository {
     // 3d-model analog-film anime cinematic comic-book digital-art enhance fantasy-art
     // isometric line-art low-poly modeling-compound neon-punk origami photographic
     // pixel-art tile-texture
-    String? stylePreset,
-  }) async {
-    // 注意：图像宽度和高度必须满足下面条件
-    // For 768 engines: 589,824 ≤ height * width ≤ 1,048,576
-    // All other engines: 262,144 ≤ height * width ≤ 1,048,576
-    if (width == 0) {
-      if (engine.contains('-768-')) {
-        width = 768;
-      } else {
-        width = 512;
-      }
-    }
-
-    if (height == 0) {
-      if (engine.contains('-768-')) {
-        height = 768;
-      } else {
-        height = 512;
-      }
-    }
-
-    var params = <String, dynamic>{
-      'width': width,
-      'height': height,
-      'cfg_scale': cfgScale,
-      'samples': samples,
-      'seed': seed,
-      'steps': steps,
-      'text_prompts': prompts,
-    };
-
-    if (stylePreset != null) {
-      params['style_preset'] = stylePreset;
-    }
-
-    var headers = <String, String>{
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }..addAll(_buildRequestHeaders());
-
-    final url = selfHosted
-        ? Uri.parse('$serverURL/v1/generation/$engine/text-to-image')
-        : Uri.parse('$serverURL/v1/stabilityai/images/$engine/text-to-image');
-
-    var req = http.Request('POST', url);
-    req.body = jsonEncode(params);
-    req.headers.addAll(headers);
-
-    var resp = await http.Response.fromStream(await http.Client().send(req));
-    if (resp.statusCode != 200) {
-      var ret = jsonDecode(resp.body);
-      return Future.error(ret['error']);
-    }
-
-    var images = <String>[];
-    for (var item in jsonDecode(resp.body)['artifacts'] as List) {
-      images.add(item['base64']);
-    }
-
-    return images;
-  }
-
-  /// 创建图片，返回图片的 base64 编码
-  /// 不同模型价格表： https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
-  /// width,height+steps+engine 决定价格
-  Future<String> createImageBase64Async(
-    String engine,
-    List<StabilityAIPrompt> prompts, {
-    int width = 0,
-    int height = 0,
-    int cfgScale = 7,
-    int samples = 1,
-    int seed = 0,
-    int steps = 30,
-    // 3d-model analog-film anime cinematic comic-book digital-art enhance fantasy-art
-    // isometric line-art low-poly modeling-compound neon-punk origami photographic
-    // pixel-art tile-texture
-    String? stylePreset,
-  }) async {
-    // 注意：图像宽度和高度必须满足下面条件
-    // For 768 engines: 589,824 ≤ height * width ≤ 1,048,576
-    // All other engines: 262,144 ≤ height * width ≤ 1,048,576
-    if (width == 0) {
-      if (engine.contains('-768-')) {
-        width = 768;
-      } else {
-        width = 512;
-      }
-    }
-
-    if (height == 0) {
-      if (engine.contains('-768-')) {
-        height = 768;
-      } else {
-        height = 512;
-      }
-    }
-
-    var params = <String, dynamic>{
-      'width': width,
-      'height': height,
-      'cfg_scale': cfgScale,
-      'samples': samples,
-      'seed': seed,
-      'steps': steps,
-      'text_prompts': prompts,
-    };
-
-    if (stylePreset != null) {
-      params['style_preset'] = stylePreset;
-    }
-
-    var headers = <String, String>{
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }..addAll(_buildRequestHeaders());
-
-    final url = Uri.parse(
-        '$serverURL/v1/stabilityai/images/$engine/text-to-image-async');
-
-    var req = http.Request('POST', url);
-    req.body = jsonEncode(params);
-    req.headers.addAll(headers);
-
-    var resp = await http.Response.fromStream(await http.Client().send(req));
-    if (resp.statusCode != 200) {
-      var ret = jsonDecode(resp.body);
-      return Future.error(ret['error']);
-    }
-
-    return jsonDecode(resp.body)['task_id'] as String;
-  }
-}
-
-class StabilityAIPrompt {
-  final String text;
-  final double weight;
-
-  StabilityAIPrompt(this.text, this.weight);
-
-  Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-      'weight': weight,
-    };
-  }
-}
+   

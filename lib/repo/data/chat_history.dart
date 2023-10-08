@@ -7,12 +7,12 @@ class ChatHistoryProvider {
 
   Future<List<ChatHistory>> getChatHistories(int roomId, int count,
       {int? userId}) async {
-    final userConditon =
+    final userCondition =
         userId == null ? ' AND user_id IS NULL' : ' AND user_id = $userId';
 
     List<Map<String, Object?>> histories = await conn.query(
       'chat_history',
-      where: 'room_id = ? $userConditon',
+      where: 'room_id = ? $userCondition',
       whereArgs: [roomId],
       orderBy: 'updated_at DESC',
       limit: count,

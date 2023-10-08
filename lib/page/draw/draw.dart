@@ -15,7 +15,7 @@ import 'package:go_router/go_router.dart';
 
 class DrawScreen extends StatefulWidget {
   final SettingRepository setting;
-  const DrawScreen({super.key, required this.setting});
+  const DrawScreen({Key? key, required this.setting}) : super(key: key);
 
   @override
   State<DrawScreen> createState() => _DrawScreenState();
@@ -54,7 +54,7 @@ class _DrawScreenState extends State<DrawScreen> {
     );
   }
 
-  /// 创作岛列表
+  /// Creative Island Items
   Widget _buildIslandItems(
     CustomColors customColors,
   ) {

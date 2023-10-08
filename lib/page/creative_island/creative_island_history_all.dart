@@ -48,7 +48,7 @@ class _CreativeIslandHistoriesAllScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '我的创作',
+          'My Creations',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -101,7 +101,7 @@ class _CreativeIslandHistoriesAllScreenState
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Button(
-                                      title: '查看作品',
+                                      title: 'View Creation',
                                       onPressed: () {
                                         context.push(
                                             '/creative-island/${item.islandId}/history/${item.id}?show_error=true');
@@ -114,7 +114,7 @@ class _CreativeIslandHistoriesAllScreenState
                                     ),
                                     const SizedBox(height: 10),
                                     Button(
-                                      title: '删除作品',
+                                      title: 'Delete Creation',
                                       onPressed: () {
                                         onItemDelete(
                                           context,
@@ -157,7 +157,7 @@ class _CreativeIslandHistoriesAllScreenState
                           Stack(
                             children: [
                               _buildAnswerImagePreview(context, item),
-                              // TODO 风格名称，测试阶段使用
+                              // TODO Style name, for testing purposes
                               if (item.filterName != null &&
                                   item.filterName!.isNotEmpty)
                                 Positioned(
@@ -200,7 +200,7 @@ class _CreativeIslandHistoriesAllScreenState
                                       ),
                                     ),
                                     child: const Text(
-                                      '公开',
+                                      'Public',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.white,
@@ -238,16 +238,16 @@ class _CreativeIslandHistoriesAllScreenState
                   String msg = '';
                   switch (status) {
                     case IndicatorStatus.noMoreLoad:
-                      msg = '~ 没有更多了 ~';
+                      msg = '~ No more ~';
                       break;
                     case IndicatorStatus.loadingMoreBusying:
-                      msg = '加载中...';
+                      msg = 'Loading...';
                       break;
                     case IndicatorStatus.error:
-                      msg = '加载失败，请稍后再试';
+                      msg = 'Failed to load, please try again later';
                       break;
                     case IndicatorStatus.empty:
-                      msg = '您还没有创作过作品哦';
+                      msg = 'You have not created any creations yet';
                       break;
                     default:
                       return const Center(child: LoadingIndicator());
@@ -275,122 +275,4 @@ class _CreativeIslandHistoriesAllScreenState
   Widget buildIslandTypeText(
       CustomColors customColors, CreativeItemInServer item) {
     return Text(
-      item.islandTitle ?? '',
-      style: TextStyle(
-        color: customColors.weakTextColor?.withAlpha(150),
-        fontSize: 12,
-      ),
-    );
-  }
-
-  void onItemDelete(BuildContext context, CreativeItemInServer item, int index,
-      {Function? onFinished}) {
-    openConfirmDialog(context, AppLocale.confirmDelete.getString(context), () {
-      APIServer()
-          .deleteCreativeHistoryItem(item.islandId, hisId: item.id)
-          .then((value) {
-        // datasource.refresh(true);
-        datasource.removeAt(index);
-        setState(() {});
-        showSuccessMessage(AppLocale.operateSuccess.getString(context));
-        onFinished?.call();
-      });
-    });
-  }
-
-  Widget _buildAnswerImagePreview(
-    BuildContext context,
-    CreativeItemInServer item,
-  ) {
-    if (item.isImageType && item.images.isNotEmpty) {
-      return ConstrainedBox(
-        constraints: const BoxConstraints(
-          minHeight: 100,
-        ),
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
-              child: CachedNetworkImageEnhanced(
-                imageUrl:
-                    imageURL(item.images.first, qiniuImageTypeThumbMedium),
-                fit: BoxFit.cover,
-              ),
-            ),
-            if (item.params['image'] != null && item.params['image'] != '')
-              Positioned(
-                left: 8,
-                bottom: 8,
-                child: SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: CachedNetworkImageEnhanced(
-                      imageUrl:
-                          imageURL(item.params['image'], qiniuImageTypeAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      );
-    }
-
-    if (item.isFailed) {
-      return ConstrainedBox(
-        constraints: const BoxConstraints(
-          minHeight: 150,
-        ),
-        child: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 40,
-                color: Colors.red,
-              ),
-              SizedBox(height: 10),
-              Text('创作失败', style: TextStyle(color: Colors.red))
-            ],
-          ),
-        ),
-      );
-    }
-
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        minHeight: 150,
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.hourglass_bottom,
-              size: 40,
-              color: Colors.blue[700],
-            ),
-            const SizedBox(height: 10),
-            Text('创作中', style: TextStyle(color: Colors.blue[700]))
-          ],
-        ),
-      ),
-    );
-  }
-
-  int _calCrossAxisCount(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    if (width > CustomSize.maxWindowSize) {
-      width = CustomSize.maxWindowSize;
-    }
-
-    return (width / 220).round();
-  }
-}
+      item.is

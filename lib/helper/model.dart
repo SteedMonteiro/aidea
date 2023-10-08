@@ -4,7 +4,7 @@ import 'package:askaide/repo/model/model.dart' as mm;
 import 'package:askaide/repo/openai_repo.dart';
 import 'package:askaide/repo/settings_repo.dart';
 
-/// 模型聚合，用于聚合多种厂商的模型
+/// Model aggregation, used to aggregate models from multiple vendors
 class ModelAggregate {
   static late SettingRepository settings;
 
@@ -12,7 +12,7 @@ class ModelAggregate {
     ModelAggregate.settings = settings;
   }
 
-  /// 支持的模型列表
+  /// Supported model list
   static Future<List<mm.Model>> models() async {
     final List<mm.Model> models = [];
     final isAPIServerSet =
@@ -52,7 +52,7 @@ class ModelAggregate {
     return models;
   }
 
-  /// 根据模型唯一id查找模型
+  /// Find model by unique id
   static Future<mm.Model> model(String uid) async {
     if (uid.split(':').length == 1) {
       uid = '$modelTypeOpenAI:$uid';

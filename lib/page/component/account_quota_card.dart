@@ -119,7 +119,7 @@ class AccountQuotaCard extends StatelessWidget {
                   //   showBeautyDialog(
                   //     context,
                   //     type: QuickAlertType.info,
-                  //     text: 'Web、桌面端购买功能暂未推出，敬请期待',
+                  //     text: 'Web and desktop purchasing functionality is not yet available, please stay tuned',
                   //   );
                   //   return;
                   // }

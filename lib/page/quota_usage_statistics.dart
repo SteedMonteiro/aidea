@@ -26,7 +26,7 @@ class _QuotaUsageStatisticsScreenState
       appBar: AppBar(
         toolbarHeight: CustomSize.toolbarHeight,
         title: const Text(
-          '使用明细',
+          'Usage Details',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -70,7 +70,7 @@ class _QuotaUsageStatisticsScreenState
               return Column(
                 children: [
                   const MessageBox(
-                    message: '使用明细将在次日更新，显示近 30 天的使用量。',
+                    message: 'Usage details will be updated the next day, showing usage for the past 30 days.',
                     type: MessageBoxType.info,
                   ),
                   const SizedBox(height: 10),
@@ -104,7 +104,7 @@ class _QuotaUsageStatisticsScreenState
             ),
             SizedBox(height: 10),
             Text(
-              '暂无使用记录',
+              'No usage records available',
             ),
           ],
         ),

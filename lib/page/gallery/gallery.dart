@@ -46,7 +46,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
-  /// 创作岛列表
+  /// Island List
   Widget _buildIslandItems(
     CustomColors customColors,
   ) {
@@ -68,7 +68,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         children: [
           // Container(
           //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          //   child: Text('热门作品'),
+          //   child: Text('Popular Works'),
           // ),
           Expanded(
             child: RefreshIndicator(
@@ -101,16 +101,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     String msg = '';
                     switch (status) {
                       case IndicatorStatus.noMoreLoad:
-                        msg = '~ 没有更多了 ~';
+                        msg = '~ No more ~';
                         break;
                       case IndicatorStatus.loadingMoreBusying:
-                        msg = '加载中...';
+                        msg = 'Loading...';
                         break;
                       case IndicatorStatus.error:
-                        msg = '加载失败，请稍后再试';
+                        msg = 'Failed to load, please try again later';
                         break;
                       case IndicatorStatus.empty:
-                        msg = '暂无数据';
+                        msg = 'No data';
                         break;
                       default:
                         return const Center(child: LoadingIndicator());

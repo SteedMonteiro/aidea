@@ -110,7 +110,7 @@ class _PromptTagsSelectorState extends State<PromptTagsSelector> {
           //       mainAxisSize: MainAxisSize.min,
           //       children: [
           //         Text(
-          //           '已选择（${selectedTags.length}）：',
+          //           'Selected (${selectedTags.length}):',
           //           style: TextStyle(
           //             fontSize: 14,
           //             color: customColors.weakLinkColor,
@@ -151,7 +151,7 @@ class _PromptTagsSelectorState extends State<PromptTagsSelector> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 WeakTextButton(
-                  title: '取消',
+                  title: 'Cancel',
                   onPressed: () {
                     context.pop();
                   },
@@ -159,7 +159,7 @@ class _PromptTagsSelectorState extends State<PromptTagsSelector> {
                 const SizedBox(width: 20),
                 Expanded(
                   child: EnhancedButton(
-                    title: '确定',
+                    title: 'Submit',
                     fontSize: 14,
                     onPressed: () {
                       widget.onSubmit(selectedTags.values.toList());

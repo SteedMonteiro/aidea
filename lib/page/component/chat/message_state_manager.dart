@@ -10,15 +10,15 @@ class MessageWithState {
   MessageWithState(this.message, this.state);
 }
 
-/// 消息状态
+/// Message state
 class MessageState {
-  /// 是否显示翻译
+  /// Whether to show translation
   bool showTranslate = false;
 
-  /// 翻译文本
+  /// Translation text
   String? translateText;
 
-  /// 是否显示 Markdown
+  /// Whether to show Markdown
   bool showMarkdown = true;
 
   MessageState({
@@ -27,7 +27,7 @@ class MessageState {
     this.showMarkdown = true,
   });
 
-  /// 是否是初始状态
+  /// Whether it is the initial state
   bool isInitializeState() {
     return !showTranslate && translateText == null && showMarkdown;
   }
@@ -47,7 +47,7 @@ class MessageState {
   }
 }
 
-/// 消息状态管理器
+/// Message state manager
 class MessageStateManager {
   final CacheRepository cacheRepo;
   MessageStateManager(this.cacheRepo);

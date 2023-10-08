@@ -4,7 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoadingIndicator extends StatelessWidget {
   final String? message;
-  const LoadingIndicator({super.key, this.message});
+  const LoadingIndicator({Key? key, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class LoadingIndicator extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          message ?? "加载中，请稍后...",
+          message ?? "Loading, please wait...",
           style: TextStyle(
             color: customColors.backgroundInvertedColor ?? Colors.white,
           ),

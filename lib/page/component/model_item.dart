@@ -43,7 +43,7 @@ class ModelItem extends StatelessWidget {
                     ),
                     if (group.value.where((e) => !e.disabled).isEmpty)
                       Text(
-                        '（敬请期待）',
+                        '(Coming Soon)',
                         style: TextStyle(
                           color: customColors.weakTextColor,
                         ),
@@ -62,7 +62,7 @@ class ModelItem extends StatelessWidget {
           )
         : const Center(
             child: Text(
-              '没有可用模型\n请先登录或者配置 OpenAI 的 Keys',
+              'No available models\nPlease login or configure OpenAI Keys first',
               textAlign: TextAlign.center,
             ),
           );
@@ -100,7 +100,7 @@ class ModelItem extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  // 模型 ID
+                  // Model ID
                   model.name,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
@@ -112,7 +112,7 @@ class ModelItem extends StatelessWidget {
                             : customColors.chatExampleItemText),
                   ),
                 ),
-                // 模型描述
+                // Model Description
                 if (model.description != null) const SizedBox(height: 5),
                 if (model.description != null)
                   Text(
@@ -132,14 +132,14 @@ class ModelItem extends StatelessWidget {
             ),
           ),
           if (model.disabled)
-            _buildBadge(const Color.fromARGB(150, 122, 122, 122), '敬请期待'),
+            _buildBadge(const Color.fromARGB(150, 122, 122, 122), 'Coming Soon'),
           if (!model.disabled && model.tag != null)
             _buildBadge(const Color.fromARGB(150, 122, 122, 122), model.tag!),
         ],
       ),
       onTap: () {
         if (model.disabled) {
-          showImportantMessage(context, '该模型即将推出，敬请期待！');
+          showImportantMessage(context, 'This model is coming soon!');
           return;
         }
         onSelected(model);

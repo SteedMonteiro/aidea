@@ -20,11 +20,11 @@ class RoomBloc extends BlocExt<RoomEvent, RoomState> {
     required this.chatMsgRepo,
     required this.stateManager,
   }) : super(RoomInitial()) {
-    // 加载指定聊天室信息
+    // Load specified chat room information
     on<RoomLoadEvent>((event, emit) async {
       try {
         if (event.roomId == 1) {
-          // 加快首屏加载速度，避免加载中状态
+          // Speed up the loading speed of the first screen to avoid the loading state
           emit(RoomLoaded(
             Room(
               '',
@@ -111,13 +111,13 @@ class RoomBloc extends BlocExt<RoomEvent, RoomState> {
       }
     });
 
-    // 加载聊天室列表
+    // Load chat room list
     on<RoomsLoadEvent>((event, emit) async {
       emit(RoomsLoading());
       emit(await createRoomsLoadedState(cache: !event.forceRefresh));
     });
 
-    // 创建聊天室
+    // Create chat room
     on<RoomCreateEvent>((event, emit) async {
       emit(RoomsLoading());
 
@@ -150,7 +150,7 @@ class RoomBloc extends BlocExt<RoomEvent, RoomState> {
       }
     });
 
-    // 删除聊天室
+    // Delete chat room
     on<RoomDeleteEvent>((event, emit) async {
       emit(RoomsLoading());
 
@@ -172,7 +172,7 @@ class RoomBloc extends BlocExt<RoomEvent, RoomState> {
       }
     });
 
-    // 更新聊天室信息
+    // Update chat room information
     on<RoomUpdateEvent>((event, emit) async {
       if (Ability().supportAPIServer()) {
         final room = await APIServer().updateRoom(

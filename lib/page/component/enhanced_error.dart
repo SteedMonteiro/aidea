@@ -37,7 +37,7 @@ class EnhancedErrorWidget extends StatelessWidget {
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Text(
-                '点击此处重新登录',
+                'Click here to login again',
                 textScaleFactor: 0.8,
                 style: TextStyle(
                   color: Colors.red,

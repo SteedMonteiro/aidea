@@ -18,7 +18,8 @@ import 'package:flutter_localization/flutter_localization.dart';
 class BackgroundSelectorScreen extends StatefulWidget {
   final SettingRepository setting;
 
-  const BackgroundSelectorScreen({super.key, required this.setting});
+  const BackgroundSelectorScreen({Key? key, required this.setting})
+      : super(key: key);
 
   @override
   State<BackgroundSelectorScreen> createState() =>
@@ -63,7 +64,7 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('图片选择'),
+                const Text('Image Selection'),
                 const SizedBox(height: 10),
                 BlocBuilder<BackgroundImageBloc, BackgroundImageState>(
                   buildWhen: (previous, current) =>
@@ -95,7 +96,7 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
                                   child: Container(
                                     alignment: Alignment.center,
                                     child: const Text(
-                                      '跟随系统',
+                                      'Follow System',
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
@@ -160,7 +161,7 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
                                       color: customColors.chatInputPanelText,
                                     ),
                                     Text(
-                                      '自定义',
+                                      'Custom',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w500,
@@ -184,7 +185,7 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
-                const Text('图片预览'),
+                const Text('Image Preview'),
                 const SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
@@ -229,7 +230,7 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('模糊程度'),
+                    const Text('Blur Level'),
                     Text(blur.toStringAsFixed(0)),
                   ],
                 ),
@@ -238,7 +239,7 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
                   min: 0,
                   max: 50,
                   divisions: 10,
-                  label: blur == 0 ? '无模糊' : '模糊程度：${blur.toStringAsFixed(0)}',
+                  label: blur == 0 ? 'No Blur' : 'Blur Level: ${blur.toStringAsFixed(0)}',
                   activeColor: customColors.linkColor,
                   onChanged: (value) {
                     setState(() {
@@ -256,14 +257,14 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
                         widget.setting.get(settingBackgroundImage);
 
                     if (originalFilepath != _controller.text) {
-                      // 移除原图
+                      // Remove original image
                       if (originalFilepath != null &&
                           originalFilepath != '' &&
                           !originalFilepath.startsWith('http')) {
                         removeExternalFile(originalFilepath);
                       }
 
-                      // 复制新图
+                      // Copy new image
                       if (_controller.text != '') {
                         if (!_controller.text.startsWith('http')) {
                           copyExternalFileToAppDocs(_controller.text)
@@ -275,7 +276,7 @@ class _BackgroundSelectorScreenState extends State<BackgroundSelectorScreen> {
                               .set(settingBackgroundImage, _controller.text);
                         }
                       } else {
-                        // 恢复为原图
+                        // Restore to original image
                         widget.setting.set(settingBackgroundImage, '');
                       }
                     }

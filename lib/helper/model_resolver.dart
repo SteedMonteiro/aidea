@@ -11,13 +11,13 @@ import 'package:askaide/repo/openai_repo.dart';
 import 'package:askaide/repo/stabilityai_repo.dart';
 import 'package:dart_openai/openai.dart';
 
-/// 根据聊天类型，调用不同的 API 接口
+/// Call different API interfaces based on the chat type
 class ModelResolver {
   late final OpenAIRepository openAIRepo;
   late final DeepAIRepository deepAIRepo;
   late final StabilityAIRepository stabilityAIRepo;
 
-  /// 初始化，设置模型实现
+  /// Initialize and set the model implementation
   void init({
     required OpenAIRepository openAIRepo,
     required DeepAIRepository deepAIRepo,
@@ -31,7 +31,7 @@ class ModelResolver {
   ModelResolver._();
   static final instance = ModelResolver._();
 
-  /// 语音转文字
+  /// Convert audio to text
   Future<String> audioToText(File file) async {
     try {
       return await openAIRepo.audioTranscription(audioFile: file);
@@ -40,7 +40,7 @@ class ModelResolver {
     }
   }
 
-  /// 发起聊天请求
+  /// Send chat request
   Future request({
     required Room room,
     required List<Message> contextMessages,
@@ -75,7 +75,7 @@ class ModelResolver {
     }
   }
 
-  /// 调用 StabilityAI API
+  /// Call StabilityAI API
   Future<void> _stabilityAIModel({
     required Room room,
     required Message message,
@@ -90,7 +90,7 @@ class ModelResolver {
 
       for (var data in res) {
         var path = await writeImageFromBase64(data, 'png');
-        // print('图片路径: $path');
+        // print('Image path: $path');
         onMessage('\n![image]($path)\n');
       }
     } else {
@@ -115,10 +115,10 @@ class ModelResolver {
         onMessage('\n![image]($data)\n');
       }
     } else if (res.status == 'failed') {
-      throw '响应失败: ${res.errors!.join("\n")}';
+      throw 'Response failed: ${res.errors!.join("\n")}';
     } else {
       if (retry > 10) {
-        throw '响应超时';
+        throw 'Response timeout';
       }
 
       await Future.delayed(const Duration(seconds: 5));
@@ -126,7 +126,7 @@ class ModelResolver {
     }
   }
 
-  /// 调用 DeepAI API
+  /// Call DeepAI API
   Future<void> _deepAIModel({
     required Room room,
     required Message message,
@@ -144,14 +144,14 @@ class ModelResolver {
     }
   }
 
-  /// 调用 OpenAI API
+  /// Call OpenAI API
   Future<void> _openAIModel({
     required Room room,
     required List<Message> contextMessages,
     required Function(ChatStreamRespData value) onMessage,
     int? maxTokens,
   }) async {
-    // 图像模式
+    // Image mode
     if (OpenAIRepository.isImageModel(room.modelName())) {
       var res = await openAIRepo.createImage(contextMessages.last.text, n: 2);
       for (var url in res) {
@@ -161,7 +161,7 @@ class ModelResolver {
       return;
     }
 
-    // 聊天模型
+    // Chat model
     return await openAIRepo.chatStream(
       _buildRequestContext(room, contextMessages),
       onMessage,
@@ -171,12 +171,12 @@ class ModelResolver {
     );
   }
 
-  /// 构建机器人请求上下文
+  /// Build the request context for the chatbot
   List<OpenAIChatCompletionChoiceMessageModel> _buildRequestContext(
     Room room,
     List<Message> messages,
   ) {
-    // // N 小时内的消息作为一个上下文
+    // // Messages within N hours as a context
     // var recentMessages = messages
     //     .where((e) => e.ts!.millisecondsSinceEpoch > lastAliveTime())
     //     .toList();

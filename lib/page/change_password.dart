@@ -46,7 +46,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       appBar: AppBar(
         toolbarHeight: CustomSize.toolbarHeight,
         title: const Text(
-          '修改密码',
+          'Change Password',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -144,7 +144,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       verifyCode: verificationCode,
     )
         .then((value) {
-      showSuccessMessage('密码修改成功');
+      showSuccessMessage('Password changed successfully');
       if (context.canPop()) {
         context.pop();
       }

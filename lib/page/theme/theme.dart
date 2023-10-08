@@ -19,7 +19,7 @@ class AppTheme extends ChangeNotifier {
 
   static AppTheme instance = AppTheme('system');
 
-  static ThemeMode themeModeFormString(String mode) {
+  static ThemeMode themeModeFromString(String mode) {
     switch (mode) {
       case 'light':
         return ThemeMode.light;

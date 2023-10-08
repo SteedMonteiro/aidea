@@ -38,7 +38,7 @@ class _CreativeIslandContentPreviewState
         : DateFormat('y-MM-dd').format(currentTime);
     return widget.result.text == ''
         ? const Center(
-            child: Text('生成结果将在这里展示'),
+            child: Text('The generated result will be displayed here'),
           )
         : SingleChildScrollView(
             child: Column(
@@ -63,7 +63,7 @@ class _CreativeIslandContentPreviewState
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        '点击图片可分享、保存；有效期至 $expireTime',
+                        'Click on the image to share or save; Valid until $expireTime',
                         maxLines: 2,
                         style: TextStyle(
                           fontSize: 12,

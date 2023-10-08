@@ -19,12 +19,12 @@ class ChatMessageRepository {
     this._chatHistoryProvider,
   );
 
-  /// 获取所有 room
+  /// Get all rooms
   Future<List<Room>> rooms({int? userId}) async {
     return await _chatRoomDataProvider.chatRooms(userId: userId);
   }
 
-  /// 创建 room
+  /// Create room
   Future<Room> createRoom({
     required String name,
     required category,
@@ -47,13 +47,13 @@ class ChatMessageRepository {
     );
   }
 
-  /// 删除 room
+  /// Delete room
   Future<void> deleteRoom(int roomId) async {
     await _chatRoomDataProvider.deleteRoom(roomId);
     await _chatMsgDataProvider.clearMessages(roomId);
   }
 
-  /// 返回 room 中最近的消息
+  /// Get recent messages in a room
   Future<List<Message>> getRecentMessages(
     int roomId, {
     int? userId,
@@ -69,22 +69,22 @@ class ChatMessageRepository {
         .toList();
   }
 
-  /// 发送消息到 room
+  /// Send message to a room
   Future<int> sendMessage(int roomId, Message message) async {
     return await _chatMsgDataProvider.sendMessage(roomId, message);
   }
 
-  /// 修复所有消息的状态（pending -> failed）
+  /// Fix the status of all messages (pending -> failed)
   Future<void> fixMessageStatus(int roomId) async {
     return await _chatMsgDataProvider.fixMessageStatus(roomId);
   }
 
-  /// 更新消息
+  /// Update a message
   Future<void> updateMessage(int roomId, int id, Message message) async {
     return await _chatMsgDataProvider.updateMessage(roomId, id, message);
   }
 
-  /// 部分更新消息
+  /// Partially update a message
   Future<void> updateMessagePart(
     int roomId,
     int id,
@@ -93,24 +93,24 @@ class ChatMessageRepository {
     return await _chatMsgDataProvider.updateMessagePart(roomId, id, parts);
   }
 
-  /// 删除消息
+  /// Remove messages
   Future<void> removeMessage(int roomId, List<int> ids) async {
     return await _chatMsgDataProvider.removeMessage(roomId, ids);
   }
 
-  /// 清空 room 中的消息
+  /// Clear messages in a room
   Future<void> clearMessages(int roomId, {int? userId}) async {
     await _chatMsgDataProvider.clearMessages(roomId, userId: userId);
   }
 
-  /// 获取 room 中最后一条消息
+  /// Get the last message in a room
   Future<Message?> getLastMessage(int roomId,
       {int? userId, int? chatHistoryId}) async {
     return await _chatMsgDataProvider.getLastMessage(roomId,
         userId: userId, chatHistoryId: chatHistoryId);
   }
 
-  /// 获取 room
+  /// Get a room
   Future<Room?> room(int roomId) async {
     final room = await _chatRoomDataProvider.room(roomId);
     if (room != null) {
@@ -120,12 +120,12 @@ class ChatMessageRepository {
     return room;
   }
 
-  /// 更新 room
+  /// Update a room
   Future<int> updateRoom(Room room) async {
     return await _chatRoomDataProvider.updateRoom(room);
   }
 
-  /// 更新 room 最后活跃时间
+  /// Update the last active time of a room
   Future<void> updateRoomLastActiveTime(int roomId) async {
     return await _chatRoomDataProvider.updateRoomLastActiveTime(roomId);
   }

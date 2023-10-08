@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class RotatingWidget extends StatefulWidget {
   final Widget child;
-  const RotatingWidget({super.key, required this.child});
+  const RotatingWidget({Key? key, required this.child});
 
   @override
   State<RotatingWidget> createState() => _RotatingWidgetState();

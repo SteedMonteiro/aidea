@@ -10,7 +10,7 @@ class FreeCountBloc extends Bloc<FreeCountEvent, FreeCountState> {
   List<FreeModelCount> counts = [];
 
   FreeCountBloc() : super(FreeCountInitial()) {
-    // 重新加载所有的模型免费使用次数
+    // Reload all model free usage counts
     on<FreeCountReloadAllEvent>((event, emit) async {
       if (Ability().supportLocalOpenAI() || !Ability().supportAPIServer()) {
         emit(FreeCountLoadedState(counts: counts));
@@ -21,7 +21,7 @@ class FreeCountBloc extends Bloc<FreeCountEvent, FreeCountState> {
       emit(FreeCountLoadedState(counts: counts));
     });
 
-    // 重新加载指定模型的免费使用次数
+    // Reload free usage count for a specific model
     on<FreeCountReloadEvent>((event, emit) async {
       if (Ability().supportLocalOpenAI() || !Ability().supportAPIServer()) {
         emit(FreeCountLoadedState(counts: counts));

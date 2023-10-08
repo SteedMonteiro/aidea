@@ -21,7 +21,7 @@ class SocialIconGroup extends StatelessWidget {
   final List<SocialItem> items = [
     SocialItem(
       image: 'assets/weibo.png',
-      name: '官方微博',
+      name: 'Official Weibo',
       onTap: () {
         launchUrlString(
           'https://weibo.com/code404',
@@ -31,7 +31,7 @@ class SocialIconGroup extends StatelessWidget {
     ),
     SocialItem(
       image: 'assets/wechat.png',
-      name: '微信公众号',
+      name: 'WeChat Official Account',
       onTap: () {
         launchUrlString(
           'https://mp.weixin.qq.com/s/4CHh_rKxBqi-npDEnmLWmA',
@@ -61,7 +61,7 @@ class SocialIconGroup extends StatelessWidget {
     ),
     SocialItem(
       image: 'assets/xiaohongshu.png',
-      name: '小红书',
+      name: 'Little Red Book',
       onTap: () {
         launchUrlString(
           'https://www.xiaohongshu.com/user/profile/63c65968000000002702abcd?xhsshare=CopyLink&appuid=63c65968000000002702abcd&apptime=1696648278',
@@ -80,7 +80,7 @@ class SocialIconGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isSettingTiles) {
       return SettingsSection(
-        title: const Text('关注我们'),
+        title: const Text('Follow Us'),
         tiles: items
             .map(
               (e) => SettingsTile(

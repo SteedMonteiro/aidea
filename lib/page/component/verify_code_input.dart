@@ -30,7 +30,7 @@ class VerifyCodeInput extends StatefulWidget {
 class _VerifyCodeInputState extends State<VerifyCodeInput> {
   final phoneNumberValidator = RegExp(r"^1[3456789]\d{9}$");
 
-  //  下次发送验证码等待时间
+  //  Waiting time for sending the next verification code
   int verifyCodeWaitSeconds = 0;
 
   Timer? timer;

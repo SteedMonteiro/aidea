@@ -48,7 +48,7 @@ class Coin extends StatelessWidget {
 
   String formatCount() {
     if (count >= maxShowCount) {
-      return '${(count / maxShowCount).toStringAsFixed(0)} 百万';
+      return '${(count / maxShowCount).toStringAsFixed(0)} million';
     }
     return '$count';
   }

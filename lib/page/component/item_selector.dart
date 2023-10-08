@@ -8,7 +8,7 @@ class ItemSelector extends StatelessWidget {
   final String title;
 
   const ItemSelector(
-      {super.key, required this.title, required this.data, this.selected});
+      {Key? key, required this.title, required this.data, this.selected});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ItemSelector extends StatelessWidget {
                                   color: Colors.grey[200],
                                 ),
                           onPressed: (context) {
-                            context.pop(e);
+                            GoRouter.of(context).pop(e);
                           },
                         ),
                       )

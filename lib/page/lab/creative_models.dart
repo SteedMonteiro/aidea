@@ -65,7 +65,7 @@ class _CreativeModelScreenState extends State<CreativeModelScreen> {
       appBar: AppBar(
         toolbarHeight: CustomSize.toolbarHeight,
         title: const Text(
-          '模型 Gallery',
+          'Model Gallery',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -92,7 +92,7 @@ class _CreativeModelScreenState extends State<CreativeModelScreen> {
                     alignment: Alignment.centerRight,
                     width: MediaQuery.of(context).size.width - 200,
                     child: Text(
-                      selectedModel?.modelName ?? '自动',
+                      selectedModel?.modelName ?? 'Auto',
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -100,7 +100,7 @@ class _CreativeModelScreenState extends State<CreativeModelScreen> {
                     openListSelectDialog(
                       context,
                       [
-                        SelectorItem(const Text('自动'), null),
+                        SelectorItem(const Text('Auto'), null),
                         ...imageModels
                             .map(
                               (e) => SelectorItem(
@@ -281,7 +281,7 @@ class _CreativeModelScreenState extends State<CreativeModelScreen> {
                                         ),
                                         child: const Center(
                                           child: Text(
-                                            '正在处理中...',
+                                            'Processing...',
                                             textAlign: TextAlign.center,
                                             maxLines: 4,
                                             style: TextStyle(
@@ -301,65 +301,4 @@ class _CreativeModelScreenState extends State<CreativeModelScreen> {
                                           color: Colors.amber,
                                         ),
                                         child: Center(
-                                          child: Text(
-                                            e.answer ?? '',
-                                            textAlign: TextAlign.center,
-                                            maxLines: 4,
-                                            style: const TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 10,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    Positioned(
-                                      right: 10,
-                                      bottom: 10,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 5,
-                                          vertical: 3,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: customColors.backgroundColor
-                                              ?.withAlpha(200),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Text(
-                                          '${DateFormat('HH:mm').format(e.createdAt!.toLocal())}@${e.userId}#${e.id}',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: customColors.weakTextColor,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ).toList(),
-                      );
-                    }
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  int _calCrossAxisCount(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    if (width > CustomSize.maxWindowSize) {
-      width = CustomSize.maxWindowSize;
-    }
-    return (width / 220).round();
-  }
-}
+                                         

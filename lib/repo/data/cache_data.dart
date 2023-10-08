@@ -4,7 +4,7 @@ class CacheDataProvider {
   Database conn;
   CacheDataProvider(this.conn);
 
-  /// 设置缓存
+  /// Set cache
   Future<void> set(
     String key,
     String value,
@@ -40,7 +40,7 @@ class CacheDataProvider {
     return ret;
   }
 
-  // 查询缓存值
+  // Get cache value
   Future<String?> get(String key) async {
     List<Map<String, Object?>> cacheValue = await conn.query(
       'cache',
@@ -56,12 +56,12 @@ class CacheDataProvider {
     return cacheValue.first['value'] as String;
   }
 
-  /// 删除缓存
+  /// Remove cache
   Future<void> remove(String key) async {
     await conn.delete('cache', where: 'key = ?', whereArgs: [key]);
   }
 
-  /// 清理过期 keys
+  /// Clean expired keys
   Future<void> gc() async {
     await conn.delete(
       'cache',
@@ -70,7 +70,7 @@ class CacheDataProvider {
     );
   }
 
-  /// 清空所有缓存
+  /// Clear all cache
   Future<void> clearAll() async {
     await conn.delete('cache');
   }

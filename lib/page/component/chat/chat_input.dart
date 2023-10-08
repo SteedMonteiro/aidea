@@ -44,7 +44,7 @@ class ChatInput extends StatefulWidget {
 class _ChatInputState extends State<ChatInput> {
   final TextEditingController _textController = TextEditingController();
 
-  /// 用于监听键盘事件，实现回车发送消息，Shift+Enter换行
+  /// Used to listen for keyboard events, implement sending messages on Enter, and line break on Shift+Enter
   late final FocusNode _focusNode = FocusNode(
     onKey: (node, event) {
       if (!event.isShiftPressed && event.logicalKey.keyLabel == 'Enter') {
@@ -69,7 +69,7 @@ class _ChatInputState extends State<ChatInput> {
       setState(() {});
     });
 
-    // 机器人回复完成后自动输入框自动获取焦点
+    // Automatically focus on the input field after the robot finishes replying
     if (!PlatformTool.isAndroid() && !PlatformTool.isIOS()) {
       widget.enableNotifier.addListener(() {
         if (widget.enableNotifier.value) {
@@ -110,7 +110,7 @@ class _ChatInputState extends State<ChatInput> {
         if (widget.enableNotifier.value) {
           return Column(
             children: [
-              // 工具栏
+              // Toolbar
               if (widget.toolbar != null)
                 Row(
                   children: [
@@ -126,7 +126,7 @@ class _ChatInputState extends State<ChatInput> {
                 ),
               // if (widget.toolbar != null)
               const SizedBox(height: 8),
-              // 聊天内容输入栏
+              // Chat input area
               SingleChildScrollView(
                 child: Slidable(
                   startActionPane: widget.onNewChat != null
@@ -150,7 +150,7 @@ class _ChatInputState extends State<ChatInput> {
                       : null,
                   child: Row(
                     children: [
-                      // 聊天功能按钮
+                      // Chat functionality buttons
                       Row(
                         children: [
                           if (widget.enableImageUpload &&
@@ -159,7 +159,7 @@ class _ChatInputState extends State<ChatInput> {
                                 context, setting, customColors),
                         ],
                       ),
-                      // 聊天输入框
+                      // Chat input field
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
@@ -190,7 +190,7 @@ class _ChatInputState extends State<ChatInput> {
                                   ),
                                 ),
                               ),
-                              // 聊天发送按钮
+                              // Chat send button
                               _buildSendOrVoiceButton(context, customColors),
                             ],
                           ),
@@ -204,7 +204,7 @@ class _ChatInputState extends State<ChatInput> {
           );
         }
 
-        /// 回复时加载中效果
+        /// Loading animation while replying
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -219,7 +219,7 @@ class _ChatInputState extends State<ChatInput> {
     );
   }
 
-  /// 构建发送或者语音按钮
+  /// Build send or voice button
   Widget _buildSendOrVoiceButton(
     BuildContext context,
     CustomColors customColors,
@@ -265,7 +265,7 @@ class _ChatInputState extends State<ChatInput> {
           );
   }
 
-  /// 构建图片上传按钮
+  /// Build image upload button
   Widget _buildImageUploadButton(
     BuildContext context,
     SettingRepository setting,
@@ -303,48 +303,4 @@ class _ChatInputState extends State<ChatInput> {
           var upload = ImageUploader(setting).upload(result.files.single.path!);
 
           upload.then((value) {
-            _handleSubmited(
-              '![${value.name}](${value.url})',
-              notSend: true,
-            );
-          }).onError((error, stackTrace) {
-            showErrorMessageEnhanced(context, error!);
-          }).whenComplete(() => cancel());
-        }
-      },
-      icon: const Icon(Icons.camera_alt),
-      color: customColors.chatInputPanelText,
-      splashRadius: 20,
-      tooltip: AppLocale.uploadImage.getString(context),
-    );
-  }
-
-  /// 处理输入框提交
-  void _handleSubmited(String text, {bool notSend = false}) {
-    if (notSend) {
-      var cursorPos = _textController.selection.base.offset;
-      if (cursorPos < 0) {
-        _textController.text = text;
-      } else {
-        String suffixText = _textController.text.substring(cursorPos);
-        String prefixText = _textController.text.substring(0, cursorPos);
-        _textController.text = prefixText + text + suffixText;
-        _textController.selection = TextSelection(
-          baseOffset: cursorPos + text.length,
-          extentOffset: cursorPos + text.length,
-        );
-      }
-
-      _focusNode.requestFocus();
-
-      return;
-    }
-
-    if (text != '') {
-      widget.onSubmit(text);
-      _textController.clear();
-    }
-
-    _focusNode.requestFocus();
-  }
-}
+            _handle

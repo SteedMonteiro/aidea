@@ -14,10 +14,10 @@ String randomId() {
   return const Uuid().v4();
 }
 
-/// 将 base64 转换为图片，存储到临时文件
+/// Convert base64 to image and store it in a temporary file
 Future<String> writeImageFromBase64(String base64, String ext) async {
   final directory = await getApplicationDocumentsDirectory();
-  // 确保目录存在
+  // Make sure the directory exists
   await Directory('${directory.path}/cache').create(recursive: true);
 
   final file = File('${directory.path}/cache/temp_${randomId()}.$ext');
@@ -55,7 +55,7 @@ Future<void> writeStringFileToDocumentsDirectory(
     Logger.instance.e('${directory.path}/$path');
     await file.writeAsString(content);
   } catch (e) {
-    Logger.instance.e('写入文件失败: $e');
+    Logger.instance.e('Failed to write file: $e');
   }
 }
 
@@ -109,7 +109,7 @@ Future<String> copyExternalFileToAppDocs(String externalFilePath) async {
   return newFile.path;
 }
 
-/// 将时间转换为友好的时间
+/// Convert time to a friendly format
 String humanTime(DateTime? ts, {bool withTime = false}) {
   if (ts == null || ts.millisecondsSinceEpoch == 0) {
     return '';
@@ -126,17 +126,17 @@ String humanTime(DateTime? ts, {bool withTime = false}) {
   }
 
   if (diff.inHours > 0) {
-    return '${diff.inHours}小时前';
+    return '${diff.inHours} hours ago';
   }
 
   if (diff.inMinutes > 0) {
-    return '${diff.inMinutes}分钟前';
+    return '${diff.inMinutes} minutes ago';
   }
 
-  return '刚刚';
+  return 'just now';
 }
 
-/// 解析错误信息
+/// Resolve error message
 String resolveError(BuildContext context, Object error) {
   if (error is LanguageText) {
     return error.message.getString(context);

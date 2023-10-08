@@ -2,57 +2,57 @@ import 'dart:convert';
 
 import 'package:askaide/helper/helper.dart';
 
-/// 聊天消息
+/// Chat message
 class Message {
-  /// 聊天所属的聊天室 ID
+  /// ID of the chat room to which the message belongs
   int? roomId;
 
-  /// 用户ID
+  /// User ID
   int? userId;
 
-  /// 聊天历史 ID
+  /// ID of the chat history
   int? chatHistoryId;
 
-  /// 消息ID
+  /// Message ID
   int? id;
 
-  /// 消息方向
+  /// Message direction
   Role role;
 
-  /// 消息内容
+  /// Message content
   String text;
 
-  /// 消息附加信息，用于提供模型相关信息
+  /// Additional information for the message, used to provide model-related information
   String? extra;
 
-  /// 消息发送时的模型
+  /// Model used when sending the message
   String? model;
 
-  /// 消息类型
+  /// Message type
   MessageType type;
 
-  /// 发送者
+  /// Sender
   String? user;
 
-  /// 时间戳
+  /// Timestamp
   DateTime? ts;
 
-  /// 关联消息ID（问题 ID）
+  /// Associated message ID (question ID)
   int? refId;
 
-  /// 服务端 ID
+  /// Server ID
   int? serverId;
 
-  /// 消息状态: 1-成功 0-等待应答 2-失败
+  /// Message status: 1-success 0-waiting for response 2-failed
   int status;
 
-  /// 消息消耗的配额
+  /// Quota consumed by the message
   int? quotaConsumed;
 
-  /// 消息消耗的 token
+  /// Token consumed by the message
   int? tokenConsumed;
 
-  /// 是否当前消息已就绪，不需要持久化
+  /// Whether the current message is ready and does not need to be persisted
   bool isReady = true;
 
   Message(
@@ -74,12 +74,12 @@ class Message {
     this.tokenConsumed,
   });
 
-  /// 获取消息附加信息
+  /// Get the additional information for the message
   void setExtra(dynamic data) {
     extra = jsonEncode(data);
   }
 
-  /// 获取消息附加信息
+  /// Get the additional information for the message
   decodeExtra() {
     if (extra == null) {
       return null;
@@ -88,39 +88,39 @@ class Message {
     return jsonDecode(extra!);
   }
 
-  /// 是否是系统消息，包括时间线
+  /// Check if it is a system message, including timeline
   bool isSystem() {
     return type == MessageType.system ||
         type == MessageType.timeline ||
         type == MessageType.contextBreak;
   }
 
-  /// 是否是初始消息
+  /// Check if it is an initial message
   bool isInitMessage() {
     return type == MessageType.initMessage;
   }
 
-  /// 是否是时间线
+  /// Check if it is a timeline
   bool isTimeline() {
     return type == MessageType.timeline;
   }
 
-  /// 格式化时间
+  /// Format the timestamp
   String friendlyTime() {
     return humanTime(ts);
   }
 
-  /// 是否已失败
+  /// Check if the message has failed
   bool statusIsFailed() {
     return status == 2;
   }
 
-  /// 是否已成功
+  /// Check if the message is successful
   bool statusIsSucceed() {
     return status == 1;
   }
 
-  /// 是否等待应答
+  /// Check if the message is waiting for response
   bool statusPending() {
     return status == 0;
   }

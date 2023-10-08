@@ -29,7 +29,7 @@ class _DrawboardScreenState extends State<DrawboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('画板'),
+        title: const Text('Drawing Board'),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -52,7 +52,7 @@ class _DrawboardScreenState extends State<DrawboardScreen> {
 
                               if (imageData == null) {
                                 // ignore: use_build_context_synchronously
-                                showErrorMessageEnhanced(context, '获取图片数据失败');
+                                showErrorMessageEnhanced(context, 'Failed to get image data');
                                 return;
                               }
 
@@ -64,7 +64,7 @@ class _DrawboardScreenState extends State<DrawboardScreen> {
                                   quality: 100,
                                 );
 
-                                showSuccessMessage('图片保存成功');
+                                showSuccessMessage('Image saved successfully');
                               } else {
                                 FileSaver.instance
                                     .saveFile(
@@ -73,7 +73,7 @@ class _DrawboardScreenState extends State<DrawboardScreen> {
                                   bytes: imageData.buffer.asUint8List(),
                                 )
                                     .then((value) {
-                                  showSuccessMessage('文件保存成功');
+                                  showSuccessMessage('File saved successfully');
                                 });
                               }
                             },
@@ -243,7 +243,7 @@ class _DrawMaskBoardState extends State<DrawMaskBoard> {
               child: Row(
                 children: [
                   Text(
-                    '画笔粗细',
+                    'Stroke Width',
                     style: TextStyle(
                       fontSize: 12,
                       color: customColors.weakTextColor,

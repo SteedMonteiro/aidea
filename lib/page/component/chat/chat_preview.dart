@@ -77,14 +77,14 @@ class _ChatPreviewState extends State<ChatPreview> {
 
         return Column(
           children: [
-            // 消息类型为 hide，不展示
+            // If the message type is hide, do not display
             if (message.message.type == MessageType.hide) Container(),
 
             if (message.message.type != MessageType.hide)
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // 消息选择模式，显示选择框
+                  // If in message selection mode, display selection box
                   if (widget.controller.selectMode &&
                       !message.message.isSystem())
                     Checkbox(
@@ -101,7 +101,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                       },
                     ),
 
-                  // 消息主体部分
+                  // Main part of the message
                   Expanded(
                     child: BlocBuilder<ChatMessageBloc, ChatMessageState>(
                       buildWhen: (previous, current) =>
@@ -144,14 +144,14 @@ class _ChatPreviewState extends State<ChatPreview> {
     return message.message;
   }
 
-  /// 构建消息框
+  /// Build message box
   Widget _buildMessageBox(
     BuildContext context,
     CustomColors customColors,
     Message message,
     MessageState state,
   ) {
-    // 系统消息
+    // System message
     if (message.isSystem()) {
       return Align(
         alignment: Alignment.center,
@@ -170,7 +170,7 @@ class _ChatPreviewState extends State<ChatPreview> {
       );
     }
 
-    // 初始消息
+    // Initial message
     // if (message.isInitMessage()) {
     //   return Align(
     //     alignment: Alignment.center,
@@ -192,7 +192,7 @@ class _ChatPreviewState extends State<ChatPreview> {
     final showTranslate = state.showTranslate &&
         state.translateText != null &&
         state.translateText != '';
-    // 普通消息
+    // Normal message
     return Align(
       alignment:
           message.role == Role.sender ? Alignment.topRight : Alignment.topLeft,
@@ -219,8 +219,8 @@ class _ChatPreviewState extends State<ChatPreview> {
                           message.statusIsFailed())
                         buildErrorIndicator(message, state, context),
                       GestureDetector(
-                        // 选择模式下，单击切换选择与否
-                        // 非选择模式下，单击隐藏键盘
+                        // In selection mode, click to toggle selection
+                        // In non-selection mode, click to hide keyboard
                         onTap: () {
                           if (widget.controller.selectMode) {
                             widget.controller
@@ -228,7 +228,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                           }
                           FocusScope.of(context).requestFocus(FocusNode());
                         },
-                        // 长按或者双击显示上下文菜单
+                        // Long press or double click to display context menu
                         onLongPressStart: (detail) {
                           _handleMessageTapControl(
                             context,
@@ -285,7 +285,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                                             size: 12, color: Colors.green),
                                         const SizedBox(width: 5),
                                         Text(
-                                          '共 ${message.tokenConsumed} 个 Token， 消耗 ${message.quotaConsumed} 个智慧果',
+                                          'Total ${message.tokenConsumed} Tokens, consumed ${message.quotaConsumed} wisdom fruits',
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: customColors.weakTextColor,
@@ -337,7 +337,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                                   ),
                                   SizedBox(width: 5),
                                   Text(
-                                    '翻译完成',
+                                    'Translation completed',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Color.fromARGB(255, 145, 145, 145),
@@ -380,7 +380,7 @@ class _ChatPreviewState extends State<ChatPreview> {
             () {
               widget.onResentEvent!(message);
             },
-            confirmText: '重新发送',
+            confirmText: 'Resend',
           );
         },
         child: const Icon(Icons.error, color: Colors.red, size: 20),
@@ -388,7 +388,7 @@ class _ChatPreviewState extends State<ChatPreview> {
     );
   }
 
-  /// 点击消息后控制操作弹窗菜单
+  /// Control operation popup menu after clicking the message
   void _handleMessageTapControl(
     BuildContext context,
     Offset? offset,
@@ -446,7 +446,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                   size: 14,
                 ),
                 Text(
-                  state.showMarkdown ? "文本" : "预览",
+                  state.showMarkdown ? "Text" : "Preview",
                   style: const TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ],
@@ -455,7 +455,7 @@ class _ChatPreviewState extends State<ChatPreview> {
           TextButton.icon(
             onPressed: () {
               FlutterClipboard.copy(message.text).then((value) {
-                showSuccessMessage('已复制到剪贴板');
+                showSuccessMessage('Copied to clipboard');
               });
               cancel();
             },
@@ -469,7 +469,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                   size: 14,
                 ),
                 Text(
-                  "复制",
+                  "Copy",
                   style: TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ],
@@ -532,7 +532,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                       size: 14,
                     ),
                     Text(
-                      showTranslate ? '隐藏' : '翻译',
+                      showTranslate ? 'Hide' : 'Translate',
                       style: const TextStyle(fontSize: 12, color: Colors.white),
                     )
                   ],
@@ -553,7 +553,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                     size: 14,
                   ),
                   Text(
-                    '重发',
+                    'Resend',
                     style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                 ],
@@ -563,7 +563,7 @@ class _ChatPreviewState extends State<ChatPreview> {
             TextButton.icon(
                 onPressed: () async {
                   cancel();
-                  await shareTo(context, content: message.text, title: '聊天记录');
+                  await shareTo(context, content: message.text, title: 'Chat record');
                 },
                 label: const Text(''),
                 icon: Column(
@@ -611,140 +611,3 @@ class _ChatPreviewState extends State<ChatPreview> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.delete,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    size: 14,
-                  ),
-                  Text(
-                    AppLocale.delete.getString(context),
-                    style: const TextStyle(fontSize: 12, color: Colors.white),
-                  )
-                ],
-              ),
-            ),
-          if (Ability().supportSpeak() && widget.onSpeakEvent != null)
-            TextButton.icon(
-                onPressed: () {
-                  cancel();
-                  widget.onSpeakEvent!(message);
-                },
-                label: const Text(''),
-                icon: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.record_voice_over,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      size: 14,
-                    ),
-                    Text(
-                      '朗读',
-                      style: TextStyle(fontSize: 12, color: Colors.white),
-                    )
-                  ],
-                )),
-        ],
-      ),
-    );
-  }
-
-  /// 获取聊天框的最大宽度
-  double _chatBoxMaxWidth(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth >= CustomSize.maxWindowSize) {
-      return CustomSize.maxWindowSize;
-    }
-
-    return screenWidth;
-  }
-}
-
-/// ChatPreview 控制器
-class ChatPreviewController extends ChangeNotifier {
-  /// 是否处于多选模式
-  bool _selectMode = false;
-
-  /// 选中的消息ID
-  final _selectedMessageIds = <int>{};
-
-  /// 所有消息
-  List<MessageWithState>? _allMessages;
-
-  bool get selectMode => _selectMode;
-  Set<int> get selectedMessageIds => _selectedMessageIds;
-
-  /// 获取选中的消息
-  List<MessageWithState> selectedMessages() {
-    if (_allMessages == null || _allMessages!.isEmpty) {
-      return [];
-    }
-
-    return _allMessages!
-        .where((element) => _selectedMessageIds.contains(element.message.id))
-        .toList();
-  }
-
-  /// 设置所有消息
-  void setAllMessageIds(List<MessageWithState> messages) {
-    _allMessages = messages.where((e) => !e.message.isSystem()).toList();
-  }
-
-  void toggleSelectMode() {
-    _selectMode = !_selectMode;
-    notifyListeners();
-  }
-
-  void exitSelectMode() {
-    _selectMode = false;
-    _selectedMessageIds.clear();
-    notifyListeners();
-  }
-
-  void enterSelectMode() {
-    _selectMode = true;
-    _selectedMessageIds.clear();
-    notifyListeners();
-  }
-
-  void toggleMessageSelected(int messageId) {
-    if (_selectedMessageIds.contains(messageId)) {
-      _selectedMessageIds.remove(messageId);
-    } else {
-      _selectedMessageIds.add(messageId);
-    }
-    notifyListeners();
-  }
-
-  void selectAllMessage() {
-    if (_allMessages == null || _allMessages!.isEmpty) {
-      return;
-    }
-
-    if (_selectedMessageIds.length == _allMessages!.length) {
-      _selectedMessageIds.clear();
-      notifyListeners();
-      return;
-    }
-
-    _selectedMessageIds.clear();
-    for (var msg in _allMessages!) {
-      _selectedMessageIds.add(msg.message.id!);
-    }
-
-    notifyListeners();
-  }
-
-  void selectMessage(int id) {
-    _selectedMessageIds.add(id);
-    notifyListeners();
-  }
-
-  void unSelectMessage(int id) {
-    _selectedMessageIds.remove(id);
-    notifyListeners();
-  }
-
-  bool isMessageSelected(int id) {
-    return _selectedMessageIds.contains(id);
-  }
-}

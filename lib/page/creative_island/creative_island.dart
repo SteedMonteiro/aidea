@@ -17,26 +17,16 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 enum CreativeIslandMode {
-  /// 创作岛
+  /// Creative Island
   creativeIsland,
 
-  /// 绘图
-  imageDraw;
-
-  String getString() {
-    switch (this) {
-      case CreativeIslandMode.creativeIsland:
-        return 'creative-island';
-      case CreativeIslandMode.imageDraw:
-        return 'image-draw';
-    }
-  }
+  /// Image Draw
+  imageDraw,
 }
 
-/// 创作岛
 class CreativeIsland extends StatefulWidget {
   final SettingRepository setting;
-  const CreativeIsland({super.key, required this.setting});
+  const CreativeIsland({Key? key, required this.setting});
 
   @override
   State<CreativeIsland> createState() => _CreativeIslandState();
@@ -83,7 +73,6 @@ class _CreativeIslandState extends State<CreativeIsland> {
     );
   }
 
-  /// 创作岛列表
   Widget _buildIslandItems(
     CustomColors customColors,
   ) {

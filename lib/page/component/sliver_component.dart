@@ -13,7 +13,7 @@ class SliverSingleComponent extends StatelessWidget {
   final bool centerTitle;
 
   const SliverSingleComponent({
-    super.key,
+    Key? key,
     required this.title,
     this.backgroundImage,
     this.actions,
@@ -70,7 +70,7 @@ class SliverComponent extends StatelessWidget {
   final EdgeInsets? titlePadding;
   final bool centerTitle;
   const SliverComponent({
-    super.key,
+    Key? key,
     required this.title,
     this.backgroundImage,
     this.actions,
@@ -136,7 +136,7 @@ class SliverTabComponent extends StatelessWidget {
       itemsBuilder;
 
   const SliverTabComponent({
-    super.key,
+    Key? key,
     required this.tabBarTitles,
     this.title,
     this.backgroundImageUrl,
@@ -234,7 +234,7 @@ class SliverTabComponent extends StatelessWidget {
                             (BuildContext context, int index) {
                               return items[index];
                             },
-                            childCount: items.length, //内部控件数量
+                            childCount: items.length, // Number of inner widgets
                           ),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(

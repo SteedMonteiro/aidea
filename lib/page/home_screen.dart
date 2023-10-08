@@ -97,7 +97,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                           Container(
                             margin: const EdgeInsets.only(top: 10, left: 10),
                             child: Text(
-                              '热门推荐',
+                              'Hot Recommendations',
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 color: customColors.backgroundInvertedColor,
@@ -109,7 +109,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                             margin: const EdgeInsets.only(
                                 top: 0, left: 10, bottom: 10),
                             child: Text(
-                              '挑选你的专属伙伴',
+                              'Choose your exclusive partner',
                               style: TextStyle(
                                 color: customColors.weakTextColorPlus,
                                 fontSize: 11,
@@ -152,7 +152,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                   child: Row(
                     children: [
                       WeakTextButton(
-                        title: '取消',
+                        title: 'Cancel',
                         onPressed: () {
                           selectedSuggestions.clear();
                           setState(() {});
@@ -162,7 +162,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                       const SizedBox(width: 20),
                       Expanded(
                         child: EnhancedButton(
-                            title: '添加为专属伙伴',
+                            title: 'Add as Exclusive Partner',
                             onPressed: () {
                               context.read<RoomBloc>().add(GalleryRoomCopyEvent(
                                   selectedSuggestions
@@ -185,7 +185,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
       CustomColors customColors, RoomsLoaded state, BuildContext context) {
     if (state.rooms.isEmpty && state.suggests.isEmpty) {
       return Center(
-        // 数字人列表为空
+        // Empty list of characters
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -266,7 +266,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '查看更多',
+                    'View More',
                     style: TextStyle(
                       color: customColors.weakTextColor,
                       fontSize: 13,

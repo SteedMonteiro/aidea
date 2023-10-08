@@ -84,7 +84,7 @@ class _GalleryItemShareScreenState extends State<GalleryItemShareScreen> {
                 Icon(Icons.share, size: 14, color: customColors.weakLinkColor),
                 const SizedBox(width: 5),
                 Text(
-                  '分享',
+                  'Share',
                   style: TextStyle(
                       color: customColors.weakLinkColor, fontSize: 14),
                 ),
@@ -94,7 +94,7 @@ class _GalleryItemShareScreenState extends State<GalleryItemShareScreen> {
           EnhancedPopupMenu(
             items: [
               EnhancedPopupMenuItem(
-                title: '保存到本地',
+                title: 'Save to Device',
                 icon: Icons.save,
                 onTap: (ctx) async {
                   final cancel = BotToast.showCustomLoading(
@@ -116,7 +116,7 @@ class _GalleryItemShareScreenState extends State<GalleryItemShareScreen> {
                       if (PlatformTool.isIOS() || PlatformTool.isAndroid()) {
                         await ImageGallerySaver.saveImage(data, quality: 100);
 
-                        showSuccessMessage('图片保存成功');
+                        showSuccessMessage('Image saved successfully');
                       } else {
                         FileSaver.instance
                             .saveFile(
@@ -126,7 +126,7 @@ class _GalleryItemShareScreenState extends State<GalleryItemShareScreen> {
                           mimeType: MimeType.png,
                         )
                             .then((value) {
-                          showSuccessMessage('文件保存成功');
+                          showSuccessMessage('File saved successfully');
                         });
                       }
                     }
@@ -136,7 +136,7 @@ class _GalleryItemShareScreenState extends State<GalleryItemShareScreen> {
                 },
               ),
               EnhancedPopupMenuItem(
-                title: showQRCode ? '不显示邀请信息' : '显示邀请信息',
+                title: showQRCode ? 'Hide Invitation Information' : 'Show Invitation Information',
                 icon: showQRCode ? Icons.visibility_off : Icons.visibility,
                 onTap: (ctx) {
                   setState(() {

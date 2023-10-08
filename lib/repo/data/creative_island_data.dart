@@ -8,12 +8,12 @@ class CreativeIslandDataProvider {
   Future<List<CreativeIslandHistory>> getRecentHistories(
       String itemId, int count,
       {int? userId}) async {
-    final userConditon =
+    final userCondition =
         userId == null ? ' AND user_id IS NULL' : ' AND user_id = $userId';
 
     List<Map<String, Object?>> histories = await conn.query(
       'creative_island_history',
-      where: 'item_id = ? $userConditon',
+      where: 'item_id = ? $userCondition',
       whereArgs: [itemId],
       orderBy: 'id DESC',
       limit: count,
@@ -45,19 +45,19 @@ class CreativeIslandDataProvider {
     return his;
   }
 
-  /// 更新
+  /// Update
   Future<void> update(int id, CreativeIslandHistory his) async {
     await conn.update('creative_island_history', his.toJson(),
         where: 'id = ?', whereArgs: [id]);
   }
 
-  /// 删除 room
+  /// Delete history
   Future<int> delete(int hisId) async {
     return conn
         .delete('creative_island_history', where: 'id = ?', whereArgs: [hisId]);
   }
 
-  /// 获取指定历史信息
+  /// Get specific history information
   Future<CreativeIslandHistory?> history(int id) async {
     List<Map<String, Object?>> histories = await conn.query(
         'creative_island_history',

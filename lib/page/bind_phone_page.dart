@@ -91,7 +91,7 @@ class _BindPhoneScreenState extends State<BindPhoneScreen> {
               context.pop();
             }
 
-            // 当返回值为 logout 时，表示需要退出登录
+            // When the return value is logout, it means that the user needs to log out
             // if (widget.isSignIn) {
             //   context.pop('logout');
             // } else {
@@ -300,7 +300,4 @@ class _BindPhoneScreenState extends State<BindPhoneScreen> {
         }
       }
     }).catchError((e) {
-      showErrorMessage(resolveError(context, e));
-    }).whenComplete(() => cancel());
-  }
-}
+      show

@@ -5,7 +5,7 @@ abstract class ChatMessageState {}
 
 class ChatMessageInitial extends ChatMessageState {}
 
-// 加载全量聊天记录
+// Load all chat records
 class ChatMessagesLoaded extends ChatMessageState {
   final List<Message> _messages;
   final bool processing;
@@ -32,7 +32,7 @@ class ChatMessageError extends ChatMessageState {
 class ChatMessageUpdated extends ChatMessageState {
   final Message message;
 
-  /// 是否新消息正在处理中
+  /// Whether new messages are being processed
   final bool processing;
 
   ChatMessageUpdated(this.message, {this.processing = false});

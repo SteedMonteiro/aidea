@@ -12,7 +12,7 @@ class Ability {
     this.capabilities = capabilities;
   }
 
-  /// 单例
+  /// Singleton
   static final Ability _instance = Ability._internal();
   Ability._internal();
 
@@ -20,27 +20,27 @@ class Ability {
     return _instance;
   }
 
-  /// 首页支持的模型列表
+  /// List of supported models on the home page
   List<HomeModel> get homeModels {
     return capabilities.homeModels;
   }
 
-  /// 是否支持 OpenAI
+  /// Whether OpenAI is supported
   bool get enableOpenAI {
     return capabilities.openaiEnabled;
   }
 
-  /// 是否支持支付宝
+  /// Whether Alipay is supported
   bool get enableAlipay {
     return capabilities.alipayEnabled;
   }
 
-  /// 是否支持 ApplePay
+  /// Whether ApplePay is supported
   bool get enableApplePay {
     return capabilities.applePayEnabled;
   }
 
-  /// 是否支持支付功能
+  /// Whether payment is supported
   bool get enablePayment {
     if (!enableApplePay && !enableAlipay) {
       return false;
@@ -53,40 +53,40 @@ class Ability {
     return enableAlipay;
   }
 
-  /// 是否支持API Server
+  /// Whether API Server is supported
   bool supportAPIServer() {
     return setting.stringDefault(settingAPIServerToken, '') != '';
   }
 
-  /// 是否启用了 OpenAI 自定义设置
+  /// Whether OpenAI custom settings are enabled
   bool supportLocalOpenAI() {
     return setting.boolDefault(settingOpenAISelfHosted, false);
   }
 
-  /// 是否支持翻译功能
+  /// Whether translation is supported
   bool supportTranslate() {
     return false;
     // return setting.stringDefault(settingAPIServerToken, '') != '';
   }
 
-  /// 是否支持语音合成功能
+  /// Whether text-to-speech is supported
   bool supportSpeak() {
     // return setting.stringDefault(settingAPIServerToken, '') != '';
     return true;
   }
 
-  /// 是否支持图片上传功能
+  /// Whether image uploading is supported
   bool supportImageUploader() {
     return supportImglocUploader() || supportQiniuUploader();
   }
 
-  /// 是否支持Imgloc图片上传功能
+  /// Whether Imgloc image uploading is supported
   bool supportImglocUploader() {
     return setting.boolDefault(settingImageManagerSelfHosted, false) &&
         setting.stringDefault(settingImglocToken, '') != '';
   }
 
-  /// 是否支持七牛云图片上传功能
+  /// Whether Qiniu image uploading is supported
   bool supportQiniuUploader() {
     return setting.stringDefault(settingAPIServerToken, '') != '';
   }

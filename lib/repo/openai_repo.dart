@@ -51,7 +51,7 @@ class OpenAIRepository {
     OpenAI.showLogs = true;
   }
 
-  /// 基于 prompt 生成图片
+  /// Generate images based on prompt
   Future<List<String>> createImage(
     String prompt, {
     int n = 1,
@@ -65,18 +65,18 @@ class OpenAIRepository {
     return model.data.map((e) => e.url).toList();
   }
 
-  /// 判断模型是否支持聊天
+  /// Check if the model supports chat
   static bool isChatModel(String model) {
     return supportForChat[model] != null && supportForChat[model]!.isChatModel;
   }
 
-  /// 判断模型是否为图片模型
+  /// Check if the model is an image model
   static bool isImageModel(String model) {
     return model == defaultImageModel;
   }
 
-  // 兼容性列表查看：https://platform.openai.com/docs/models/gpt-3
-  // key: 模型名, value: 是否支持聊天模式
+  // Compatibility list: https://platform.openai.com/docs/models/gpt-3
+  // key: model name, value: whether it supports chat mode
   static final supportForChat = <String, mm.Model>{
     'gpt-3.5-turbo': mm.Model(
       'gpt-3.5-turbo',
@@ -84,7 +84,7 @@ class OpenAIRepository {
       'openai',
       category: modelTypeOpenAI,
       isChatModel: true,
-      description: '能力最强的 GPT-3.5 模型，成本低',
+      description: 'The most powerful GPT-3.5 model, cost-effective',
     ),
     'gpt-3.5-turbo-16k': mm.Model(
       'gpt-3.5-turbo-16k',
@@ -92,7 +92,7 @@ class OpenAIRepository {
       'openai',
       category: modelTypeOpenAI,
       isChatModel: true,
-      description: '能力最强的 GPT-3.5 模型，成本为 gpt-3.5-turbo 的两倍，但是支持 4K 上下文',
+      description: 'The most powerful GPT-3.5 model, costs twice as much as gpt-3.5-turbo but supports 4K context',
     ),
     'gpt-4': mm.Model(
       'gpt-4',
@@ -100,7 +100,7 @@ class OpenAIRepository {
       'openai',
       category: modelTypeOpenAI,
       isChatModel: true,
-      description: '比GPT-3.5模型更强，能够执行复杂任务，并优化用于聊天',
+      description: 'More powerful than the GPT-3.5 model, capable of performing complex tasks and optimized for chat',
     ),
 
     'gpt-4-32k': mm.Model(
@@ -109,7 +109,7 @@ class OpenAIRepository {
       'openai',
       category: modelTypeOpenAI,
       isChatModel: true,
-      description: '基于 GPT-4，但是支持4倍的内容长度',
+      description: 'Based on GPT-4, but supports four times the content length',
     ),
 
     // 'gpt-4-0314': Model(
@@ -124,7 +124,7 @@ class OpenAIRepository {
     //   category: modelTypeOpenAI,
     //   isChatModel: true,
     // ),
-    //// gpt-3.5-turbo-0301 将在 2023年6月1日停止服务
+    //// gpt-3.5-turbo-0301 will be discontinued on June 1, 2023
     // 'gpt-3.5-turbo-0301': Model(
     //   'gpt-3.5-turbo-0301',
     //   'openai',
@@ -158,14 +158,14 @@ class OpenAIRepository {
     // ),
   };
 
-  /// 支持的模型
+  /// Supported models
   static List<mm.Model> supportModels() {
     var models = supportForChat.values.toList();
     // models.add(Model(
     //   defaultImageModel,
     //   'openai',
     //   category: modelTypeOpenAI,
-    //   description: '根据自然语言创建现实的图像和艺术',
+    //   description: 'Create realistic images and art based on natural language',
     // ));
     return models;
   }
@@ -207,107 +207,3 @@ class OpenAIRepository {
         n: 1,
         maxTokens: maxTokens,
         user: user,
-      );
-
-      stream.listen(
-        (event) {
-          for (var element in event.choices) {
-            onData(ChatStreamRespData(content: element.text));
-          }
-        },
-        onDone: () => completer.complete(),
-        onError: (e) => completer.completeError(e),
-        cancelOnError: true,
-      ).onError((e) {
-        completer.completeError(e);
-      });
-    } catch (e) {
-      completer.completeError(e);
-    }
-
-    return completer.future;
-  }
-
-  Future<void> chatStream(
-    List<OpenAIChatCompletionChoiceMessageModel> messages,
-    void Function(ChatStreamRespData data) onData, {
-    double temperature = 1.0,
-    user = 'user',
-    model = defaultChatModel,
-    int? roomId,
-    int? maxTokens,
-  }) async {
-    var completer = Completer<void>();
-
-    try {
-      var chatStream = OpenAI.instance.chat.createStream(
-        model: model,
-        messages: messages,
-        temperature: temperature,
-        user: user,
-        maxTokens: maxTokens,
-        n: Ability().supportLocalOpenAI()
-            ? null
-            : roomId, // n 参数暂时用不到，复用作为 roomId
-      );
-
-      chatStream.listen(
-        (event) {
-          for (var element in event.choices) {
-            if (element.delta.content != null) {
-              onData(ChatStreamRespData(
-                content: element.delta.content!,
-                role: element.delta.role,
-              ));
-            }
-          }
-        },
-        onDone: () => completer.complete(),
-        onError: (e) => completer.completeError(e),
-        cancelOnError: true,
-      ).onError((e) {
-        completer.completeError(e);
-      });
-    } catch (e) {
-      completer.completeError(e);
-    }
-
-    return completer.future;
-  }
-
-  /// 音频文件转文字
-  Future<String> audioTranscription({
-    required File audioFile,
-  }) async {
-    var audioModel = await OpenAI.instance.audio.createTranscription(
-      file: audioFile,
-      model: 'whisper-1',
-    );
-
-    return audioModel.text;
-  }
-}
-
-class ChatReplyMessage {
-  final int index;
-  final String role;
-  final String content;
-  final String? finishReason;
-
-  ChatReplyMessage({
-    required this.index,
-    required this.role,
-    required this.content,
-    this.finishReason,
-  });
-}
-
-class ChatStreamRespData {
-  final String? role;
-  final String content;
-
-  ChatStreamRespData({
-    this.role,
-    required this.content,
-  });
-}

@@ -1,49 +1,49 @@
 import 'package:askaide/helper/constant.dart';
 
-/// 聊天室
+/// Chat Room
 class Room {
-  /// 聊天室 ID
+  /// Room ID
   int? id;
 
-  /// 用户 ID
+  /// User ID
   int? userId;
 
-  /// 头像 ID
+  /// Avatar ID
   int? avatarId;
 
-  /// 头像链接
+  /// Avatar URL
   String? avatarUrl;
 
-  /// 聊天室名称
+  /// Room Name
   String name;
 
-  /// 聊天室类别
+  /// Room Category
   String category;
 
-  /// 显示优先级（排序，值越大越靠前）
+  /// Display Priority (sorting, larger values appear first)
   int priority;
 
-  /// 聊天室采用的模型
+  /// Model used in the room
   String model;
 
-  /// 模型初始化消息
+  /// Model Initialization Message
   String? initMessage;
 
-  /// 模型最大上下文数量
+  /// Maximum Context Count for the Model
   int maxContext;
 
-  /// 模型最大返回 Token 数量
+  /// Maximum Token Count to Return for the Model
   int? maxTokens;
 
-  /// room 类型：local or remote
+  /// Room Type: local or remote
   bool? localRoom;
 
   bool get isLocalRoom => localRoom ?? false;
 
-  /// 聊天室头像 标识
+  /// Room Avatar Identifier
   int get avatar => (avatarId == null || avatarId == 0) ? 0 : avatarId!;
 
-  /// 模型类别
+  /// Model Category
   String modelCategory() {
     final segs = model.split(':');
     if (segs.length == 1) {
@@ -53,7 +53,7 @@ class Room {
     return segs[0];
   }
 
-  /// 模型名称
+  /// Model Name
   String modelName() {
     final segs = model.split(':');
     if (segs.length == 1) {
@@ -63,22 +63,22 @@ class Room {
     return segs[1];
   }
 
-  /// 聊天室图标
+  /// Room Icon
   String? iconData;
 
-  /// 聊天室图标颜色
+  /// Room Icon Color
   String? color;
 
-  /// 聊天室描述
+  /// Room Description
   String? description;
 
-  /// 系统提示
+  /// System Prompt
   String? systemPrompt;
 
-  /// 聊天室创建时间
+  /// Room Creation Time
   DateTime? createdAt;
 
-  /// 聊天室最后活跃时间
+  /// Room Last Active Time
   DateTime? lastActiveTime;
 
   Room(this.name, this.category,

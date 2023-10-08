@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-/// 该队列以一定的时间间隔将队列中的元素传递给回调函数，实现平滑的队列处理
+/// This queue passes the elements in the queue to the callback function at regular time intervals, achieving smooth queue processing.
 class GracefulQueue<T> {
   final Queue<T> _queue = Queue<T>();
   bool finished = false;

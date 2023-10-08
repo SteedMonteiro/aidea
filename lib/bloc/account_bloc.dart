@@ -13,7 +13,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final SettingRepository settings;
 
   AccountBloc(this.settings) : super(AccountInitial()) {
-    // 加载用户信息
+    // Load user information
     on<AccountLoadEvent>((event, emit) async {
       emit(AccountLoading());
 

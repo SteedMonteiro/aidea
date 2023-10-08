@@ -68,7 +68,7 @@ class ImageCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        username ?? '匿名',
+                        username ?? 'Anonymous',
                         style: TextStyle(
                           color: customColors.weakTextColor,
                           fontSize: 12,

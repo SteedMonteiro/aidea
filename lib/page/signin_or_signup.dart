@@ -70,7 +70,7 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
         toolbarHeight: CustomSize.toolbarHeight,
         backgroundColor: Colors.transparent,
         title: const Text(
-          '验证账号',
+          'Verify Account',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -112,7 +112,7 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Text(
-            '请使用 ${widget.username} 的密码进行登录。',
+            'Please use the password of ${widget.username} to log in.',
             style: TextStyle(
               color: customColors.weakTextColor?.withAlpha(200),
               fontSize: 15,
@@ -120,7 +120,7 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
           ),
         ),
         const SizedBox(height: 10),
-        // 密码
+        // Password
         Padding(
           padding: const EdgeInsets.only(
               left: 15.0, right: 15.0, top: 15, bottom: 0),
@@ -132,7 +132,7 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
         ),
 
         const SizedBox(height: 15),
-        // 登录
+        // Sign In
         Container(
           height: 45,
           width: double.infinity,
@@ -176,7 +176,7 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
             ),
           ),
         ),
-        // 找回密码
+        // Forgot Password
         Container(
           padding: const EdgeInsets.only(left: 15, right: 10),
           width: double.infinity,
@@ -193,7 +193,7 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
                   });
                 },
                 child: Text(
-                  '验证码登录',
+                  'Sign in with verification code',
                   style: TextStyle(
                     color: customColors.weakLinkColor?.withAlpha(120),
                     fontSize: 14,
@@ -231,185 +231,11 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Text(
-            '请发送验证码至 ${widget.username} 以完成操作。',
+            'Please send the verification code to ${widget.username} to complete the operation.',
             style: TextStyle(
               color: customColors.weakTextColor,
               fontSize: 15,
             ),
           ),
         ),
-        const SizedBox(height: 10),
-        // 验证码
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 15.0, right: 5.0, top: 15, bottom: 0),
-          child: VerifyCodeInput(
-            controller: _verificationCodeController,
-            onVerifyCodeSent: (id) {
-              verifyCodeId = id;
-            },
-            sendVerifyCode: () {
-              return APIServer().sendSigninOrSignupVerifyCode(
-                widget.username,
-                verifyType: phoneNumberValidator.hasMatch(widget.username)
-                    ? 'sms'
-                    : 'email',
-                isSignup: widget.isSignup,
-              );
-            },
-            sendCheck: () {
-              return true;
-            },
-          ),
-        ),
-
-        // 邀请码
-        if (widget.isSignup)
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 15.0, right: 15.0, top: 15, bottom: 0),
-            child: TextFormField(
-              controller: _inviteCodeController,
-              inputFormatters: [
-                FilteringTextInputFormatter.singleLineFormatter
-              ],
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Color.fromARGB(200, 192, 192, 192)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: customColors.linkColor ?? Colors.green),
-                ),
-                floatingLabelStyle:
-                    TextStyle(color: customColors.linkColor ?? Colors.green),
-                isDense: true,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelText: AppLocale.inviteCode.getString(context),
-                labelStyle: const TextStyle(fontSize: 17),
-                hintText: AppLocale.inviteCodeInputTips.getString(context),
-                hintStyle: TextStyle(
-                  color: customColors.textfieldHintColor,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-          ),
-
-        const SizedBox(height: 15),
-        // 创建账号或登录
-        Container(
-          height: 45,
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-            color: customColors.linkColor,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: TextButton(
-            onPressed: onCreateSubmit,
-            child: Text(
-              widget.isSignup
-                  ? AppLocale.createAccount.getString(context)
-                  : AppLocale.signIn.getString(context),
-              style: const TextStyle(color: Colors.white, fontSize: 18),
-            ),
-          ),
-        ),
-        if (!widget.isSignup)
-          Container(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      signInMethod = 'password';
-                    });
-                  },
-                  child: Text(
-                    '使用密码登录',
-                    style: TextStyle(
-                      color: customColors.weakLinkColor?.withAlpha(120),
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  onCreateSubmit() {
-    FocusScope.of(context).requestFocus(FocusNode());
-
-    if (verifyCodeId == '') {
-      showErrorMessage(AppLocale.pleaseGetVerifyCodeFirst.getString(context));
-      return;
-    }
-
-    final verificationCode = _verificationCodeController.text.trim();
-    if (verificationCode == '') {
-      showErrorMessage(AppLocale.verifyCodeRequired.getString(context));
-      return;
-    }
-    if (verificationCode.length != 6) {
-      showErrorMessage(AppLocale.verifyCodeFormatError.getString(context));
-      return;
-    }
-
-    final inviteCode = _inviteCodeController.text.trim();
-    if (inviteCode != '' && inviteCode.length > 20) {
-      showErrorMessage(AppLocale.inviteCodeFormatError.getString(context));
-      return;
-    }
-
-    final cancel = BotToast.showCustomLoading(
-      toastBuilder: (cancel) {
-        return LoadingIndicator(
-          message: AppLocale.processingWait.getString(context),
-        );
-      },
-      allowClick: false,
-      duration: const Duration(seconds: 120),
-    );
-
-    APIServer()
-        .signInOrUp(
-      username: widget.username,
-      inviteCode: inviteCode,
-      verifyCodeId: verifyCodeId,
-      verifyCode: verificationCode,
-    )
-        .then((value) async {
-      await widget.settings.set(settingAPIServerToken, value.token);
-      await widget.settings.set(settingUserInfo, jsonEncode(value));
-
-      if (value.needBindPhone) {
-        if (context.mounted) {
-          context.push('/bind-phone').then((value) async {
-            if (value == 'logout') {
-              await widget.settings.set(settingAPIServerToken, '');
-              await widget.settings.set(settingUserInfo, '');
-            }
-          });
-        }
-
-        return;
-      } else {
-        if (context.mounted) {
-          context.go(
-              '/chat-chat?show_initial_dialog=${value.isNewUser ? "true" : "false"}&reward=${value.reward}');
-        }
-      }
-    }).catchError((e) {
-      showErrorMessage(resolveError(context, e));
-    }).whenComplete(() => cancel());
-  }
-}
+        const SizedBox

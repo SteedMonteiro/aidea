@@ -47,7 +47,7 @@ class _DestroyAccountScreenState extends State<DestroyAccountScreen> {
       appBar: AppBar(
         toolbarHeight: CustomSize.toolbarHeight,
         title: const Text(
-          '注销账号',
+          'Destroy Account',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -62,7 +62,7 @@ class _DestroyAccountScreenState extends State<DestroyAccountScreen> {
             children: [
               const MessageBox(
                 message:
-                    '请注意，注销账号后：\n1. 您的数据将被清空，包括数字人、创作岛历史纪录、充值数据、智慧果使用明细等全部数据；\n2. 您未使用完的智慧果将会被销毁，无法继续使用，无法退回；\n3. 注销操作不可逆，一旦账号注销，所有被删除数据均无法恢复。',
+                    'Please note that after destroying your account:\n1. Your data will be cleared, including all data related to your digital persona, Creation Island history, recharge data, and Wisdom Fruit usage details.\n2. Any unused Wisdom Fruit will be destroyed and cannot be used or refunded.\n3. Account destruction is irreversible, once your account is destroyed, all deleted data cannot be recovered.',
                 type: MessageBoxType.warning,
               ),
               const SizedBox(height: 15),
@@ -94,7 +94,7 @@ class _DestroyAccountScreenState extends State<DestroyAccountScreen> {
                 child: TextButton(
                   onPressed: onDestroySubmit,
                   child: const Text(
-                    '确认注销账号',
+                    'Confirm Account Destruction',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
@@ -141,7 +141,7 @@ class _DestroyAccountScreenState extends State<DestroyAccountScreen> {
       await widget.setting.set(settingAPIServerToken, '');
       await widget.setting.set(settingUserInfo, '');
 
-      showSuccessMessage('账号注销成功');
+      showSuccessMessage('Account destroyed successfully');
 
       if (context.mounted) {
         context.go('/login');

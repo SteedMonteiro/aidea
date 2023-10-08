@@ -6,20 +6,20 @@ class RoomDataProvider {
   Database conn;
   RoomDataProvider(this.conn);
 
-  /// 获取所有 room
+  /// Get all rooms
   Future<List<Room>> chatRooms({int? userId}) async {
-    final userConditon =
+    final userCondition =
         userId == null ? 'user_id IS NULL' : 'user_id = $userId';
     List<Map<String, Object?>> rooms = await conn.query(
       'chat_room',
-      where: userConditon,
+      where: userCondition,
       orderBy: 'priority DESC, last_active_time DESC',
     );
 
     return rooms.map((e) => Room.fromMap(e)).toList();
   }
 
-  /// 创建 room
+  /// Create room
   Future<Room> createRoom({
     required String name,
     required String category,
@@ -47,12 +47,12 @@ class RoomDataProvider {
     return room;
   }
 
-  /// 删除 room
+  /// Delete room
   Future<int> deleteRoom(int roomId) async {
     return conn.delete('chat_room', where: 'id = ?', whereArgs: [roomId]);
   }
 
-  /// 获取指定 room
+  /// Get specific room
   Future<Room?> room(int roomId) async {
     List<Map<String, Object?>> rooms = await conn.query('chat_room',
         where: 'id = ?', whereArgs: [roomId], limit: 1);
@@ -63,7 +63,7 @@ class RoomDataProvider {
     return Room.fromMap(rooms.first);
   }
 
-  /// 更新 room
+  /// Update room
   Future<int> updateRoom(Room room) async {
     if (room.id == null) {
       throw Exception('room id is null');
@@ -77,7 +77,7 @@ class RoomDataProvider {
     );
   }
 
-  /// 更新 Room 最后活跃时间
+  /// Update room last active time
   Future<void> updateRoomLastActiveTime(int roomId) async {
     await conn.update(
       'chat_room',
