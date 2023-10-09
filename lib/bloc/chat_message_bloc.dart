@@ -126,340 +126,355 @@ if (room == null) {
 emit(ChatMessagesLoaded(
 await chatMsgRepo.getRecentMessages(
 roomId,
-userId: APIServer().localUserID(),
-),
-error: 'The selected digital person does not exist',
-));
-return;
-}
-
-await chatMsgRepo.clearMessages(
-roomId,
-userId: APIServer().localUserID(),
+  userId: APIServer().localUserID(),
 );
-
-if (room.initMessage != null && room.initMessage != '') {
-await chatMsgRepo.sendMessage(
-roomId,
-Message(
-Role.receiver,
-room.initMessage!,
-ts: DateTime.now(),
-type: MessageType.initMessage,
-roomId: roomId,
-userId: APIServer().localUserID(),
-),
-);
+emit(ChatMessagesLoaded(messages));
+emit(ChatMessageUpdated(messages.last));
 }
 
-emit(ChatMessagesLoaded(await chatMsgRepo.getRecentMessages(
-roomId,
-userId: APIServer().localUserID(),
-)));
+/// Clear all message event handler
+Future<void> _clearAllEventHandler(event, emit) async {
+  // Query current Room information
+  final room = await queryRoomById(chatMsgRepo, roomId);
+  if (room == null) {
+    emit(ChatMessagesLoaded(
+      await chatMsgRepo.getRecentMessages(
+        roomId,
+        userId: APIServer().localUserID(),
+      ),
+      error: 'Selected digital entity does not exist',
+    ));
+    return;
+  }
+
+  await chatMsgRepo.clearMessages(
+    roomId,
+    userId: APIServer().localUserID(),
+  );
+
+  if (room.initMessage != null && room.initMessage != '') {
+    await chatMsgRepo.sendMessage(
+      roomId,
+      Message(
+        Role.receiver,
+        room.initMessage!,
+        ts: DateTime.now(),
+        type: MessageType.initMessage,
+        roomId: roomId,
+        userId: APIServer().localUserID(),
+      ),
+    );
+  }
+
+  emit(ChatMessagesLoaded(await chatMsgRepo.getRecentMessages(
+    roomId,
+    userId: APIServer().localUserID(),
+  )));
 }
 
-/// Page loading event handler
+/// Page load event handler
 Future<void> _getRecentEventHandler(event, emit) async {
-ChatHistory? his;
-if (event.chatHistoryId != null && event.chatHistoryId! > 0) {
-his = await chatMsgRepo.getChatHistory(event.chatHistoryId!);
+  ChatHistory? history;
+  if (event.chatHistoryId != null && event.chatHistoryId! > 0) {
+    history = await chatMsgRepo.getChatHistory(event.chatHistoryId!);
+  }
+
+  emit(ChatMessagesLoaded(
+    await chatMsgRepo.getRecentMessages(
+      roomId,
+      userId: APIServer().localUserID(),
+      chatHistoryId: event.chatHistoryId,
+    ),
+    chatHistory: history,
+  ));
 }
 
-emit(ChatMessagesLoaded(
-await chatMsgRepo.getRecentMessages(
-roomId,
-userId: APIServer().localUserID(),
-chatHistoryId: event.chatHistoryId,
-),
-chatHistory: his,
-));
-}
-
-/// Message sending event handler
+/// Message send event handler
 Future<void> _messageSendEventHandler(event, emit) async {
-if (event.message is! Message) {
-return;
+  if (event.message is! Message) {
+    return;
+  }
+
+  Message message = event.message as Message;
+  ChatHistory? localChatHistory;
+
+  // Automatically create chat record history if it's a chat session
+  if (roomId == chatAnywhereRoomId) {
+    if (message.chatHistoryId == null || message.chatHistoryId! <= 0) {
+      final chatHistory = await chatMsgRepo.createChatHistory(
+        title: event.message.text,
+        userId: APIServer().localUserID(),
+        roomId: roomId,
+        model: event.message.model,
+        lastMessage: message.text,
+      );
+
+      localChatHistory = chatHistory;
+      message.chatHistoryId = chatHistory.id;
+      emit(ChatAnywhereInited(chatHistory.id!));
+    }
+  }
+
+  int? localChatHistoryId = message.chatHistoryId;
+
+  // Query current Room information
+  final room = await queryRoomById(chatMsgRepo, roomId);
+  if (room == null) {
+    emit(ChatMessagesLoaded(
+      await chatMsgRepo.getRecentMessages(
+        roomId,
+        userId: APIServer().localUserID(),
+        chatHistoryId: localChatHistoryId,
+      ),
+      error: 'Selected digital entity does not exist',
+      chatHistory: localChatHistory,
+    ));
+    return;
+  }
+
+  if (roomId == chatAnywhereRoomId &&
+      localChatHistoryId != null &&
+      localChatHistoryId > 0) {
+    final chatHistory = await chatMsgRepo.getChatHistory(localChatHistoryId);
+    if (chatHistory != null && chatHistory.model != null) {
+      room.model = chatHistory.model!;
+      localChatHistory = chatHistory;
+    }
+  }
+
+  // Query the last message
+  // If the last message meets the following conditions, create a timeline
+  //  1. The last message does not exist
+  //  2. The time difference between the last message and the current time is more than 3 hours
+  var last = await chatMsgRepo.getLastMessage(
+    roomId,
+    chatHistoryId: localChatHistoryId,
+    userId: APIServer().localUserID(),
+  );
+  if (last == null ||
+      last.ts == null ||
+      DateTime.now().difference(last.ts!).inMinutes > 60 * 3) {
+    // Send a timeline message
+    await chatMsgRepo.sendMessage(
+      roomId,
+      Message(
+        Role.receiver,
+        DateFormat('y-MM-dd HH:mm').format(DateTime.now().toLocal()),
+        type: MessageType.timeline,
+        ts: DateTime.now(),
+        roomId: roomId,
+        userId: APIServer().localUserID(),
+        chatHistoryId: localChatHistoryId,
+      ),
+    );
+  }
+
+  // Send the current user's message
+  message.model = room.model;
+  message.userId = APIServer().localUserID();
+  message.status = 0;
+
+  // Set all pending messages in chat history to failed
+  await chatMsgRepo.fixMessageStatus(roomId);
+
+  // Record the current message
+  final sentMessageId = await chatMsgRepo.sendMessage(roomId, message);
+
+  // Update the Room's last active time
+  // This is not awaited because we don't need to wait for the update to complete asynchronously
+  if (!Ability().supportAPIServer()) {
+    chatMsgRepo.updateRoomLastActiveTime(roomId);
+  }
+
+  // Re-query the message list, now including the message just sent + the message being considered by the bot
+  final messages = await chatMsgRepo.getRecentMessages(
+    roomId,
+    userId: APIServer().localUserID(),
+    chatHistoryId: localChatHistoryId,
+  );
+
+  // Create a system message for the bot's consideration
+  Message waitMessage = Message(
+    Role.receiver,
+    '',
+    ts: DateTime.now(),
+    type: MessageType.text,
+    model: room.model,
+    roomId: roomId,
+    userId: APIServer().localUserID(),
+    refId: sentMessageId,
+    chatHistoryId: localChatHistoryId,
+  );
+
+  // Set the message ID
+  waitMessage.id = await chatMsgRepo.sendMessage(roomId, waitMessage);
+  waitMessage.isReady = false;
+
+  messages.add(waitMessage);
+
+  emit(ChatMessagesLoaded(messages,
+      processing: true, chatHistory: localChatHistory));
+  emit(ChatMessageUpdated(waitMessage, processing: true));
+
+  // Wait for the bot's response message
+  final queue = GracefulQueue<ChatStreamRespData>();
+  try {
+    var listener = queue.listen(const Duration(milliseconds: 10), (items) {
+      final systemCmds = items.where((e) => e.role == 'system').toList();
+      if (systemCmds.isNotEmpty) {
+        for (var element in systemCmds) {
+          try {
+            final cmd = jsonDecode(element.content);
+
+            message.serverId = cmd['question_id'];
+            waitMessage.serverId = cmd['answer_id'];
+
+            final quotaConsumed = cmd['quota_consumed'] ?? 0;
+            final tokenConsumed = cmd['token'] ?? 0;
+
+            if (quotaConsumed == 0 && tokenConsumed == 0) {
+              continue;
+            }
+
+            waitMessage.quotaConsumed = quotaConsumed;
+            waitMessage.tokenConsumed = tokenConsumed;
+          } catch (e) {
+            // Ignore errors
+          }
+        }
+      }
+
+      waitMessage.text += items
+          .where((e) => e.role != 'system')
+          .map((e) => e.content)
+          .join('');
+      emit(ChatMessageUpdated(waitMessage, processing: true));
+    });
+
+    await ModelResolver.instance
+        .request(
+          room: room,
+          contextMessages: messages.sublist(0, messages.length - 1),
+          onMessage: queue.add,
+          maxTokens: room.maxTokens,
+        )
+        .whenComplete(queue.finish);
+
+    await listener;
+
+    // Bot response is complete, update the last bot response message in the database, replacing the thinking message
+    waitMessage.isReady = true;
+    await chatMsgRepo.updateMessage(roomId, waitMessage.id!, waitMessage);
+
+    // Update the server ID and message status of the chat question
+    var sentMessageParts = <MessagePart>[];
+    sentMessageParts.add(MessagePart('status', 1));
+    if (message.serverId != null && message.serverId! > 0) {
+      sentMessageParts.add(MessagePart('server_id', message.serverId));
+    }
+
+    await chatMsgRepo.updateMessagePart(
+      roomId,
+      sentMessageId,
+      sentMessageParts,
+    );
+
+    if (room.id == chatAnywhereRoomId &&
+        localChatHistoryId != null &&
+        localChatHistoryId > 0) {
+      // Update the last message of the chat history record
+      final chatHistory =
+          await chatMsgRepo.getChatHistory(localChatHistoryId);
+      if (chatHistory != null) {
+        chatHistory.lastMessage = waitMessage.text;
+        // Handle asynchronously, no need to wait
+        chatMsgRepo.updateChatHistory(localChatHistoryId, chatHistory);
+      }
+    }
+
+    // Re-query the message list, now including the message just sent + the bot's response message
+    emit(ChatMessagesLoaded(
+      await chatMsgRepo.getRecentMessages(
+        roomId,
+        userId: APIServer().localUserID(),
+        chatHistoryId: localChatHistoryId,
+      ),
+      chatHistory: localChatHistory,
+    ));
+  } catch (e) {
+    await chatMsgRepo.updateMessagePart(
+      roomId,
+      sentMessageId,
+      [
+        MessagePart('status', 2),
+      ],
+    );
+
+    if (waitMessage.id != null) {
+      if (waitMessage.isReady) {
+        await chatMsgRepo.updateMessage(
+          roomId,
+          waitMessage.id!,
+          Message(
+            Role.receiver,
+            AppLocale.robotHasSomeError,
+            id: waitMessage.id,
+            ts: DateTime.now(),
+            type: MessageType.system,
+            roomId: roomId,
+            userId: APIServer().localUserID(),
+            chatHistoryId: localChatHistoryId,
+          ),
+        );
+      } else {
+        await chatMsgRepo.removeMessage(roomId, [waitMessage.id!]);
+      }
+    }
+
+    emit(ChatMessagesLoaded(
+      await chatMsgRepo.getRecentMessages(
+        roomId,
+        userId: APIServer().localUserID(),
+        chatHistoryId: localChatHistoryId,
+      ),
+      error: resolveErrorMessage(e),
+      chatHistory: localChatHistory,
+    ));
+
+    queue.finish();
+  } finally {
+    queue.dispose();
+  }
+
+  emit(ChatMessageUpdated(waitMessage));
 }
-
-Message message = event.message as Message;
-ChatHistory? localChatHistory;
-
-// If it's a chat, automatically create a chat history record
-if (roomId == chatAnywhereRoomId) {
-if (message.chatHistoryId == null || message.chatHistoryId! <= 0) {
-final chatHistory = await chatMsgRepo.createChatHistory(
-title: event.message.text,
-userId: APIServer().localUserID(),
-roomId: roomId,
-model: event.message.model,
-lastMessage: message.text,
-);
-
-localChatHistory = chatHistory;
-message.chatHistoryId = chatHistory.id;
-emit(ChatAnywhereInited(chatHistory.id!));
-}
-}
-
-int? localChatHistoryId = message.chatHistoryId;
-
-// Query current Room information
-final room = await queryRoomById(chatMsgRepo, roomId);
-if (room == null) {
-emit(ChatMessagesLoaded(
-await chatMsgRepo.getRecentMessages(
-roomId,
-userId: APIServer().localUserID(),
-chatHistoryId: localChatHistoryId,
-),
-error: 'The selected digital person does not exist',
-chatHistory: localChatHistory,
-));
-return;
-}
-
-if (roomId == chatAnywhereRoomId &&
-localChatHistoryId != null &&
-localChatHistoryId > 0) {
-final chatHistory = await chatMsgRepo.getChatHistory(localChatHistoryId);
-if (chatHistory != null && chatHistory.model != null) {
-room.model = chatHistory.model!;
-localChatHistory = chatHistory;
-}
-}
-
-// Query the last message
-// If the last message meets the following conditions, create a timeline
-// 1. The last message does not exist
-// 2. The time difference between the last message and the current time is more than 3 hours
-var last = await chatMsgRepo.getLastMessage(
-roomId,
-chatHistoryId: localChatHistoryId,
-userId: APIServer().localUserID(),
-);
-if (last == null ||
-last.ts == null ||
-DateTime.now().difference(last.ts!).inMinutes > 60 * 3) {
-// Send timeline message
-await chatMsgRepo.sendMessage(
-roomId,
-Message(
-Role.receiver,
-DateFormat('y-MM-dd HH:mm').format(DateTime.now().toLocal()),
-type: MessageType.timeline,
-ts: DateTime.now(),
-roomId: roomId,
-userId: APIServer().localUserID(),
-chatHistoryId: localChatHistoryId,
-),
-);
-}
-
-// Send current user message
-message.model = room.model;
-message.userId = APIServer().localUserID();
-message.status = 0;
-
-// For chat history records, set all messages with pending status to failed
-await chatMsgRepo.fixMessageStatus(roomId);
-
-// Record the current message
-final sentMessageId = await chatMsgRepo.sendMessage(roomId, message);
-
-// Update Room's last active time
-// No need to use await here because we don't need to wait for the update to complete; let the room's update process happen asynchronously
-if (!Ability().supportAPIServer()) {
-chatMsgRepo.updateRoomLastActiveTime(roomId);
-}
-
-// Re-query the message list, now including the just sent message + messages being processed by the robot
-final messages = await chatMsgRepo.getRecentMessages(
-roomId,
-userId: APIServer().localUserID(),
-chatHistoryId: localChatHistoryId,
-);
-
-// Create a system message for the robot thinking process
-Message waitMessage = Message(
-Role.receiver,
-'',
-ts: DateTime.now(),
-type: MessageType.text,
-model: room.model,
-roomId: roomId,
-userId: APIServer().localUserID(),
-refId: sentMessageId,
-chatHistoryId: localChatHistoryId,
-);
-
-// Write the message ID
-waitMessage.id = await chatMsgRepo.sendMessage(roomId, waitMessage);
-waitMessage.isReady = false;
-
-messages.add(waitMessage);
-
-emit(ChatMessagesLoaded(messages,
-processing: true, chatHistory: localChatHistory));
-emit(ChatMessageUpdated(waitMessage, processing: true));
-
-// Wait for the robot response message
-final queue = GracefulQueue<ChatStreamRespData>();
-try {
-var listener = queue.listen(const Duration(milliseconds: 10), (items) {
-final systemCmds = items.where((e) => e.role == 'system').toList();
-if (systemCmds.isNotEmpty) {
-for (var element in systemCmds) {
-try {
-final cmd = jsonDecode(element.content);
-
-message.serverId = cmd['question_id'];
-waitMessage.serverId = cmd['answer_id'];
-
-final quotaConsumed = cmd['quota_consumed'] ?? 0;
-final tokenConsumed = cmd['token'] ?? 0;
-
-if (quotaConsumed == 0 && tokenConsumed == 0) {
-continue;
-}
-
-waitMessage.quotaConsumed = quotaConsumed;
-waitMessage.tokenConsumed = tokenConsumed;
-} catch (e) {
-// ignore: avoid_print
-}
-}
-}
-
-waitMessage.text += items
-.where((e) => e.role != 'system')
-.map((e) => e.content)
-.join('');
-emit(ChatMessageUpdated(waitMessage, processing: true));
-});
-
-await ModelResolver.instance
-.request(
-room: room,
-contextMessages: messages.sublist(0, messages.length - 1),
-onMessage: queue.add,
-maxTokens: room.maxTokens,
-)
-.whenComplete(queue.finish);
-
-await listener;
-
-// Robot response complete, update the last robot response message in the database, replacing the thinking message
-waitMessage.isReady = true;
-await chatMsgRepo.updateMessage(roomId, waitMessage.id!, waitMessage);
-
-// Update server ID and message status for the chat question
-var sentMessageParts = <MessagePart>[];
-sentMessageParts.add(MessagePart('status', 1));
-if (message.serverId != null && message.serverId! > 0) {
-sentMessageParts.add(MessagePart('server_id', message.serverId));
-}
-
-await chatMsgRepo.updateMessagePart(
-roomId,
-sentMessageId,
-sentMessageParts,
-);
-
-if (room.id == chatAnywhereRoomId &&
-localChatHistoryId != null &&
-localChatHistoryId > 0) {
-// Update the last message of the chat history record
-final chatHistory =
-await chatMsgRepo.getChatHistory(localChatHistoryId);
-if (chatHistory != null) {
-chatHistory.lastMessage = waitMessage.text;
-// Handle asynchronously, no need to wait
-chatMsgRepo.updateChatHistory(localChatHistoryId, chatHistory);
-}
-}
-
-// Re-query the message list, now including the just sent message + robot response messages
-emit(ChatMessagesLoaded(
-await chatMsgRepo.getRecentMessages(
-roomId,
-userId: APIServer().localUserID(),
-chatHistoryId: localChatHistoryId,
-),
-chatHistory: localChatHistory,
-));
-} catch (e) {
-await chatMsgRepo.updateMessagePart(
-roomId,
-sentMessageId,
-[
-MessagePart('status', 2),
-],
-);
-
-if (waitMessage.id != null) {
-if (waitMessage.isReady) {
-await chatMsgRepo.updateMessage(
-roomId,
-waitMessage.id!,
-Message(
-Role.receiver,
-AppLocale.robotHasSomeError,
-id: waitMessage.id,
-ts: DateTime.now(),
-type: MessageType.system,
-roomId: roomId,
-userId: APIServer().localUserID(),
-chatHistoryId: localChatHistoryId,
-),
-);
-} else {
-await chatMsgRepo.removeMessage(roomId, [waitMessage.id!]);
-}
-}
-
-emit(ChatMessagesLoaded(
-await chatMsgRepo.getRecentMessages(
-roomId,
-userId: APIServer().localUserID(),
-chatHistoryId: localChatHistoryId,
-),
-error: resolveErrorMessage(e),
-chatHistory: localChatHistory,
-));
-
-queue.finish();
-} finally {
-queue.dispose();
-}
-
-emit(ChatMessageUpdated(waitMessage));
 }
 
 Future<Room?> queryRoomById(
-ChatMessageRepository chatMsgRepo, int roomId) async {
-Room? room;
-if (Ability().supportAPIServer()) {
-final roomInServer = await APIServer().room(roomId: roomId);
-room = Room(
-roomInServer.name,
-'chat',
-description: roomInServer.description,
-id: roomInServer.id,
-userId: roomInServer.userId,
-createdAt: roomInServer.createdAt,
-lastActiveTime: roomInServer.lastActiveTime,
-systemPrompt: roomInServer.systemPrompt,
-priority: roomInServer.priority ?? 0,
-model: '${roomInServer.vendor}:${roomInServer.model}',
-initMessage: roomInServer.initMessage,
-maxContext: roomInServer.maxContext,
-maxTokens: roomInServer.maxTokens,
-localRoom: false,
-);
-} else {
-room = await chatMsgRepo.room(roomId);
-}
+    ChatMessageRepository chatMsgRepo, int roomId) async {
+  Room? room;
+  if (Ability().supportAPIServer()) {
+    final roomInServer = await APIServer().room(roomId: roomId);
+    room = Room(
+      roomInServer.name,
+      'chat',
+      description: roomInServer.description,
+      id: roomInServer.id,
+      userId: roomInServer.userId,
+      createdAt: roomInServer.createdAt,
+      lastActiveTime: roomInServer.lastActiveTime,
+      systemPrompt: roomInServer.systemPrompt,
+      priority: roomInServer.priority ?? 0,
+      model: '${roomInServer.vendor}:${roomInServer.model}',
+      initMessage: roomInServer.initMessage,
+      maxContext: roomInServer.maxContext,
+      maxTokens: roomInServer.maxTokens,
+      localRoom: false,
+    );
+  } else {
+    room = await chatMsgRepo.room(roomId);
+  }
 
-return room;
+  return room;
 }
 
