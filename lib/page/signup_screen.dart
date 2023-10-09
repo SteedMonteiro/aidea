@@ -55,7 +55,23 @@ class _SignupScreenState extends State<SignupScreen> {
     if (widget.username != null) {
       _usernameController.text = widget.username!;
     }
+        // Clipboard.getData(Clipboard.kTextPlain).then((value) {
+    //   if (value == null || value.text == null || value.text == '') {
+    //     return;
+    //   }
+
+    //   if (value.text!.trim().contains(RegExp(r'\$AIDEA\.INV\.\w+\$'))) {
+    //     final match = RegExp(r'\$AIDEA\.INV\.(\w+)\$').firstMatch(value.text!);
+    //     if (match != null) {
+    //       final val = match.group(1);
+    //       if (val != null) {
+    //         _inviteCodeController.text = val;
+    //       }
+    //     }
+    //   }
+    // });
   }
+
 
   @override
   void dispose() {

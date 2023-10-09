@@ -182,6 +182,9 @@ class StabilityAIRepository {
     // pixel-art tile-texture
     String? stylePreset,
   }) async {
+    // Note: The image width and height must meet the following conditions:
+    // For 768 engines: 589,824 ≤ height * width ≤ 1,048,576
+    // All other engines: 262,144 ≤ height * width ≤ 1,048,576
     if (width == 0) {
       if (engine.contains('-768-')) {
         width = 768;
@@ -239,6 +242,9 @@ class StabilityAIRepository {
     return images;
   }
 
+/// Create an image and return its base64 encoding.
+/// Pricing table for different models: https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
+/// Width, height, steps, and engine determine the price.
   Future<String> createImageBase64Async(
     String engine,
     List<StabilityAIPrompt> prompts, {
@@ -248,8 +254,14 @@ class StabilityAIRepository {
     int samples = 1,
     int seed = 0,
     int steps = 30,
+    // 3d-model analog-film anime cinematic comic-book digital-art enhance fantasy-art
+    // isometric line-art low-poly modeling-compound neon-punk origami photographic
+    // pixel-art tile-texture
     String? stylePreset,
   }) async {
+    // Note: Image width and height must meet the following conditions
+    // For 768 engines: 589,824 ≤ height * width ≤ 1,048,576
+    // All other engines: 262,144 ≤ height * width ≤ 1,048,576
     if (width == 0) {
       if (engine.contains('-768-')) {
         width = 768;
