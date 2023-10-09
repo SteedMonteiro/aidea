@@ -110,16 +110,16 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
       );
     }
 
-    final messages = await chatMsgRepo.getRecentMessages(
-        roomId,
-        userId: APIServer().localUserID(),
-      );
-      emit(ChatMessagesLoaded(messages));
-      emit(ChatMessageUpdated(messages.last));
-    }
+  final messages = await chatMsgRepo.getRecentMessages(
+     roomId,
+      userId: APIServer().localUserID(),
+    );
+    emit(ChatMessagesLoaded(messages));
+    emit(ChatMessageUpdated(messages.last));
+  }
 
-    /// Message clearing event handler
-    Future<void> _clearAllEventHandler(event, emit) async {
+  /// Message clearing event handler
+  Future<void> _clearAllEventHandler(event, emit) async {
     // Query current Room information
     final room = await queryRoomById(chatMsgRepo, roomId);
     if (room == null) {
