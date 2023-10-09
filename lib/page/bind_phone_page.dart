@@ -300,4 +300,7 @@ class _BindPhoneScreenState extends State<BindPhoneScreen> {
         }
       }
     }).catchError((e) {
-      show
+     showErrorMessage(resolveError(context, e));
+    }).whenComplete(() => cancel());
+  }
+}

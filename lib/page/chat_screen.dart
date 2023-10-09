@@ -610,8 +610,9 @@ Widget buildSelectModeToolbars(
           icon: Icon(Icons.select_all_outlined, color: customColors.linkColor),
           label: Text(
             AppLocale.selectAll.getString(context),
-style: TextStyle(color: customColors.linkColor),
-),
+            style: TextStyle(color: customColors.linkColor),
+          ),
+        ),
 TextButton.icon(
   onPressed: () {
     if (chatPreviewController.selectedMessageIds.isEmpty) {

@@ -33,7 +33,7 @@ class ItemSelector extends StatelessWidget {
                                   color: Colors.grey[200],
                                 ),
                           onPressed: (context) {
-                            GoRouter.of(context).pop(e);
+                            context.pop(e);
                           },
                         ),
                       )

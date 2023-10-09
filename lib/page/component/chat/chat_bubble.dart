@@ -15,7 +15,7 @@ class SpecialChatBubbleOne extends CustomPainter {
   final double _radius = 10.0;
   final double _x = 5.0;
 
- @override
+@override
 void paint(Canvas canvas, Size size) {
   if (alignment == Alignment.topRight) {
     if (tail) {
@@ -137,7 +137,7 @@ class BubbleSpecialThree extends StatelessWidget {
   final TextStyle textStyle;
 
   const BubbleSpecialThree({
-    super.key,
+     Key? key,
     this.isSender = true,
     required this.text,
     this.color = Colors.white70,
@@ -422,7 +422,7 @@ class BubbleSpecialTwo extends StatelessWidget {
   final TextStyle textStyle;
 
   const BubbleSpecialTwo({
-    super.key,
+     Key? key,
     this.isSender = true,
     required this.text,
     this.color = Colors.white70,
