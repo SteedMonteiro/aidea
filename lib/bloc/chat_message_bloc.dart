@@ -124,53 +124,37 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
     final room = await queryRoomById(chatMsgRepo, roomId);
     if (room == null) {
       emit(ChatMessagesLoaded(
-      await chatMsgRepo.getRecentMessages(
-        roomId,
-        userId: APIServer().localUserID(),
-      );
-      emit(ChatMessagesLoaded(messages));
-      emit(ChatMessageUpdated(messages.last));
+         await chatMsgRepo.getRecentMessages(
+          roomId,
+          userId: APIServer().localUserID(),
+        ),
+        error: '选择的数字人不存在',
+      ));
+      return;
     }
 
-    /// Clear all message event handler
-    Future<void> _clearAllEventHandler(event, emit) async {
-      // Query current Room information
-      final room = await queryRoomById(chatMsgRepo, roomId);
-      if (room == null) {
-        emit(ChatMessagesLoaded(
-          await chatMsgRepo.getRecentMessages(
-            roomId,
-            userId: APIServer().localUserID(),
-          ),
-          error: 'Selected digital entity does not exist',
-        ));
-        return;
-      }
+  await chatMsgRepo.clearMessages(
+      roomId,
+      userId: APIServer().localUserID(),
+    );
 
-      await chatMsgRepo.clearMessages(
+   if (room.initMessage != null && room.initMessage != '') {
+      await chatMsgRepo.sendMessage(
         roomId,
-        userId: APIServer().localUserID(),
-      );
-
-      if (room.initMessage != null && room.initMessage != '') {
-        await chatMsgRepo.sendMessage(
-          roomId,
-          Message(
-            Role.receiver,
-            room.initMessage!,
-            ts: DateTime.now(),
-            type: MessageType.initMessage,
-            roomId: roomId,
-            userId: APIServer().localUserID(),
-          ),
-        );
-      }
-
+        Message(
+          Role.receiver,
+          room.initMessage!,
+          ts: DateTime.now(),
+          type: MessageType.initMessage,
+          roomId: roomId,
+          userId: APIServer().localUserID(),
+        ),      );
+  }
       emit(ChatMessagesLoaded(await chatMsgRepo.getRecentMessages(
-        roomId,
-        userId: APIServer().localUserID(),
-      )));
-  } 
+      roomId,
+      userId: APIServer().localUserID(),
+    )));
+  }
 
   /// Page load event handler
   Future<void> _getRecentEventHandler(event, emit) async {
