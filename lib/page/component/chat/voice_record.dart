@@ -17,7 +17,7 @@ class VoiceRecord extends StatefulWidget {
   final Function(String text) onFinished;
   final Function() onStart;
   const VoiceRecord(
-      {Key? key, required this.onFinished, required this.onStart});
+      {super.key, required this.onFinished, required this.onStart});
 
   @override
   State<VoiceRecord> createState() => _VoiceRecordState();

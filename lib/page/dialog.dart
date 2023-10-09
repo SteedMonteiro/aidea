@@ -618,7 +618,7 @@ class _FullScreenDialog extends StatelessWidget {
   final List<Widget>? actions;
 
   const _FullScreenDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.actions,

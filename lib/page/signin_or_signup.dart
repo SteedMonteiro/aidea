@@ -238,4 +238,177 @@ class _SigninOrSignupScreenState extends State<SigninOrSignupScreen> {
             ),
           ),
         ),
-        const SizedBox
+const SizedBox(height: 10),
+// Verification Code
+Padding(
+  padding:
+      const EdgeInsets.only(left: 15.0, right: 5.0, top: 15, bottom: 0),
+  child: VerifyCodeInput(
+    controller: _verificationCodeController,
+    onVerifyCodeSent: (id) {
+      verifyCodeId = id;
+    },
+    sendVerifyCode: () {
+      return APIServer().sendSigninOrSignupVerifyCode(
+        widget.username,
+        verifyType: phoneNumberValidator.hasMatch(widget.username)
+            ? 'sms'
+            : 'email',
+        isSignup: widget.isSignup,
+      );
+    },
+    sendCheck: () {
+      return true;
+    },
+  ),
+),
+
+// Invitation Code
+if (widget.isSignup)
+  Padding(
+    padding: const EdgeInsets.only(
+        left: 15.0, right: 15.0, top: 15, bottom: 0),
+    child: TextFormField(
+      controller: _inviteCodeController,
+      inputFormatters: [
+        FilteringTextInputFormatter.singleLineFormatter
+      ],
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        enabledBorder: const OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Color.fromARGB(200, 192, 192, 192)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: customColors.linkColor ?? Colors.green),
+        ),
+        floatingLabelStyle:
+            TextStyle(color: customColors.linkColor ?? Colors.green),
+        isDense: true,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        labelText: AppLocale.inviteCode.getString(context),
+        labelStyle: const TextStyle(fontSize: 17),
+        hintText: AppLocale.inviteCodeInputTips.getString(context),
+        hintStyle: TextStyle(
+          color: customColors.textfieldHintColor,
+          fontSize: 15,
+        ),
+      ),
+    ),
+  ),
+
+const SizedBox(height: 15),
+// Create Account or Sign In
+Container(
+  height: 45,
+  width: double.infinity,
+  margin: const EdgeInsets.symmetric(horizontal: 15),
+  decoration: BoxDecoration(
+    color: customColors.linkColor,
+    borderRadius: BorderRadius.circular(8),
+  ),
+  child: TextButton(
+    onPressed: onCreateSubmit,
+    child: Text(
+      widget.isSignup
+          ? AppLocale.createAccount.getString(context)
+          : AppLocale.signIn.getString(context),
+      style: const TextStyle(color: Colors.white, fontSize: 18),
+    ),
+  ),
+),
+if (!widget.isSignup)
+  Container(
+    padding: const EdgeInsets.only(left: 10, right: 10),
+    width: double.infinity,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton(
+          onPressed: () {
+            setState(() {
+              signInMethod = 'password';
+            });
+          },
+          child: Text(
+            'Sign In with Password',
+            style: TextStyle(
+              color: customColors.weakLinkColor?.withAlpha(120),
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+],
+);
+
+onCreateSubmit() {
+FocusScope.of(context).requestFocus(FocusNode());
+
+if (verifyCodeId == '') {
+  showErrorMessage(AppLocale.pleaseGetVerifyCodeFirst.getString(context));
+  return;
+}
+
+final verificationCode = _verificationCodeController.text.trim();
+if (verificationCode == '') {
+  showErrorMessage(AppLocale.verifyCodeRequired.getString(context));
+  return;
+}
+if (verificationCode.length != 6) {
+  showErrorMessage(AppLocale.verifyCodeFormatError.getString(context));
+  return;
+}
+
+final inviteCode = _inviteCodeController.text.trim();
+if (inviteCode != '' && inviteCode.length > 20) {
+  showErrorMessage(AppLocale.inviteCodeFormatError.getString(context));
+  return;
+}
+
+final cancel = BotToast.showCustomLoading(
+  toastBuilder: (cancel) {
+    return LoadingIndicator(
+      message: AppLocale.processingWait.getString(context),
+    );
+  },
+  allowClick: false,
+  duration: const Duration(seconds: 120),
+);
+
+APIServer()
+    .signInOrUp(
+  username: widget.username,
+  inviteCode: inviteCode,
+  verifyCodeId: verifyCodeId,
+  verifyCode: verificationCode,
+)
+    .then((value) async {
+  await widget.settings.set(settingAPIServerToken, value.token);
+  await widget.settings.set(settingUserInfo, jsonEncode(value));
+
+  if (value.needBindPhone) {
+    if (context.mounted) {
+      context.push('/bind-phone').then((value) async {
+        if (value == 'logout') {
+          await widget.settings.set(settingAPIServerToken, '');
+          await widget.settings.set(settingUserInfo, '');
+        }
+      });
+    }
+
+    return;
+  } else {
+    if (context.mounted) {
+      context.go(
+          '/chat-chat?show_initial_dialog=${value.isNewUser ? "true" : "false"}&reward=${value.reward}');
+    }
+  }
+}).catchError((e) {
+  showErrorMessage(resolveError(context, e));
+}).whenComplete(() => cancel());
+}
+}

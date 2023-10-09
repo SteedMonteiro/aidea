@@ -301,4 +301,67 @@ class _CreativeModelScreenState extends State<CreativeModelScreen> {
                                           color: Colors.amber,
                                         ),
                                         child: Center(
-                                         
+        child: Text(
+  e.answer ?? '',
+  textAlign: TextAlign.center,
+  maxLines: 4,
+  style: const TextStyle(
+    color: Colors.red,
+    fontSize: 10,
+    overflow: TextOverflow.ellipsis,
+  ),
+),
+),
+),
+Positioned(
+right: 10,
+bottom: 10,
+child: Container(
+padding: const EdgeInsets.symmetric(
+horizontal: 5,
+vertical: 3,
+),
+decoration: BoxDecoration(
+color: customColors.backgroundColor
+?.withAlpha(200),
+borderRadius:
+BorderRadius.circular(8),
+),
+child: Text(
+'${DateFormat('HH:mm').format(e.createdAt!.toLocal())}@${e.userId}#${e.id}',
+style: TextStyle(
+fontSize: 12,
+color: customColors.weakTextColor,
+),
+),
+),
+)
+],
+),
+),
+);
+},
+).toList(),
+);
+}
+return const Center(child: CircularProgressIndicator());
+},
+),
+),
+),
+],
+),
+),
+),
+);
+}
+
+int _calCrossAxisCount(BuildContext context) {
+double width = MediaQuery.of(context).size.width;
+if (width > CustomSize.maxWindowSize) {
+width = CustomSize.maxWindowSize;
+}
+return (width / 220).round();
+}
+}
+          

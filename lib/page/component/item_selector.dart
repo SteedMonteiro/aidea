@@ -8,7 +8,7 @@ class ItemSelector extends StatelessWidget {
   final String title;
 
   const ItemSelector(
-      {Key? key, required this.title, required this.data, this.selected});
+      {super.key, required this.title, required this.data, this.selected});
 
   @override
   Widget build(BuildContext context) {

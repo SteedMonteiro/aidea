@@ -219,4 +219,100 @@ class DeepAIRepository {
   //     ),
   //     Model(
   //       'cyberpunk-portrait-generator',
- 
+ //       'deepai',
+  //       category: modelTypeDeepAI,
+  //       description: 'Generate futuristic sci-fi character images',
+  //     ),
+  //   ];
+  // }
+
+  Future<DeepAIPaintResult> painting(
+    String model,
+    String prompt, {
+    int gridSize = 1,
+    int width = 512,
+    int height = 512,
+    String? negativePrompt,
+  }) async {
+    var params = <String, dynamic>{
+      "text": prompt,
+      "grid_size": gridSize.toString(),
+      "width": width.toString(),
+      "height": height.toString(),
+    };
+    if (negativePrompt != null) {
+      params['negative_prompt'] = negativePrompt;
+    }
+
+    var url = selfHosted
+        ? Uri.parse('$serverURL/api/$model')
+        : Uri.parse('$serverURL/v1/deepai/images/$model/text-to-image');
+
+    var headers = <String, String>{};
+    headers.addAll(_headers);
+    if (selfHosted) {
+      headers['api-key'] = apiKey;
+    } else {
+      headers['Authorization'] = 'Bearer $apiKey';
+    }
+
+    var resp = await http.post(
+      url,
+      body: params,
+      headers: headers,
+    );
+
+    if (resp.statusCode != 200) {
+      return Future.error((resp.body as Map<String, dynamic>)['error']);
+    }
+
+    var ret = jsonDecode(resp.body) as Map<String, dynamic>;
+
+    return Future.value(DeepAIPaintResult(ret['id'], ret['output_url']));
+  }
+
+  Future<String> paintingAsync(
+    String model,
+    String prompt, {
+    int gridSize = 1,
+    int width = 512,
+    int height = 512,
+    String? negativePrompt,
+  }) async {
+    var params = <String, dynamic>{
+      "text": prompt,
+      "grid_size": gridSize.toString(),
+      "width": width.toString(),
+      "height": height.toString(),
+    };
+    if (negativePrompt != null) {
+      params['negative_prompt'] = negativePrompt;
+    }
+
+    var url =
+        Uri.parse('$serverURL/v1/deepai/images/$model/text-to-image-async');
+
+    var headers = <String, String>{};
+    headers.addAll(_headers);
+    headers['Authorization'] = 'Bearer $apiKey';
+
+    var resp = await http.post(
+      url,
+      body: params,
+      headers: headers,
+    );
+
+    if (resp.statusCode != 200) {
+      return Future.error((resp.body as Map<String, dynamic>)['error']);
+    }
+
+    return Future.value(jsonDecode(resp.body)['task_id']);
+  }
+}
+
+class DeepAIPaintResult {
+  final String id;
+  final String url;
+
+  DeepAIPaintResult(this.id, this.url);
+}

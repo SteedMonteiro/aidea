@@ -14,7 +14,7 @@ import 'package:sizer/sizer.dart';
 class CreativeIslandGalleryScreen extends StatefulWidget {
   final SettingRepository setting;
 
-  const CreativeIslandGalleryScreen({Key? key, required this.setting});
+  const CreativeIslandGalleryScreen({super.key, required this.setting});
 
   @override
   State<CreativeIslandGalleryScreen> createState() =>

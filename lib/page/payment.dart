@@ -195,6 +195,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
               textScaleFactor: 0.9,
             ),
           ),
+          // TextButton(
+          //   style: ButtonStyle(
+          //     overlayColor: MaterialStateProperty.all(Colors.transparent),
+          //   ),
+          //   onPressed: () {
+          //     _startPaymentLoading();
+          //     // Restore purchases
+          //     InAppPurchase.instance.restorePurchases().whenComplete(() {
+          //       _closePaymentLoading();
+          //       showSuccessMessage('Restore completed');
+          //     });
+          //   },
+          //   child: Text(
+          //     'Restore Purchases',
+          //     style: TextStyle(color: customColors.weakLinkColor),
+          //     textScaleFactor: 0.9,
+          //   ),
+          // ),
+
         ],
       ),
       backgroundColor: customColors.backgroundContainerColor,

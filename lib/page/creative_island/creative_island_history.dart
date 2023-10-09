@@ -325,4 +325,13 @@ class _CreativeIslandHistoryPageState extends State<CreativeIslandHistoryPage> {
     }
 
     if (his.isProcessing) {
-      return const Icon
+         return const Icon(
+        Icons.hourglass_top,
+        size: 18,
+        color: Colors.blue,
+      );
+    }
+
+    return const SizedBox();
+  }
+}

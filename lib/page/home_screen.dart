@@ -21,7 +21,7 @@ import 'package:go_router/go_router.dart';
 
 class CharactersScreen extends StatefulWidget {
   final SettingRepository setting;
-  const CharactersScreen({Key? key, required this.setting}) : super(key: key);
+  const CharactersScreen({super.key, required this.setting}) : super(key: key);
 
   @override
   State<CharactersScreen> createState() => _CharactersScreenState();

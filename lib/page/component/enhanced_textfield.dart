@@ -10,7 +10,7 @@ class InputSelector extends StatelessWidget {
   final VoidCallback onTap;
 
   const InputSelector({
-    Key? key,
+    super.key,
     required this.title,
     required this.onTap,
   });
@@ -67,7 +67,7 @@ class EnhancedTextField extends StatefulWidget {
   final Widget? middleWidget;
 
   const EnhancedTextField({
-    Key? key,
+    super.key,
     required this.customColors,
     this.maxLength,
     this.autofocus,

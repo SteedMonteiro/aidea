@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class BottomSheetBox extends StatelessWidget {
   final Widget child;
-  const BottomSheetBox({Key? key, required this.child});
+  const BottomSheetBox({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

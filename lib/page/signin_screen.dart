@@ -180,4 +180,279 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
 
                   // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 15
+//   padding: const EdgeInsets.symmetric(horizontal: 15),
+//   child: Column(
+//     children: [
+//       Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           // Forgot Password
+//           TextButton(
+//             onPressed: () {
+//               context.push(
+//                   '/retrieve-password?username=${_usernameController.text.trim()}');
+//             },
+//             child: Text(
+//               AppLocale.forgotPassword.getString(context),
+//               style: TextStyle(
+//                 color: customColors.weakLinkColor,
+//                 fontSize: 14,
+//               ),
+//             ),
+//           ),
+//           // Create Account
+//           TextButton(
+//               onPressed: () {
+//                 context
+//                     .push(
+//                         '/signup?username=${_usernameController.text.trim()}')
+//                     .then((value) {
+//                   if (value != null) {
+//                     _usernameController.text = value as String;
+//                   }
+//                 });
+//               },
+//               child: Text(
+//                 AppLocale.createAccount.getString(context),
+//                 style: TextStyle(
+//                   color: customColors.linkColor,
+//                   fontSize: 14,
+//                 ),
+//               )),
+//         ],
+//       ),
+//     ],
+//   ),
+// ),
+_buildUserTermsAndPrivacy(customColors, context),
+const SizedBox(height: 50),
+// Third-Party Sign-In
+BlocBuilder<VersionBloc, VersionState>(
+  builder: (context, state) {
+    return _buildThirdPartySignInButtons(
+        context, customColors);
+  },
+),
+const SizedBox(height: 10),
+],
+),
+),
+),
+);
+}
+
+Row _buildUserTermsAndPrivacy(
+CustomColors customColors, BuildContext context) {
+return Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Transform.scale(
+      scale: 0.75,
+      child: Theme(
+        data: ThemeData(
+          unselectedWidgetColor: customColors.weakTextColor?.withAlpha(180),
+        ),
+        child: Checkbox(
+          activeColor: customColors.linkColor,
+          value: agreeProtocol,
+          onChanged: (agree) {
+            setState(() {
+              agreeProtocol = !agreeProtocol;
+            });
+          },
+        ),
+      ),
+    ),
+    RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: AppLocale.readAndAgree.getString(context),
+            style: TextStyle(
+              color: customColors.weakTextColor?.withAlpha(80),
+              fontSize: 12,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                setState(() {
+                  agreeProtocol = !agreeProtocol;
+                });
+              },
+          ),
+          TextSpan(
+            text: '《${AppLocale.userTerms.getString(context)}》',
+            style: TextStyle(
+              color: customColors.linkColor?.withAlpha(150),
+              fontSize: 12,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                launchUrl(
+                    Uri.parse('$apiServerURL/public/info/terms-of-user'));
+              },
+          ),
+          TextSpan(
+            text: AppLocale.andWord.getString(context),
+            style: TextStyle(
+              color: customColors.weakTextColor?.withAlpha(80),
+              fontSize: 12,
+            ),
+          ),
+          TextSpan(
+            text: '《${AppLocale.privacyPolicy.getString(context)}》',
+            style: TextStyle(
+              color: customColors.linkColor?.withAlpha(150),
+              fontSize: 12,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                launchUrl(
+                    Uri.parse('$apiServerURL/public/info/privacy-policy'));
+              },
+          ),
+        ],
+      ),
+    )
+  ],
+);
+}
+
+Widget _buildThirdPartySignInButtons(
+BuildContext context, CustomColors customColors) {
+final signInItems = <Widget>[
+  if (Ability().enableApplePay &&
+      (PlatformTool.isIOS() ||
+          PlatformTool.isAndroid() ||
+          PlatformTool.isMacOS()))
+    SignInButton(
+      Buttons.appleDark,
+      mini: true,
+      shape: const CircleBorder(),
+      onPressed: onAppleSigninSubmit,
+    ),
+];
+
+if (signInItems.isEmpty) {
+  return Container();
+}
+
+return Column(
+  children: [
+    Text(
+      'Other Sign-In Methods',
+      style: TextStyle(
+        fontSize: 13,
+        color: customColors.weakTextColor?.withAlpha(80),
+      ),
+    ),
+    const SizedBox(height: 8),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: signInItems,
+    ),
+  ],
+);
+}
+
+bool processing = false;
+
+onAppleSigninSubmit() async {
+if (processing) {
+  return;
+}
+
+if (!agreeProtocol) {
+  showErrorMessage(AppLocale.pleaseReadAgreeProtocol.getString(context));
+  return;
+}
+
+processing = true;
+
+try {
+  final credential = await SignInWithApple.getAppleIDCredential(
+    webAuthenticationOptions: WebAuthenticationOptions(
+      clientId: 'cc.aicode.askaide',
+      redirectUri: Uri.parse(
+          'https://ai-api.aicode.cc/v1/callback/auth/sign_in_with_apple'),
+    ),
+    scopes: [
+      AppleIDAuthorizationScopes.email,
+      AppleIDAuthorizationScopes.fullName,
+    ],
+  );
+
+  APIServer()
+      .signInWithApple(
+    userIdentifier: credential.userIdentifier ?? '',
+    authorizationCode: credential.authorizationCode,
+    identityToken: credential.identityToken,
+    familyName: credential.familyName,
+    givenName: credential.givenName,
+    email: credential.email,
+  )
+      .then((value) async {
+    await widget.settings.set(settingAPIServerToken, value.token);
+    await widget.settings.set(settingUserInfo, jsonEncode(value));
+
+    HttpClient.cacheManager.clearAll().then((_) {
+      if (value.needBindPhone) {
+        if (context.mounted) {
+          context.push('/bind-phone').then((value) async {
+            if (value == 'logout') {
+              await widget.settings.set(settingAPIServerToken, '');
+              await widget.settings.set(settingUserInfo, '');
+            }
+          });
+        }
+        return;
+      } else {
+        context.go(
+            '/chat-chat?show_initial_dialog=${value.isNewUser ? "true" : "false"}&reward=${value.reward}');
+      }
+    });
+  }).catchError((e) {
+    Logger.instance.e(e);
+    showErrorMessage(AppLocale.signInFailed.getString(context));
+  }).onError((error, stackTrace) {
+    Logger.instance.e(error);
+    showErrorMessage(AppLocale.signInFailed.getString(context));
+  });
+} finally {
+  processing = false;
+}
+}
+
+onSignInSubmit() {
+FocusScope.of(context).requestFocus(FocusNode());
+
+if (processing) {
+  return;
+}
+
+final username = _usernameController.text.trim();
+if (username == '') {
+  showErrorMessage(AppLocale.accountRequired.getString(context));
+  return;
+}
+
+if (!phoneNumberValidator.hasMatch(username) &&
+    !emailValidator.hasMatch(username)) {
+  showErrorMessage(AppLocale.accountFormatError.getString(context));
+  return;
+}
+
+if (!agreeProtocol) {
+  showErrorMessage(AppLocale.pleaseReadAgreeProtocol.getString(context));
+  return;
+}
+
+processing = true;
+
+APIServer().checkPhoneExists(username).then((resp) async {
+  context.push(
+      '/signin-or-signup?username=$username&is_signup=${resp.exist ? "false" : "true"}&sign_in_method=${resp.signInMethod}');
+}).catchError((e) {
+  showErrorMessage(resolveError(context, e));
+}).whenComplete(() => processing = false);
+}
+}

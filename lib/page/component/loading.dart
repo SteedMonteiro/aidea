@@ -4,7 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoadingIndicator extends StatelessWidget {
   final String? message;
-  const LoadingIndicator({Key? key, this.message});
+  const LoadingIndicator({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {

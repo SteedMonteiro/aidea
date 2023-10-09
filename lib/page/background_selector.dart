@@ -18,7 +18,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 class BackgroundSelectorScreen extends StatefulWidget {
   final SettingRepository setting;
 
-  const BackgroundSelectorScreen({Key? key, required this.setting})
+  const BackgroundSelectorScreen({super.key, required this.setting})
       : super(key: key);
 
   @override

@@ -610,4 +610,81 @@ Widget buildSelectModeToolbars(
           icon: Icon(Icons.select_all_outlined, color: customColors.linkColor),
           label: Text(
             AppLocale.selectAll.getString(context),
-            style: TextStyle(color: customColors.linkColor
+style: TextStyle(color: customColors.linkColor),
+),
+TextButton.icon(
+  onPressed: () {
+    if (chatPreviewController.selectedMessageIds.isEmpty) {
+      showErrorMessageEnhanced(
+          context, AppLocale.noMessageSelected.getString(context));
+      return;
+    }
+
+    openConfirmDialog(
+      context,
+      AppLocale.confirmDelete.getString(context),
+      () {
+        final ids = chatPreviewController.selectedMessageIds.toList();
+        if (ids.isNotEmpty) {
+          context
+              .read<ChatMessageBloc>()
+              .add(ChatMessageDeleteEvent(ids));
+
+          showErrorMessageEnhanced(
+              context, AppLocale.operateSuccess.getString(context));
+
+          chatPreviewController.exitSelectMode();
+        }
+      },
+      danger: true,
+    );
+  },
+  icon: Icon(Icons.delete, color: customColors.linkColor),
+  label: Text(
+    AppLocale.delete.getString(context),
+    style: TextStyle(color: customColors.linkColor),
+  ),
+),
+],
+);
+}
+
+/// Build chat settings dropdown menu
+Widget buildChatMoreMenu(
+BuildContext context,
+int chatRoomId, {
+bool useLocalContext = true,
+bool withSetting = true,
+}) {
+var customColors = Theme.of(context).extension<CustomColors>()!;
+
+return EnhancedPopupMenu(
+items: [
+  EnhancedPopupMenuItem(
+    title: AppLocale.newChat.getString(context),
+    icon: Icons.post_add,
+    iconColor: Colors.blue,
+    onTap: (ctx) {
+      handleResetContext(useLocalContext ? ctx : context);
+    },
+  ),
+  EnhancedPopupMenuItem(
+    title: AppLocale.clearChatHistory.getString(context),
+    icon: Icons.delete_forever,
+    iconColor: Colors.red,
+    onTap: (ctx) {
+      handleClearHistory(useLocalContext ? ctx : context);
+    },
+  ),
+  if (withSetting)
+    EnhancedPopupMenuItem(
+      title: AppLocale.settings.getString(context),
+      icon: Icons.settings,
+      iconColor: customColors.linkColor,
+      onTap: (_) {
+        context.push('/room/$chatRoomId/setting');
+      },
+    ),
+],
+);
+}

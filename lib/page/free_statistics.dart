@@ -16,7 +16,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 class FreeStatisticsPage extends StatefulWidget {
   final SettingRepository setting;
 
-  const FreeStatisticsPage({Key? key, required this.setting}) : super(key: key);
+  const FreeStatisticsPage({super.key, required this.setting}) : super(key: key);
 
   @override
   State<FreeStatisticsPage> createState() => _FreeStatisticsPageState();

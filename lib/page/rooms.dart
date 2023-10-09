@@ -18,7 +18,7 @@ import 'package:go_router/go_router.dart';
 
 class RoomItem extends StatelessWidget {
   final Room room;
-  const RoomItem({Key? key, required this.room}) : super(key: key);
+  const RoomItem({super.key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

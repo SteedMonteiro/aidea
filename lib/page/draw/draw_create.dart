@@ -280,4 +280,706 @@ class _DrawCreateScreenState extends State<DrawCreateScreen> {
                     Row(
                       children: [
                         Text(
-                          AppLocale.smartOptimization.getString(context
+AppLocale.smartOptimization.getString(context),
+style: const TextStyle(fontSize: 16),
+),
+const SizedBox(width: 5),
+InkWell(
+  onTap: () {
+    showBeautyDialog(
+      context,
+      type: QuickAlertType.info,
+      text: AppLocale.onceEnabledSmartOptimization
+          .getString(context),
+      confirmBtnText:
+          AppLocale.gotIt.getString(context),
+      showCancelBtn: false,
+    );
+  },
+  child: Icon(
+    Icons.help_outline,
+    size: 16,
+    color: customColors.weakLinkColor?.withAlpha(150),
+  ),
+),
+],
+),
+CupertinoSwitch(
+activeColor: customColors.linkColor,
+value: enableAIRewrite,
+onChanged: (value) {
+setState(() {
+  enableAIRewrite = value;
+});
+},
+),
+],
+),
+],
+),
+
+if (showAdvancedOptions)
+ColumnBlock(
+innerPanding: 10,
+padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+children: [
+if (widget.mode == 'image-to-image' &&
+capacity != null &&
+capacity!.showPromptForImage2Image)
+  ...buildPromptField(customColors),
+// Reverse prompt text
+if ((capacity != null && capacity!.showNegativeText) ||
+forceShowNegativePrompt)
+  EnhancedTextField(
+    labelPosition: LabelPosition.top,
+    labelText: AppLocale.excludeContents.getString(context),
+    customColors: customColors,
+    controller: negativePromptController,
+    textAlignVertical: TextAlignVertical.top,
+    hintText: AppLocale.unwantedElements.getString(context),
+    maxLength: 500,
+    maxLines: 5,
+    minLines: 3,
+    showCounter: false,
+  ),
+// Original image similarity
+if (capacity != null &&
+capacity!.showImageStrength &&
+widget.mode == 'image-to-image')
+  Row(
+    children: [
+      Row(
+        children: [
+          Text(AppLocale.imagination.getString(context)),
+          const SizedBox(width: 5),
+          InkWell(
+            onTap: () {
+              showBeautyDialog(
+                context,
+                type: QuickAlertType.info,
+                text:
+                    'Imagination\n\nIncrease imagination for more creative content. Decrease imagination for results closer to the reference image.',
+                confirmBtnText:
+                    AppLocale.gotIt.getString(context),
+                showCancelBtn: false,
+              );
+            },
+            child: Icon(
+              Icons.help_outline,
+              size: 16,
+              color: customColors.weakLinkColor?.withAlpha(150),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: Slider(
+          value: imageStrength ?? 0,
+          min: 0,
+          max: 1,
+          divisions: 20,
+          label: imageStrengthText(),
+          activeColor: customColors.linkColor,
+          onChanged: (value) {
+            setState(() {
+              imageStrength = value;
+            });
+          },
+        ),
+      ),
+      Text(
+        ((imageStrength ?? 0) * 100).toStringAsFixed(0),
+        style: TextStyle(
+          fontSize: 12,
+          color: customColors.weakTextColor,
+        ),
+      ),
+    ],
+  ),
+// Image count
+if (capacity != null &&
+capacity!.showImageCount &&
+widget.mode != 'image-to-image')
+  EnhancedInput(
+    title: Text(
+      AppLocale.imageCount.getString(context),
+      style: TextStyle(
+        color: customColors.textfieldLabelColor,
+        fontSize: 16,
+      ),
+    ),
+    value: Text(generationImageCount.toString()),
+    onPressed: () {
+      openListSelectDialog(
+        context,
+        <SelectorItem>[
+          SelectorItem(
+              const Text('1', textAlign: TextAlign.center), 1),
+          SelectorItem(
+              const Text('2', textAlign: TextAlign.center), 2),
+          SelectorItem(
+              const Text('3', textAlign: TextAlign.center), 3),
+          SelectorItem(
+              const Text('4', textAlign: TextAlign.center), 4),
+        ],
+        (value) {
+          setState(() {
+            generationImageCount = value.value;
+          });
+          return true;
+        },
+        heightFactor: 0.4,
+        value: generationImageCount,
+      );
+    },
+  ),
+// Image size
+if (capacity != null &&
+capacity!.allowRatios.isNotEmpty &&
+widget.mode != 'image-to-image')
+  EnhancedInput(
+    title: Text(
+      AppLocale.imageSize.getString(context),
+      style: TextStyle(
+        color: customColors.textfieldLabelColor,
+        fontSize: 16,
+      ),
+    ),
+    value: ImageSize(aspectRatio: selectedImageSize),
+    onPressed: () {
+      openListSelectDialog(
+        context,
+        capacity!.allowRatios
+            .map((e) =>
+                SelectorItem(ImageSize(aspectRatio: e), e))
+            .toList(),
+        (value) {
+          setState(() {
+            selectedImageSize = value.value;
+          });
+
+          return true;
+        },
+        value: selectedImageSize,
+        heightFactor: 0.3,
+        horizontal: true,
+        horizontalCount: capacity!.allowRatios.length > 3
+            ? 4
+            : capacity!.allowRatios.length,
+      );
+    },
+  ),
+],
+),
+if (showAdvancedOptions)
+ColumnBlock(
+padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+children: [
+// Model
+if (capacity != null && capacity!.vendorModels.isNotEmpty)
+  EnhancedInput(
+    title: Text(
+      AppLocale.model.getString(context),
+      style: TextStyle(
+        color: customColors.textfieldLabelColor,
+        fontSize: 16,
+      ),
+    ),
+    value: Container(
+      alignment: Alignment.centerRight,
+      width: MediaQuery.of(context).size.width - 200,
+      child: Text(
+        selectedModel?.name ?? 'Auto',
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
+    onPressed: () {
+      openListSelectDialog(
+        context,
+        [
+          SelectorItem(const Text('Auto'), null),
+          ...capacity!.vendorModels
+              .map((e) => SelectorItem(
+                    Stack(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(
+                              top: 25, bottom: 10),
+                          alignment: Alignment.center,
+                          child: Text(
+                            e.name,
+                            textAlign: TextAlign.center,
+                            style:
+                                const TextStyle(fontSize: 14),
+                            textWidthBasis:
+                                TextWidthBasis.longestLine,
+                          ),
+                        ),
+                        if (e.vendor != null &&
+                            e.vendor!.isNotEmpty)
+                          Positioned(
+                            left: 0,
+                            top: 0,
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(
+                                horizontal: 5,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(5),
+                                color: modelTypeTagColors[
+                                    e.vendor!],
+                              ),
+                              child: Text(
+                                e.vendor!,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    e.id,
+                    search: (keyword) {
+                      return e.name.contains(keyword) ||
+                          (e.vendor != null &&
+                              e.vendor!.contains(keyword));
+                    },
+                  ))
+              .toList(),
+        ],
+        (value) {
+          setState(() {
+            if (value.value == null) {
+              selectedModel = null;
+              return;
+            }
+
+            selectedModel = capacity!.vendorModels
+                .firstWhere((e) => e.id == value.value);
+          });
+          return true;
+        },
+        heightFactor: 0.8,
+        value: selectedModel?.id,
+        enableSearch: true,
+        innerPadding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 0,
+        ),
+      );
+    },
+  ),
+if (capacity != null &&
+capacity!.showUpscaleBy &&
+capacity!.allowUpscaleBy.isNotEmpty &&
+(selectedModel?.upscale ?? false))
+  EnhancedInput(
+    title: Text(
+      'Upscale',
+      style: TextStyle(
+        color: customColors.textfieldLabelColor,
+        fontSize: 16,
+      ),
+    ),
+    value: Text(upscaleBy ?? 'Auto'),
+    onPressed: () {
+      openListSelectDialog(
+        context,
+        [
+          SelectorItem(const Text('Auto'), null),
+          ...capacity!.allowUpscaleBy
+              .map((e) => SelectorItem(Text(e), e))
+              .toList(),
+        ],
+        (value) {
+          setState(() {
+            upscaleBy = value.value;
+          });
+          return true;
+        },
+        heightFactor: 0.5,
+        value: upscaleBy,
+      );
+    },
+  ),
+
+// Seed
+if (capacity != null && capacity!.showSeed)
+  EnhancedTextField(
+    controller: seedController,
+    customColors: customColors,
+    labelText: 'Seed',
+    labelPosition: LabelPosition.left,
+    showCounter: false,
+    keyboardType: TextInputType.number,
+    inputFormatters: [
+      FilteringTextInputFormatter.digitsOnly,
+    ],
+    hintText: 'Default: Random',
+    textDirection: TextDirection.rtl,
+  ),
+],
+),
+
+// Generate button
+const SizedBox(height: 20),
+Row(
+children: [
+if (capacity != null)
+  EnhancedButton(
+    title: showAdvancedOptions
+        ? AppLocale.simpleMode.getString(context)
+        : AppLocale.professionalMode.getString(context),
+    width: 120,
+    backgroundColor: Colors.transparent,
+    color: customColors.weakLinkColor,
+    fontSize: 15,
+    icon: Icon(
+      showAdvancedOptions ? Icons.unfold_less : Icons.unfold_more,
+      color: customColors.weakLinkColor,
+      size: 15,
+    ),
+    onPressed: () {
+      setState(() {
+        showAdvancedOptions = !showAdvancedOptions;
+      });
+    },
+  ),
+if (capacity != null) const SizedBox(width: 10),
+Expanded(
+flex: 1,
+child: EnhancedButton(
+  title: AppLocale.generate.getString(context),
+  onPressed: onGenerate,
+),
+),
+],
+),
+const SizedBox(height: 20),
+],
+),
+);
+}
+
+List<Widget> buildPromptField(CustomColors customColors) {
+return [
+EnhancedTextField(
+labelPosition: LabelPosition.top,
+labelText: AppLocale.yourIdeas.getString(context),
+customColors: customColors,
+controller: promptController,
+textAlignVertical: TextAlignVertical.top,
+hintText: AppLocale.keywordsSeparatedByCommas.getString(context),
+maxLines: 10,
+minLines: 2,
+maxLength: 460,
+showCounter: false,
+inputSelector: IconButton(
+  onPressed: () {
+    openModalBottomSheet(
+      context,
+      (context) {
+        return PromptTagsSelector(
+          selectedTags: selectedTags,
+          onSubmit: (tags) {
+            setState(() {
+              selectedTags = tags;
+            });
+            context.pop();
+          },
+        );
+      },
+      heightFactor: 0.8,
+      useSafeArea: true,
+    );
+  },
+  icon: Icon(
+    Icons.lightbulb_outline,
+    color: customColors.linkColor,
+    size: 16,
+  ),
+),
+middleWidget: Container(
+width: double.infinity,
+margin: const EdgeInsets.only(bottom: 30),
+child: Wrap(
+  spacing: 3,
+  runSpacing: 3,
+  children: selectedTags
+      .map(
+        (e) => Tag(
+          name: e.name,
+          backgroundColor: customColors.linkColor,
+          textColor: Colors.white,
+          fontsize: 10,
+          onDeleted: () {
+            setState(() {
+              selectedTags.remove(e);
+            });
+          },
+        ),
+      )
+      .toList(),
+),
+),
+bottomButton: Row(
+children: [
+Icon(
+  Icons.shuffle,
+  size: 13,
+  color: customColors.linkColor?.withAlpha(150),
+),
+const SizedBox(width: 5),
+Text(
+  AppLocale.random.getString(context),
+  style: TextStyle(
+    color: customColors.linkColor?.withAlpha(150),
+    fontSize: 13,
+  ),
+),
+],
+),
+bottomButtonOnPressed: () async {
+final examples = await APIServer().exampleByTag('image-generation');
+if (examples.isEmpty) {
+  return;
+}
+
+// Randomly select an example
+final example = examples[Random().nextInt(examples.length)];
+promptController.text = example.text;
+},
+),
+];
+}
+
+List<PromptTag> selectedTags = [];
+
+void onGenerate() async {
+FocusScope.of(context).requestFocus(FocusNode());
+HapticFeedbackHelper.mediumImpact();
+
+final prompt = promptController.text.trim();
+if (prompt.isEmpty && widget.mode == 'text-to-image') {
+showErrorMessage(AppLocale.contentIsRequired.getString(context));
+return;
+}
+
+if (widget.mode == 'image-to-image' &&
+selectedImagePath == null &&
+selectedImageData == null) {
+showErrorMessage(AppLocale.selectReferenceImage.getString(context));
+return;
+}
+
+final seed = int.tryParse(seedController.text);
+if (seed != null && (seed < 0 || seed > 2147483647)) {
+showErrorMessage('Seed must be in the range of 0 to 2147483647');
+return;
+}
+
+var params = <String, dynamic>{
+'prompt': prompt,
+'negative_prompt': negativePromptController.text,
+'prompt_tags': selectedTags.map((e) => e.value).join(','),
+'filter_id': selectedStyle == null ? null : selectedStyle!.id,
+'image_ratio': selectedImageSize,
+'image_count': generationImageCount,
+'ai_rewrite': enableAIRewrite,
+'gallery_copy_id': widget.galleryCopyId,
+'upscale_by': upscaleBy,
+'model': selectedModel?.id,
+'image_strength': imageStrength,
+'seed': seed,
+};
+
+if (selectedImagePath != null && selectedImagePath!.isNotEmpty) {
+params['image'] =
+'https://${selectedImagePath ?? 'demo'}'; // Only for testing consumption, will be replaced with URL after upload
+}
+
+if (selectedImageData != null && selectedImageData!.isNotEmpty) {
+params['image'] = "https://fake-image-url.com";
+}
+
+final cancel = BotToast.showCustomLoading(
+toastBuilder: (cancel) {
+  return const LoadingIndicator(
+    message: 'Thinking, please wait...',
+  );
+},
+allowClick: false,
+duration: const Duration(seconds: 15),
+);
+
+request(int waitDuration) async {
+try {
+  cancel();
+
+  if (params['image'] != null && params['image'] != '') {
+    final cancel = BotToast.showCustomLoading(
+      toastBuilder: (cancel) {
+        return const LoadingIndicator(
+          message: 'Uploading image, please wait...',
+        );
+      },
+      allowClick: false,
+    );
+
+    if (selectedImagePath != null && selectedImagePath!.isNotEmpty) {
+      final uploadRes = await ImageUploader(widget.setting)
+          .upload(selectedImagePath!)
+          .whenComplete(() => cancel());
+      params['image'] = uploadRes.url;
+    } else if (selectedImageData != null &&
+        selectedImageData!.isNotEmpty) {
+      final uploadRes = await ImageUploader(widget.setting)
+          .uploadData(selectedImageData!)
+          .whenComplete(() => cancel());
+      params['image'] = uploadRes.url;
+    }
+  }
+
+  final taskId =
+      await APIServer().creativeIslandCompletionsAsyncV2(params);
+
+  stopPeriodQuery = false;
+
+  // ignore: use_build_context_synchronously
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => CreativeIslandResultDialog(
+        future: Future.delayed(const Duration(seconds: 10), () async {
+          return await queryCompletionTaskStatus(
+            taskId: taskId,
+            retryTimes: 0,
+            delaySeconds: 3,
+            params: params,
+          );
+        }),
+        waitDuration: waitDuration,
+      ),
+    ),
+  ).whenComplete(() {
+    stopPeriodQuery = true;
+  });
+} catch (e) {
+  stopPeriodQuery = true;
+  cancel();
+  // ignore: use_build_context_synchronously
+  showErrorMessageEnhanced(context, e);
+}
+}
+
+try {
+final res = await APIServer().creativeIslandCompletionsEvaluateV2(params);
+if (!res.enough) {
+  if (context.mounted) {
+    showBeautyDialog(
+      context,
+      type: QuickAlertType.warning,
+      text: AppLocale.quotaExceeded.getString(context),
+      confirmBtnText: 'Buy Now',
+      showCancelBtn: true,
+      onConfirmBtnTap: () {
+        context.pop();
+        context.push('/payment');
+      },
+    );
+  }
+  return;
+}
+if (res.cost > 0) {
+  cancel();
+  // ignore: use_build_context_synchronously
+  openConfirmDialog(
+    context,
+    'This request is estimated to consume ${res.cost} Wisdom Fruits. Do you want to proceed?',
+    () => request(res.waitDuration ?? 60),
+  );
+} else {
+  request(res.waitDuration ?? 60);
+}
+} catch (e) {
+cancel();
+showErrorMessageEnhanced(context, e);
+}
+}
+
+String imageStrengthText() {
+if (imageStrength == 0 || imageStrength == null) {
+return 'Auto';
+}
+
+if (imageStrength! >= 0.4 && imageStrength! <= 0.6) {
+return 'Moderate (Recommended)';
+}
+
+if (imageStrength! > 0.6 && imageStrength! < 0.9) {
+return 'More Creative';
+}
+
+if (imageStrength! >= 0.9) {
+return 'Fully Creative';
+}
+
+return 'Closer to Reference';
+}
+
+Future<IslandResult> queryCompletionTaskStatus({
+required String taskId,
+required int retryTimes,
+required int delaySeconds,
+Map<String, dynamic>? params,
+}) async {
+if (retryTimes > 60) {
+return Future.error(AppLocale.generateTimeout.getString(context));
+}
+
+final resp = await APIServer().asyncTaskStatus(taskId);
+switch (resp.status) {
+case 'success':
+  if (params != null &&
+      resp.originImage != null &&
+      resp.originImage != '') {
+    params['image'] = resp.originImage;
+  }
+  return IslandResult(
+    result: resp.resources ?? const [],
+    params: params,
+  );
+case 'failed':
+  return Future.error(resp.errors!.join(";"));
+default:
+  if (stopPeriodQuery) {
+    // ignore: use_build_context_synchronously
+    return Future.error(AppLocale.generateTimeout.getString(context));
+  }
+
+  return await Future.delayed(Duration(seconds: delaySeconds), () async {
+    return await queryCompletionTaskStatus(
+      taskId: taskId,
+      retryTimes: retryTimes + 1,
+      delaySeconds: 3,
+      params: params,
+    );
+  });
+}
+}
+
+double _calImageSelectorHeight(BuildContext context) {
+var width = MediaQuery.of(context).size.width;
+if (width > CustomSize.smallWindowSize) {
+  width = CustomSize.smallWindowSize;
+}
+
+return width - 15 * 2 - 10 * 2 - 10;
+}

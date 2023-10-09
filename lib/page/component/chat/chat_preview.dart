@@ -610,4 +610,142 @@ class _ChatPreviewState extends State<ChatPreview> {
               icon: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                    const Icon(
+Icons.delete,
+color: Color.fromARGB(255, 255, 255, 255),
+size: 14,
+),
+Text(
+AppLocale.delete.getString(context),
+style: const TextStyle(fontSize: 12, color: Colors.white),
+)
+],
+),
+),
+if (Ability().supportSpeak() && widget.onSpeakEvent != null)
+TextButton.icon(
+onPressed: () {
+cancel();
+widget.onSpeakEvent!(message);
+},
+label: const Text(''),
+icon: const Column(
+mainAxisSize: MainAxisSize.min,
+children: [
+Icon(
+Icons.record_voice_over,
+color: Color.fromARGB(255, 255, 255, 255),
+size: 14,
+),
+Text(
+'朗读',
+style: TextStyle(fontSize: 12, color: Colors.white),
+)
+],
+)),
+],
+),
+);
+}
+
+/// Get the maximum width of the chat box
+double _chatBoxMaxWidth(BuildContext context) {
+var screenWidth = MediaQuery.of(context).size.width;
+if (screenWidth >= CustomSize.maxWindowSize) {
+return CustomSize.maxWindowSize;
+}
+
+return screenWidth;
+}
+}
+
+/// ChatPreview Controller
+class ChatPreviewController extends ChangeNotifier {
+/// Whether it is in multi-select mode
+bool _selectMode = false;
+
+/// Selected message IDs
+final _selectedMessageIds = <int>{};
+
+/// All messages
+List<MessageWithState>? _allMessages;
+
+bool get selectMode => _selectMode;
+Set<int> get selectedMessageIds => _selectedMessageIds;
+
+/// Get selected messages
+List<MessageWithState> selectedMessages() {
+if (_allMessages == null || _allMessages!.isEmpty) {
+return [];
+}
+
+return _allMessages!
+    .where((element) => _selectedMessageIds.contains(element.message.id))
+    .toList();
+}
+
+/// Set all message IDs
+void setAllMessageIds(List<MessageWithState> messages) {
+_allMessages = messages.where((e) => !e.message.isSystem()).toList();
+}
+
+void toggleSelectMode() {
+_selectMode = !_selectMode;
+notifyListeners();
+}
+
+void exitSelectMode() {
+_selectMode = false;
+_selectedMessageIds.clear();
+notifyListeners();
+}
+
+void enterSelectMode() {
+_selectMode = true;
+_selectedMessageIds.clear();
+notifyListeners();
+}
+
+void toggleMessageSelected(int messageId) {
+if (_selectedMessageIds.contains(messageId)) {
+_selectedMessageIds.remove(messageId);
+} else {
+_selectedMessageIds.add(messageId);
+}
+notifyListeners();
+}
+
+void selectAllMessage() {
+if (_allMessages == null || _allMessages!.isEmpty) {
+return;
+}
+
+if (_selectedMessageIds.length == _allMessages!.length) {
+_selectedMessageIds.clear();
+notifyListeners();
+return;
+}
+
+_selectedMessageIds.clear();
+for (var msg in _allMessages!) {
+_selectedMessageIds.add(msg.message.id!);
+}
+
+notifyListeners();
+}
+
+void selectMessage(int id) {
+_selectedMessageIds.add(id);
+notifyListeners();
+}
+
+void unSelectMessage(int id) {
+_selectedMessageIds.remove(id);
+notifyListeners();
+}
+
+bool isMessageSelected(int id) {
+return _selectedMessageIds.contains(id);
+}
+}
+

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ImageSize extends StatelessWidget {
   final String aspectRatio;
-  const ImageSize({Key? key, required this.aspectRatio}) : super(key: key);
+  const ImageSize({super.key, required this.aspectRatio}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ import 'package:go_router/go_router.dart';
 
 class DrawScreen extends StatefulWidget {
   final SettingRepository setting;
-  const DrawScreen({Key? key, required this.setting}) : super(key: key);
+  const DrawScreen({super.key, required this.setting}) : super(key: key);
 
   @override
   State<DrawScreen> createState() => _DrawScreenState();

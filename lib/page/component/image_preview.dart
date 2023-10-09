@@ -305,7 +305,81 @@ void openImagePreviewDialog(
             ),
             IconButton(
               onPressed: () async {
-                final cancel = BotToast.showCustomLoading(
-                  toastBuilder: (cancel) {
-                    return const LoadingIndicator(
-                     
+final cancel = BotToast.showCustomLoading(
+  toastBuilder: (cancel) {
+    return const LoadingIndicator(
+      message: 'Downloading, please wait...',
+    );
+  },
+  allowClick: false,
+  duration: const Duration(seconds: 120),
+);
+
+try {
+  final saveFile = await DefaultCacheManager()
+      .getSingleFile(originalURL ?? imageUrl);
+
+  if (PlatformTool.isIOS() || PlatformTool.isAndroid()) {
+    await ImageGallerySaver.saveImage(
+      saveFile.readAsBytesSync(),
+      quality: 100,
+    );
+
+    showSuccessMessage('Image saved successfully');
+  } else {
+    var ext = saveFile.path.toLowerCase().split('.').last;
+    MimeType mimeType;
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+        mimeType = MimeType.jpeg;
+        break;
+      case 'png':
+        mimeType = MimeType.png;
+        break;
+      case 'gif':
+        mimeType = MimeType.gif;
+        break;
+      default:
+        mimeType = MimeType.other;
+    }
+
+    FileSaver.instance
+        .saveFile(
+      name: filenameWithoutExt(saveFile.path.split('/').last),
+      filePath: saveFile.path,
+      ext: ext,
+      mimeType: mimeType,
+    )
+        .then((value) {
+      showSuccessMessage('File saved successfully');
+    });
+  }
+} catch (e) {
+  // ignore: use_build_context_synchronously
+  showErrorMessageEnhanced(context, 'Failed to save the image, please try again later');
+  Logger.instance.e('Failed to download the original image', error: e);
+} finally {
+  cancel();
+}
+ },
+icon: Icon(
+  Icons.download_sharp,
+  size: 16,
+  color: customColors.weakLinkColor,
+),
+),
+],
+),
+backgroundColor: customColors.backgroundContainerColor,
+body: PhotoView(
+imageProvider: imageProvider,
+enableRotation: true,
+backgroundDecoration: BoxDecoration(
+color: customColors.backgroundContainerColor,
+),
+),
+),
+),
+);
+}

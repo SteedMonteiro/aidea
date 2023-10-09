@@ -677,4 +677,27 @@ void openSystemPromptSelectDialog(
                       ],
                     ),
                     e.content,
-                    search: (
+                    search: (keywrod) =>
+                        e.title.toLowerCase().contains(keywrod.toLowerCase()),
+                  ),
+                )
+                .toList(),
+            onSelected: (value) {
+              promptController.text = value.value;
+              return true;
+            },
+          );
+        },
+      );
+    },
+    heightFactor: 0.7,
+  );
+}
+
+class ChatMemory {
+  String name;
+  String? description;
+  int number;
+
+  ChatMemory(this.name, this.number, {this.description});
+}

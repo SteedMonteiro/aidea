@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MessageBox extends StatelessWidget {
   final String message;
   final MessageBoxType type;
-  const MessageBox({Key? key, required this.message, required this.type});
+  const MessageBox({super.key, required this.message, required this.type});
 
   @override
   Widget build(BuildContext context) {

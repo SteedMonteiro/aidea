@@ -13,7 +13,7 @@ class SliverSingleComponent extends StatelessWidget {
   final bool centerTitle;
 
   const SliverSingleComponent({
-    Key? key,
+    super.key,
     required this.title,
     this.backgroundImage,
     this.actions,
@@ -70,7 +70,7 @@ class SliverComponent extends StatelessWidget {
   final EdgeInsets? titlePadding;
   final bool centerTitle;
   const SliverComponent({
-    Key? key,
+    super.key,
     required this.title,
     this.backgroundImage,
     this.actions,
@@ -136,7 +136,7 @@ class SliverTabComponent extends StatelessWidget {
       itemsBuilder;
 
   const SliverTabComponent({
-    Key? key,
+    super.key,
     required this.tabBarTitles,
     this.title,
     this.backgroundImageUrl,

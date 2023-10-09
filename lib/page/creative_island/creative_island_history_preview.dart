@@ -266,4 +266,163 @@ class _CreativeIslandHistoryPreviewState
               widget.showErrorMessage
                   ? '${state.item!.answer}'
                   : 'Error Code: ${state.item!.errorCode}',
-             
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 10,
+                color: customColors.weakTextColor,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      );
+    }
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 50,
+            color: customColors.weakTextColor,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'En cours de création, veuillez patienter...',
+            style: TextStyle(
+              color: customColors.backgroundInvertedColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildItemArguments(
+      CreativeItemArguments arg, CustomColors customColors) {
+    final children = <Widget>[];
+
+    if (arg.negativePrompt != null && arg.negativePrompt != '') {
+      children.add(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocale.excludeContents.getString(context),
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: customColors.textfieldLabelColor,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SelectableText(
+              arg.negativePrompt!,
+              style: TextStyle(
+                color: customColors.weakTextColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // if (arg.modelName != null && arg.modelName != '') {
+    //   children.add(
+    //     Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           'AI Modèle',
+    //           style: TextStyle(
+    //             fontSize: 15,
+    //             fontWeight: FontWeight.bold,
+    //             color: customColors.textfieldLabelColor,
+    //           ),
+    //         ),
+    //         const SizedBox(height: 10),
+    //         SelectableText(
+    //           arg.modelName!,
+    //           style: TextStyle(
+    //             color: customColors.weakTextColor,
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
+
+    if (arg.filterName != null && arg.filterName != '') {
+      children.add(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Style',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: customColors.textfieldLabelColor,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SelectableText(
+              arg.filterName!,
+              style: TextStyle(
+                color: customColors.weakTextColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // if (arg.seed != null && arg.seed! > 0) {
+    //   children.add(
+    //     Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           'Seed',
+    //           style: TextStyle(
+    //             fontSize: 15,
+    //             fontWeight: FontWeight.bold,
+    //             color: customColors.textfieldLabelColor,
+    //           ),
+    //         ),
+    //         const SizedBox(height: 10),
+    //         SelectableText(
+    //           '${arg.seed!}',
+    //           style: TextStyle(
+    //             color: customColors.weakTextColor,
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
+
+    // if (arg.image != null && arg.image != '') {
+    //   children.add(
+    //     Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           'Image d'origine',
+    //           style: TextStyle(
+    //             fontSize: 15,
+    //             fontWeight: FontWeight.bold,
+    //             color: customColors.textfieldLabelColor,
+    //           ),
+    //         ),
+    //         const SizedBox(height: 10),
+    //         NetworkImagePreviewer(url: arg.image!, hidePreviewButton: true),
+    //       ],
+    //     ),
+    //   );
+    // }
+
+    return children;
+  }
+}

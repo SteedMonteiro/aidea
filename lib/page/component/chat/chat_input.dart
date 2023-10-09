@@ -303,4 +303,48 @@ class _ChatInputState extends State<ChatInput> {
           var upload = ImageUploader(setting).upload(result.files.single.path!);
 
           upload.then((value) {
-            _handle
+_handleSubmited(
+  '![${value.name}](${value.url})',
+  notSend: true,
+);
+}).onError((error, stackTrace) {
+  showErrorMessageEnhanced(context, error!);
+}).whenComplete(() => cancel());
+}
+},
+icon: const Icon(Icons.camera_alt),
+color: customColors.chatInputPanelText,
+splashRadius: 20,
+tooltip: AppLocale.uploadImage.getString(context),
+);
+}
+
+/// Handle input box submission
+void _handleSubmited(String text, {bool notSend = false}) {
+if (notSend) {
+var cursorPos = _textController.selection.base.offset;
+if (cursorPos < 0) {
+  _textController.text = text;
+} else {
+  String suffixText = _textController.text.substring(cursorPos);
+  String prefixText = _textController.text.substring(0, cursorPos);
+  _textController.text = prefixText + text + suffixText;
+  _textController.selection = TextSelection(
+    baseOffset: cursorPos + text.length,
+    extentOffset: cursorPos + text.length,
+  );
+}
+
+_focusNode.requestFocus();
+
+return;
+}
+
+if (text != '') {
+widget.onSubmit(text);
+_textController.clear();
+}
+
+_focusNode.requestFocus();
+}
+}

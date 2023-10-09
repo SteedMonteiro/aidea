@@ -207,3 +207,107 @@ class OpenAIRepository {
         n: 1,
         maxTokens: maxTokens,
         user: user,
+      );
+
+      stream.listen(
+  (event) {
+    for (var element in event.choices) {
+      onData(ChatStreamRespData(content: element.text));
+    }
+  },
+  onDone: () => completer.complete(),
+  onError: (e) => completer.completeError(e),
+  cancelOnError: true,
+).onError((e) {
+  completer.completeError(e);
+});
+} catch (e) {
+  completer.completeError(e);
+}
+
+return completer.future;
+}
+
+Future<void> chatStream(
+  List<OpenAIChatCompletionChoiceMessageModel> messages,
+  void Function(ChatStreamRespData data) onData, {
+  double temperature = 1.0,
+  user = 'user',
+  model = defaultChatModel,
+  int? roomId,
+  int? maxTokens,
+}) async {
+  var completer = Completer<void>();
+
+  try {
+    var chatStream = OpenAI.instance.chat.createStream(
+      model: model,
+      messages: messages,
+      temperature: temperature,
+      user: user,
+      maxTokens: maxTokens,
+      n: Ability().supportLocalOpenAI()
+          ? null
+          : roomId, // n parameter is not currently used, reused as roomId
+    );
+
+    chatStream.listen(
+      (event) {
+        for (var element in event.choices) {
+          if (element.delta.content != null) {
+            onData(ChatStreamRespData(
+              content: element.delta.content!,
+              role: element.delta.role,
+            ));
+          }
+        }
+      },
+      onDone: () => completer.complete(),
+      onError: (e) => completer.completeError(e),
+      cancelOnError: true,
+    ).onError((e) {
+      completer.completeError(e);
+    });
+  } catch (e) {
+    completer.completeError(e);
+  }
+
+  return completer.future;
+}
+
+/// Convert audio files to text
+Future<String> audioTranscription({
+  required File audioFile,
+}) async {
+  var audioModel = await OpenAI.instance.audio.createTranscription(
+    file: audioFile,
+    model: 'whisper-1',
+  );
+
+  return audioModel.text;
+}
+}
+
+class ChatReplyMessage {
+  final int index;
+  final String role;
+  final String content;
+  final String? finishReason;
+
+  ChatReplyMessage({
+    required this.index,
+    required this.role,
+    required this.content,
+    this.finishReason,
+  });
+}
+
+class ChatStreamRespData {
+  final String? role;
+  final String content;
+
+  ChatStreamRespData({
+    this.role,
+    required this.content,
+  });
+}

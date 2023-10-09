@@ -556,3 +556,254 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
               onTap: () {
                 switch (promotionEvent!.clickButtonType) {
                   case PromotionEventClickButtonType.url:
+  if (promotionEvent!.clickValue != null &&
+      promotionEvent!.clickValue!.isNotEmpty) {
+    launchUrlString(promotionEvent!.clickValue!,
+        mode: LaunchMode.externalApplication);
+  }
+  break;
+  case PromotionEventClickButtonType.inAppRoute:
+  if (promotionEvent!.clickValue != null &&
+      promotionEvent!.clickValue!.isNotEmpty) {
+    context.push(promotionEvent!.clickValue!);
+  }
+  break;
+  case PromotionEventClickButtonType.none:
+  }if (promotionEvent!.clickValue != null &&
+    promotionEvent!.clickValue!.isNotEmpty) {
+  launchUrlString(promotionEvent!.clickValue!,
+      mode: LaunchMode.externalApplication);
+}
+break;
+case PromotionEventClickButtonType.inAppRoute:
+if (promotionEvent!.clickValue != null &&
+    promotionEvent!.clickValue!.isNotEmpty) {
+  context.push(promotionEvent!.clickValue!);
+}
+break;
+case PromotionEventClickButtonType.none:
+}
+},
+child: Row(
+children: [
+Text(
+  'Details',
+  style: TextStyle(
+    color: stringToColor(
+        promotionEvent!.clickButtonColor ?? 'FFFFFFFF'),
+    fontSize: 14,
+  ),
+),
+const SizedBox(width: 5),
+Icon(
+  Icons.keyboard_double_arrow_right,
+  size: 16,
+  color: stringToColor(
+      promotionEvent!.clickButtonColor ?? 'FFFFFFFF'),
+),
+],
+),
+),
+],
+),
+);
+
+/// Build send or voice button
+Widget _buildSendOrVoiceButton(
+BuildContext context,
+CustomColors customColors,
+) {
+return Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+crossAxisAlignment: CrossAxisAlignment.center,
+children: [
+InkWell(
+onTap: () {
+HapticFeedbackHelper.mediumImpact();
+
+openModalBottomSheet(
+  context,
+  (context) {
+    return VoiceRecord(
+      onFinished: (text) {
+        _textController.text = _textController.text + text;
+        Navigator.pop(context);
+      },
+      onStart: () {},
+    );
+  },
+  isScrollControlled: false,
+  heightFactor: 0.8,
+);
+},
+child: Icon(
+Icons.mic,
+color: customColors.chatInputPanelText,
+size: 28,
+),
+),
+BlocBuilder<FreeCountBloc, FreeCountState>(
+buildWhen: (previous, current) => current is FreeCountLoadedState,
+builder: (context, state) {
+if (state is FreeCountLoadedState) {
+  if (currentModel != null) {
+    final matched = state.model(currentModel!.modelId);
+    if (matched != null &&
+        matched.leftCount > 0 &&
+        matched.maxCount > 0) {
+      return Text(
+        'Today you can still enjoy ${matched.leftCount} times for free',
+        style: TextStyle(
+          color: customColors.weakTextColor?.withAlpha(120),
+          fontSize: 11,
+        ),
+      );
+    }
+  }
+}
+return const SizedBox();
+},
+),
+InkWell(
+onTap: () {
+if (_textController.text.trim().isEmpty) {
+  return;
+}
+
+onSubmit(context, _textController.text.trim());
+},
+child: Icon(
+Icons.send,
+color: _textController.text.trim().isNotEmpty
+    ? customColors.linkColor ??
+        const Color.fromARGB(255, 70, 165, 73)
+    : customColors.chatInputPanelText,
+size: 26,
+),
+)
+],
+);
+}
+
+void onSubmit(BuildContext context, String text) {
+context
+.push(Uri(path: '/chat-anywhere', queryParameters: {
+'init_message': text,
+'model': currentModel?.modelId,
+}).toString())
+.whenComplete(() {
+_textController.clear();
+FocusScope.of(context).requestFocus(FocusNode());
+context.read<ChatChatBloc>().add(ChatChatLoadRecentHistories());
+});
+}
+}
+
+class ChatHistoryItem extends StatelessWidget {
+const ChatHistoryItem({
+super.key,
+required this.history,
+required this.customColors,
+required this.onTap,
+});
+
+final ChatHistory history;
+final CustomColors customColors;
+final VoidCallback onTap;
+
+@override
+Widget build(BuildContext context) {
+return Container(
+margin: const EdgeInsets.symmetric(
+horizontal: 15,
+vertical: 5,
+),
+decoration: BoxDecoration(
+borderRadius: BorderRadius.circular(10),
+),
+child: Slidable(
+endActionPane: ActionPane(
+motion: const ScrollMotion(),
+children: [
+const SizedBox(width: 10),
+SlidableAction(
+label: AppLocale.delete.getString(context),
+borderRadius: BorderRadius.circular(10),
+backgroundColor: Colors.red,
+icon: Icons.delete,
+onPressed: (_) {
+openConfirmDialog(
+  context,
+  AppLocale.confirmDelete.getString(context),
+  () {
+    context
+        .read<ChatChatBloc>()
+        .add(ChatChatDeleteHistory(history.id!));
+  },
+  danger: true,
+);
+},
+),
+],
+),
+child: Material(
+color: customColors.backgroundColor?.withAlpha(200),
+borderRadius: BorderRadius.all(
+Radius.circular(customColors.borderRadius ?? 8),
+),
+child: InkWell(
+child: ListTile(
+contentPadding:
+const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+shape: RoundedRectangleBorder(
+borderRadius:
+    BorderRadius.circular(customColors.borderRadius ?? 8),
+),
+title: Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
+Expanded(
+  child: Text(
+    (history.title ?? 'Unnamed').trim(),
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(
+      color: customColors.weakTextColor,
+      fontSize: 15,
+    ),
+    maxLines: 1,
+  ),
+),
+Text(
+  humanTime(history.updatedAt),
+  style: TextStyle(
+    color: customColors.weakTextColor?.withAlpha(65),
+    fontSize: 12,
+  ),
+),
+],
+),
+dense: true,
+subtitle: Padding(
+padding: const EdgeInsets.only(top: 5),
+child: Text(
+  (history.lastMessage ?? 'No content yet').trim().replaceAll("\n", " "),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+  style: TextStyle(
+    color: customColors.weakTextColor?.withAlpha(150),
+    fontSize: 12,
+    overflow: TextOverflow.ellipsis,
+  ),
+),
+),
+onTap: () {
+HapticFeedbackHelper.lightImpact();
+onTap();
+},
+),
+),
+),
+),
+);
+}
+}

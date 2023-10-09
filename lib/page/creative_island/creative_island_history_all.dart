@@ -275,4 +275,122 @@ class _CreativeIslandHistoriesAllScreenState
   Widget buildIslandTypeText(
       CustomColors customColors, CreativeItemInServer item) {
     return Text(
-      item.is
+      item.islandTitle ?? '',
+      style: TextStyle(
+        color: customColors.weakTextColor?.withAlpha(150),
+        fontSize: 12,
+      ),
+    );
+  }
+
+  void onItemDelete(BuildContext context, CreativeItemInServer item, int index,
+      {Function? onFinished}) {
+    openConfirmDialog(context, AppLocale.confirmDelete.getString(context), () {
+      APIServer()
+          .deleteCreativeHistoryItem(item.islandId, hisId: item.id)
+          .then((value) {
+        // datasource.refresh(true);
+        datasource.removeAt(index);
+        setState(() {});
+        showSuccessMessage(AppLocale.operateSuccess.getString(context));
+        onFinished?.call();
+      });
+    });
+  }
+
+  Widget _buildAnswerImagePreview(
+    BuildContext context,
+    CreativeItemInServer item,
+  ) {
+    if (item.isImageType && item.images.isNotEmpty) {
+      return ConstrainedBox(
+        constraints: const BoxConstraints(
+          minHeight: 100,
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              ),
+              child: CachedNetworkImageEnhanced(
+                imageUrl:
+                    imageURL(item.images.first, qiniuImageTypeThumbMedium),
+                fit: BoxFit.cover,
+              ),
+            ),
+            if (item.params['image'] != null && item.params['image'] != '')
+              Positioned(
+                left: 8,
+                bottom: 8,
+                child: SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: CachedNetworkImageEnhanced(
+                      imageUrl:
+                          imageURL(item.params['image'], qiniuImageTypeAvatar),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
+
+    if (item.isFailed) {
+      return ConstrainedBox(
+        constraints: const BoxConstraints(
+          minHeight: 150,
+        ),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 40,
+                color: Colors.red,
+              ),
+              SizedBox(height: 10),
+              Text('Création échouée', style: TextStyle(color: Colors.red))
+            ],
+          ),
+        ),
+      );
+    }
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 150,
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.hourglass_bottom,
+              size: 40,
+              color: Colors.blue[700],
+            ),
+            const SizedBox(height: 10),
+            Text('En cours de création', style: TextStyle(color: Colors.blue[700]))
+          ],
+        ),
+      ),
+    );
+  }
+
+  int _calCrossAxisCount(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    if (width > CustomSize.maxWindowSize) {
+      width = CustomSize.maxWindowSize;
+    }
+
+    return (width / 220).round();
+  }
+}
