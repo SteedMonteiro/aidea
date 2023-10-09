@@ -148,7 +148,7 @@ if (room.initMessage != null && room.initMessage != '') {
         type: MessageType.initMessage,
         roomId: roomId,
         userId: APIServer().localUserID(),
-      ),
+       ),
       );
     }
 
