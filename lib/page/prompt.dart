@@ -117,9 +117,9 @@ class _PromptScreenState extends State<PromptScreen> {
                             ),
                           ),
                           e.content,
-                          search: (keywrod) => e.title
+                          search: (keyword) => e.title
                               .toLowerCase()
-                              .contains(keywrod.toLowerCase()),
+                              .contains(keyword.toLowerCase()),
                         ),
                       )
                       .toList(),

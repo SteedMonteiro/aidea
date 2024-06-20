@@ -67,7 +67,7 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
       appBar: AppBar(
         toolbarHeight: CustomSize.toolbarHeight,
         title: const Text(
-          'OpenAI 设置',
+          'OpenAI Settings',
           style: TextStyle(
             fontSize: CustomSize.appBarTitleSize,
           ),
@@ -81,7 +81,7 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
                 context.go('/chat-chat');
               },
               child: Text(
-                '暂不设置',
+                'Skip',
                 style: TextStyle(
                   color: customColors.weakLinkColor,
                   fontSize: 13,
@@ -169,7 +169,7 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
                 EnhancedButton(
                   title: widget.source == 'setting'
                       ? AppLocale.save.getString(context)
-                      : '启用',
+                      : 'Enable',
                   onPressed: () {
                     var url = _urlController.text;
                     var apiKey = _apiKeyController.text;
@@ -182,7 +182,7 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
                     if (!url.startsWith('http://') &&
                         !url.startsWith('https://')) {
                       showErrorMessageEnhanced(
-                          context, 'URL 必须以 http:// 或 https:// 开头');
+                          context, 'URL must start with http:// or https://');
                       return;
                     }
 
@@ -192,7 +192,7 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
                     }
 
                     if (enableOpenAISelfHosted && apiKey == '') {
-                      showErrorMessageEnhanced(context, 'API Key 不能为空');
+                      showErrorMessageEnhanced(context, 'API Key cannot be empty');
                       return;
                     }
 
@@ -242,11 +242,11 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
     }
 
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      return Future.error('URL 必须以 http:// 或 https:// 开头');
+      return Future.error('URL must start with http:// or https://');
     }
 
     if (apiKey == '') {
-      return Future.error('API Key 不能为空');
+      return Future.error('API Key cannot be empty');
     }
 
     final headers = <String, dynamic>{
@@ -288,7 +288,7 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
         setState(() {
           verifySuccess = false;
         });
-        return Future.error('验证失败，请检查 API Key：${resp.data}');
+        return Future.error('Verification failed, please check API Key: ${resp.data}');
       }
 
       cancelLoading();
@@ -304,12 +304,12 @@ class _OpenAISettingScreenState extends State<OpenAISettingScreen> {
       if (e is DioError) {
         if (e.response != null && e.response!.data != null) {
           return Future.error(
-              '验证失败，请检查网络 或 API Key：${e.response!.data["error"]["message"]}');
+              'Verification failed, please check network or API Key: ${e.response!.data["error"]["message"]}');
         } else {
-          return Future.error('验证失败，请检查网络 或 API Key：${e.error}');
+          return Future.error('Verification failed, please check network or API Key: ${e.error}');
         }
       } else {
-        return Future.error('验证失败，请检查网络 或 API Key：${e.toString()}');
+        return Future.error('Verification failed, please check network or API Key: ${e.toString()}');
       }
     }
   }

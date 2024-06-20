@@ -175,7 +175,7 @@ class GalleryRoomCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          '简介：',
+                          'Description:',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -206,7 +206,7 @@ class GalleryRoomCard extends StatelessWidget {
             child: Row(
               children: [
                 WeakTextButton(
-                  title: '取消',
+                  title: 'Cancel',
                   onPressed: () {
                     context.pop();
                   },
@@ -214,7 +214,7 @@ class GalleryRoomCard extends StatelessWidget {
                 const SizedBox(width: 20),
                 Expanded(
                   child: EnhancedButton(
-                      title: selected ? '移除' : '选择',
+                      title: selected ? 'Remove' : 'Select',
                       onPressed: () {
                         onConfirm!();
                         context.pop();

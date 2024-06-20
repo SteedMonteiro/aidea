@@ -10,7 +10,7 @@ class Cache {
     this.cacheRepo = cacheRepo;
   }
 
-  /// 单例
+  /// Singleton
   static final Cache _instance = Cache._internal();
   Cache._internal();
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:askaide/helper/constant.dart';
 import 'package:askaide/helper/helper.dart';
@@ -24,7 +23,7 @@ class SignupScreen extends StatefulWidget {
   final SettingRepository settings;
   final String? username;
 
-  const SignupScreen({super.key, required this.settings, this.username});
+  const SignupScreen({Key? key, required this.settings, this.username});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -45,7 +44,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   var agreeProtocol = false;
 
-  //  下次发送验证码等待时间
+  // Time to wait before sending the verification code again
   int verifyCodeWaitSeconds = 0;
   Timer? timer;
 
@@ -56,8 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (widget.username != null) {
       _usernameController.text = widget.username!;
     }
-
-    // Clipboard.getData(Clipboard.kTextPlain).then((value) {
+        // Clipboard.getData(Clipboard.kTextPlain).then((value) {
     //   if (value == null || value.text == null || value.text == '') {
     //     return;
     //   }
@@ -73,6 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
     //   }
     // });
   }
+
 
   @override
   void dispose() {
@@ -139,7 +138,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  // 用户名
+                  // Username
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 15.0, right: 15.0, top: 15, bottom: 0),
@@ -171,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                   ),
-                  // 密码
+                  // Password
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 15.0, right: 15.0, top: 15, bottom: 0),
@@ -181,7 +180,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       hintText: AppLocale.passwordInputTips.getString(context),
                     ),
                   ),
-                  // 邀请码
+                  // Invite Code
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 15.0, right: 15.0, top: 15, bottom: 0),
@@ -214,7 +213,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                   ),
-                  // 验证码
+                  // Verification Code
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 15.0, right: 15.0, top: 15, bottom: 0),
@@ -343,7 +342,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ]),
                   ),
                   const SizedBox(height: 15),
-                  // 创建账号
+                  // Create Account
                   Container(
                     height: 50,
                     width: double.infinity,
@@ -361,7 +360,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                   ),
-                  // 直接登录
+                  // Direct Sign-in
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(children: [

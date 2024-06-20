@@ -19,7 +19,7 @@ class User {
     this.invitedBy,
   });
 
-  /// 是否需要绑定手机号码
+  /// Whether phone number binding is required
   bool get needBindPhone => phone == null || phone!.isEmpty;
 
   String displayName() {

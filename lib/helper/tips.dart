@@ -1,4 +1,4 @@
 final inputTips = [
-  '有问题尽管问我...',
-  '开启新对话？往右侧滑动我试试',
+  'Feel free to ask me if you have any questions...',
+  'Want to start a new conversation? Swipe me to the right and let's give it a try',
 ];

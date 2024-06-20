@@ -106,7 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
       listenWhen: (previous, current) => current is RoomLoaded,
       listener: (context, state) {
         if (state is RoomLoaded && state.cascading) {
-          // 加载免费使用次数
+          // Load free usage count
           context
               .read<FreeCountBloc>()
               .add(FreeCountReloadEvent(model: state.room.model));
@@ -120,16 +120,16 @@ class _ChatScreenState extends State<ChatScreen> {
             bottom: false,
             child: Column(
               children: [
-                // 语音输出中提示
+                // Voice output prompt
                 if (showAudioPlayer)
                   EnhancedAudioPlayer(controller: _audioPlayerController),
-                // 聊天内容窗口
+                // Chat content window
                 Expanded(
                   child: _buildChatPreviewArea(
                       room, customColors, _chatPreviewController.selectMode),
                 ),
 
-                // 聊天输入窗口
+                // Chat input window
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
@@ -140,13 +140,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   child: BlocBuilder<FreeCountBloc, FreeCountState>(
                     builder: (context, freeState) {
-                      var hintText = '有问题尽管问我';
+                      var hintText = 'Feel free to ask me';
                       if (freeState is FreeCountLoadedState) {
                         final matched = freeState.model(room.room.model);
                         if (matched != null &&
                             matched.leftCount > 0 &&
                             matched.maxCount > 0) {
-                          hintText += '（今日还可免费畅享${matched.leftCount}次）';
+                          hintText += '（You can still enjoy ${matched.leftCount} times for free today）';
                         }
                       }
 
@@ -188,11 +188,11 @@ class _ChatScreenState extends State<ChatScreen> {
   ) {
     return BlocConsumer<ChatMessageBloc, ChatMessageState>(
       listener: (context, state) {
-        // 显示错误提示
+        // Show error prompt
         if (state is ChatMessagesLoaded && state.error != null) {
           showErrorMessageEnhanced(context, state.error);
         } else if (state is ChatMessageUpdated) {
-          // 聊天内容窗口滚动到底部
+          // Scroll the chat content window to the bottom
           if (!state.processing && _scrollController.hasClients) {
             _scrollController.animateTo(
               0,
@@ -202,17 +202,17 @@ class _ChatScreenState extends State<ChatScreen> {
           }
 
           if (state.processing && _inputEnabled.value) {
-            // 聊天回复中时，禁止输入框编辑
+            // When the chat reply is in progress, disable the input box editing
             setState(() {
               _inputEnabled.value = false;
             });
           } else if (!state.processing && !_inputEnabled.value) {
-            // 更新免费使用次数
+            // Update free usage count
             context
                 .read<FreeCountBloc>()
                 .add(FreeCountReloadEvent(model: room.room.model));
 
-            // 聊天回复完成时，取消输入框的禁止编辑状态
+            // When the chat reply is completed, cancel the input box's disabled editing state
             setState(() {
               _inputEnabled.value = true;
             });
@@ -290,7 +290,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  /// 构建 AppBar
+  /// Build AppBar
   AppBar _buildAppBar(BuildContext context, CustomColors customColors) {
     return _chatPreviewController.selectMode
         ? AppBar(
@@ -322,7 +322,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // 房间名称
+                      // Room name
                       Text(
                         state.room.name,
                         style: const TextStyle(fontSize: 16),
@@ -337,7 +337,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       //           matched.leftCount > 0 &&
                       //           matched.maxCount > 0) {
                       //         return Text(
-                      //           '今日剩余免费 ${matched.leftCount} 次',
+                      //           'Today's remaining free ${matched.leftCount} times',
                       //           style: TextStyle(
                       //             color: customColors.weakTextColor,
                       //             fontSize: 12,
@@ -348,7 +348,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       //     return const SizedBox();
                       //   },
                       // ),
-                      // 模型名称
+                      // Model name
                       // Text(
                       //   state.room.model.split(':').last,
                       //   style: TextStyle(
@@ -386,7 +386,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  /// 提交新消息
+  /// Submit new message
   void _handleSubmit(String text, {messagetType = MessageType.text}) {
     setState(() {
       _inputEnabled.value = false;
@@ -411,7 +411,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-/// 处理消息删除事件
+/// Handle message delete event
 void handleDeleteMessage(BuildContext context, int id, {int? chatHistoryId}) {
   openConfirmDialog(
     context,
@@ -423,7 +423,7 @@ void handleDeleteMessage(BuildContext context, int id, {int? chatHistoryId}) {
   );
 }
 
-/// 重置上下文
+/// Reset context
 void handleResetContext(BuildContext context) {
   // openConfirmDialog(
   //   context,
@@ -435,7 +435,7 @@ void handleResetContext(BuildContext context) {
   // );
 }
 
-/// 清空历史消息
+/// Clear history messages
 void handleClearHistory(BuildContext context) {
   openConfirmDialog(
     context,
@@ -449,7 +449,7 @@ void handleClearHistory(BuildContext context) {
   );
 }
 
-/// 打开示例问题列表
+/// Open example question list
 void handleOpenExampleQuestion(
   BuildContext context,
   Room room,
@@ -557,7 +557,7 @@ void handleOpenExampleQuestion(
   );
 }
 
-/// 构建聊天内容窗口
+/// Build chat content window
 Widget buildSelectModeToolbars(
   BuildContext context,
   ChatPreviewController chatPreviewController,
@@ -613,80 +613,79 @@ Widget buildSelectModeToolbars(
             style: TextStyle(color: customColors.linkColor),
           ),
         ),
-        TextButton.icon(
-          onPressed: () {
-            if (chatPreviewController.selectedMessageIds.isEmpty) {
-              showErrorMessageEnhanced(
-                  context, AppLocale.noMessageSelected.getString(context));
-              return;
-            }
+TextButton.icon(
+  onPressed: () {
+    if (chatPreviewController.selectedMessageIds.isEmpty) {
+      showErrorMessageEnhanced(
+          context, AppLocale.noMessageSelected.getString(context));
+      return;
+    }
 
-            openConfirmDialog(
-              context,
-              AppLocale.confirmDelete.getString(context),
-              () {
-                final ids = chatPreviewController.selectedMessageIds.toList();
-                if (ids.isNotEmpty) {
-                  context
-                      .read<ChatMessageBloc>()
-                      .add(ChatMessageDeleteEvent(ids));
+    openConfirmDialog(
+      context,
+      AppLocale.confirmDelete.getString(context),
+      () {
+        final ids = chatPreviewController.selectedMessageIds.toList();
+        if (ids.isNotEmpty) {
+          context
+              .read<ChatMessageBloc>()
+              .add(ChatMessageDeleteEvent(ids));
 
-                  showErrorMessageEnhanced(
-                      context, AppLocale.operateSuccess.getString(context));
+          showErrorMessageEnhanced(
+              context, AppLocale.operateSuccess.getString(context));
 
-                  chatPreviewController.exitSelectMode();
-                }
-              },
-              danger: true,
-            );
-          },
-          icon: Icon(Icons.delete, color: customColors.linkColor),
-          label: Text(
-            AppLocale.delete.getString(context),
-            style: TextStyle(color: customColors.linkColor),
-          ),
-        ),
-      ],
-    ),
-  );
+          chatPreviewController.exitSelectMode();
+        }
+      },
+      danger: true,
+    );
+  },
+  icon: Icon(Icons.delete, color: customColors.linkColor),
+  label: Text(
+    AppLocale.delete.getString(context),
+    style: TextStyle(color: customColors.linkColor),
+  ),
+),
+],
+);
 }
 
-/// 构建聊天设置下拉菜单
+/// Build chat settings dropdown menu
 Widget buildChatMoreMenu(
-  BuildContext context,
-  int chatRoomId, {
-  bool useLocalContext = true,
-  bool withSetting = true,
+BuildContext context,
+int chatRoomId, {
+bool useLocalContext = true,
+bool withSetting = true,
 }) {
-  var customColors = Theme.of(context).extension<CustomColors>()!;
+var customColors = Theme.of(context).extension<CustomColors>()!;
 
-  return EnhancedPopupMenu(
-    items: [
-      EnhancedPopupMenuItem(
-        title: AppLocale.newChat.getString(context),
-        icon: Icons.post_add,
-        iconColor: Colors.blue,
-        onTap: (ctx) {
-          handleResetContext(useLocalContext ? ctx : context);
-        },
-      ),
-      EnhancedPopupMenuItem(
-        title: AppLocale.clearChatHistory.getString(context),
-        icon: Icons.delete_forever,
-        iconColor: Colors.red,
-        onTap: (ctx) {
-          handleClearHistory(useLocalContext ? ctx : context);
-        },
-      ),
-      if (withSetting)
-        EnhancedPopupMenuItem(
-          title: AppLocale.settings.getString(context),
-          icon: Icons.settings,
-          iconColor: customColors.linkColor,
-          onTap: (_) {
-            context.push('/room/$chatRoomId/setting');
-          },
-        ),
-    ],
-  );
+return EnhancedPopupMenu(
+items: [
+  EnhancedPopupMenuItem(
+    title: AppLocale.newChat.getString(context),
+    icon: Icons.post_add,
+    iconColor: Colors.blue,
+    onTap: (ctx) {
+      handleResetContext(useLocalContext ? ctx : context);
+    },
+  ),
+  EnhancedPopupMenuItem(
+    title: AppLocale.clearChatHistory.getString(context),
+    icon: Icons.delete_forever,
+    iconColor: Colors.red,
+    onTap: (ctx) {
+      handleClearHistory(useLocalContext ? ctx : context);
+    },
+  ),
+  if (withSetting)
+    EnhancedPopupMenuItem(
+      title: AppLocale.settings.getString(context),
+      icon: Icons.settings,
+      iconColor: customColors.linkColor,
+      onTap: (_) {
+        context.push('/room/$chatRoomId/setting');
+      },
+    ),
+],
+);
 }

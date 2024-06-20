@@ -128,7 +128,7 @@ class _AvatarSelectorState extends State<AvatarSelector> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              '自定义',
+                              'Custom',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

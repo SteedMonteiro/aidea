@@ -34,7 +34,7 @@ import 'package:askaide/page/theme/custom_theme.dart';
 import 'package:askaide/repo/model/model.dart' as mm;
 import 'package:go_router/go_router.dart';
 
-/// 创建聊天室对话框
+/// Create chat room dialog
 class ChatRoomCreateScreen extends StatefulWidget {
   final SettingRepository setting;
   const ChatRoomCreateScreen({super.key, required this.setting});
@@ -58,10 +58,10 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
   int maxContext = 5;
 
   List<ChatMemory> validMemories = [
-    ChatMemory('无记忆', 1, description: '每次对话都是独立的，常用于一次性问答'),
-    ChatMemory('基础', 5, description: '记住最近的 5 次对话'),
-    ChatMemory('中等', 10, description: '记住最近的 10 次对话'),
-    ChatMemory('深度', 20, description: '记住最近的 20 次对话'),
+    ChatMemory('No memory', 1, description: 'Each conversation is independent, commonly used for one-time Q&A'),
+    ChatMemory('Basic', 5, description: 'Remember the last 5 conversations'),
+    ChatMemory('Medium', 10, description: 'Remember the last 10 conversations'),
+    ChatMemory('Deep', 20, description: 'Remember the last 20 conversations'),
   ];
 
   bool showAdvancedOptions = false;
@@ -129,7 +129,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                             tabs: [
                               for (var tag in tags) Tab(text: tag),
                               if (selectedSuggestions.isEmpty)
-                                const Tab(text: '自定义'),
+                                const Tab(text: 'Custom'),
                             ],
                             isScrollable: true,
                             labelColor: customColors.linkColor,
@@ -202,7 +202,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                 child: Row(
                   children: [
                     WeakTextButton(
-                      title: '取消',
+                      title: 'Cancel',
                       onPressed: () {
                         selectedSuggestions.clear();
                         setState(() {});
@@ -211,7 +211,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: EnhancedButton(
-                        title: '添加为专属伙伴',
+                        title: 'Add as exclusive partner',
                         onPressed: () {
                           context.read<RoomBloc>().add(GalleryRoomCopyEvent(
                               selectedSuggestions.map((e) => e.id).toList()));
@@ -273,7 +273,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
           const SizedBox(height: 10),
           ColumnBlock(
             children: [
-              // 名称
+              // Name
               EnhancedTextField(
                 customColors: customColors,
                 controller: _nameController,
@@ -289,7 +289,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                 EnhancedInput(
                   padding: const EdgeInsets.only(top: 10, bottom: 5),
                   title: Text(
-                    '数字人头像',
+                    'Digital Human Avatar',
                     style: TextStyle(
                       color: customColors.textfieldLabelColor,
                       fontSize: 16,
@@ -375,7 +375,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                   ),
                 ),
 
-              // 模型
+              // Model
               EnhancedInputSimple(
                 title: AppLocale.model.getString(context),
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -394,7 +394,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                     ? _selectedModel!.name
                     : AppLocale.select.getString(context),
               ),
-              // 提示语
+              // Prompt
               if (_selectedModel != null && _selectedModel!.isChatModel)
                 EnhancedTextField(
                   customColors: customColors,
@@ -411,7 +411,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        '示例',
+                        'Example',
                         style: TextStyle(
                           color: customColors.linkColor?.withAlpha(150),
                           fontSize: 13,
@@ -441,16 +441,16 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                 EnhancedTextField(
                   customColors: customColors,
                   controller: _initMessageController,
-                  labelText: '引导语',
+                  labelText: 'Guide language',
                   labelPosition: LabelPosition.top,
-                  hintText: '每次开始新对话时，系统将会以 AI 的身份自动发送引导语。',
+                  hintText: 'Every time a new conversation starts, the system will automatically send the guide language on behalf of AI.',
                   maxLines: 3,
                   showCounter: false,
                   maxLength: 1000,
                 ),
                 EnhancedInput(
                   title: Text(
-                    '记忆深度',
+                    'Memory depth',
                     style: TextStyle(
                       color: customColors.textfieldLabelColor,
                       fontSize: 16,
@@ -506,7 +506,7 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
           Row(
             children: [
               EnhancedButton(
-                title: showAdvancedOptions ? '收起选项' : '高级选项',
+                title: showAdvancedOptions ? 'Collapse options' : 'Advanced options',
                 width: 100,
                 backgroundColor: Colors.transparent,
                 color: customColors.weakLinkColor,
@@ -548,11 +548,11 @@ class _ChatRoomCreateScreenState extends State<ChatRoomCreateScreen> {
                     if (_avatarUrl != null) {
                       if (!(_avatarUrl!.startsWith('http://') ||
                           _avatarUrl!.startsWith('https://'))) {
-                        // 上传文件，获取 URL
+                        // Upload file, get URL
                         final cancel = BotToast.showCustomLoading(
                           toastBuilder: (cancel) {
                             return const LoadingIndicator(
-                              message: "正在上传图片，请稍后...",
+                              message: "Uploading image, please wait...",
                             );
                           },
                           allowClick: false,

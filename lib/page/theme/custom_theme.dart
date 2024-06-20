@@ -60,6 +60,7 @@ class CustomColors extends ThemeExtension<CustomColors> {
     this.paymentItemDescriptionColor,
   });
 
+ 
   final double? borderRadius;
 
   final String? appBarBackgroundImage;

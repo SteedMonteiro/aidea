@@ -28,7 +28,7 @@ class _QuotaDetailScreenState extends State<QuotaDetailScreen> {
       appBar: AppBar(
         toolbarHeight: CustomSize.toolbarHeight,
         title: const Text(
-          '购买历史',
+          'Purchase History',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -113,7 +113,7 @@ class _QuotaDetailScreenState extends State<QuotaDetailScreen> {
                                   children: [
                                     Text(
                                       (item.note == null || item.note == '')
-                                          ? '购买'
+                                          ? 'Purchase'
                                           : item.note!,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -140,7 +140,7 @@ class _QuotaDetailScreenState extends State<QuotaDetailScreen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   Text(
-                                    '${DateFormat('yyyy/MM/dd').format(item.periodEndAt.toLocal())} 过期',
+                                    '${DateFormat('yyyy/MM/dd').format(item.periodEndAt.toLocal())} Expired',
                                     textScaleFactor: 0.7,
                                   ),
                                 ],

@@ -4,7 +4,7 @@ import 'package:askaide/helper/platform.dart';
 import 'package:askaide/repo/data/settings_data.dart';
 import 'package:http/http.dart' as http;
 
-/// StabilityAI 模型
+/// StabilityAI Model
 class StabilityAIRepository {
   final SettingDataProvider settings;
 
@@ -53,7 +53,7 @@ class StabilityAIRepository {
     }
   }
 
-  /// 创建请求头
+  /// Create request headers
   Map<String, String> _buildRequestHeaders() {
     var headers = <String, String>{
       'Authorization': 'Bearer $apiKey',
@@ -68,7 +68,7 @@ class StabilityAIRepository {
     return headers;
   }
 
-  /// 默认的模型列表
+  /// Default model list
   // static List<Model> supportModels() {
   //   return [
   //     // Model(
@@ -134,7 +134,7 @@ class StabilityAIRepository {
   //   ];
   // }
 
-  /// 查询模型列表
+  /// Query model list
   // Future<List<Model>> models() async {
   //   var resp = await http.get(
   //     Uri.parse('$serverURL/v1/engines/list'),
@@ -165,9 +165,9 @@ class StabilityAIRepository {
   //   return models;
   // }
 
-  /// 创建图片，返回图片的 base64 编码
-  /// 不同模型价格表： https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
-  /// width,height+steps+engine 决定价格
+  /// Create image and return the base64 encoding of the image
+  /// Different models have different pricing: https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
+  /// width,height+steps+engine determine the price
   Future<List<String>> createImageBase64(
     String engine,
     List<StabilityAIPrompt> prompts, {
@@ -182,7 +182,7 @@ class StabilityAIRepository {
     // pixel-art tile-texture
     String? stylePreset,
   }) async {
-    // 注意：图像宽度和高度必须满足下面条件
+    // Note: The image width and height must meet the following conditions:
     // For 768 engines: 589,824 ≤ height * width ≤ 1,048,576
     // All other engines: 262,144 ≤ height * width ≤ 1,048,576
     if (width == 0) {
@@ -242,9 +242,9 @@ class StabilityAIRepository {
     return images;
   }
 
-  /// 创建图片，返回图片的 base64 编码
-  /// 不同模型价格表： https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
-  /// width,height+steps+engine 决定价格
+/// Create an image and return its base64 encoding.
+/// Pricing table for different models: https://platform.stability.ai/docs/getting-started/credits-and-billing#pricing-table
+/// Width, height, steps, and engine determine the price.
   Future<String> createImageBase64Async(
     String engine,
     List<StabilityAIPrompt> prompts, {
@@ -259,7 +259,7 @@ class StabilityAIRepository {
     // pixel-art tile-texture
     String? stylePreset,
   }) async {
-    // 注意：图像宽度和高度必须满足下面条件
+    // Note: Image width and height must meet the following conditions
     // For 768 engines: 589,824 ≤ height * width ≤ 1,048,576
     // All other engines: 262,144 ≤ height * width ≤ 1,048,576
     if (width == 0) {

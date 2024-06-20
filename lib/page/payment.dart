@@ -50,10 +50,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
         showErrorMessage(resolveError(context, error));
       });
     } else {
-      // 支付宝支付
+      // Alipay payment
     }
 
-    // 加载支付产品列表
+    // Load payment product list
     context.read<PaymentBloc>().add(PaymentLoadAppleProducts());
 
     super.initState();
@@ -65,12 +65,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
     super.dispose();
   }
 
-  // 支付 ID
+  // Payment ID
   String? paymentId;
 
   ProductDetails? selectedProduct;
 
-  /// 监听支付状态
+  /// Listen to payment status
   void _listenToPurchaseUpdated(
     List<PurchaseDetails> purchaseDetailsList,
   ) async {
@@ -117,7 +117,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             )
                 .then((status) {
               _closePaymentLoading();
-              showSuccessMessage('购买成功');
+              showSuccessMessage('Purchase successful');
             }).onError((error, stackTrace) {
               _closePaymentLoading();
               showErrorMessage(resolveError(context, error!));
@@ -126,14 +126,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
           break;
         case PurchaseStatus.restored:
-          Logger.instance.d('恢复购买');
+          Logger.instance.d('Restore purchase');
           _closePaymentLoading();
-          showSuccessMessage('恢复成功');
+          showSuccessMessage('Restore successful');
           break;
         case PurchaseStatus.canceled:
           APIServer().cancelApplePay(paymentId!).whenComplete(() {
             _closePaymentLoading();
-            showErrorMessage('购买已取消');
+            showErrorMessage('Purchase has been cancelled');
           });
 
           break;
@@ -145,7 +145,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  /// 关闭支付中的 loading
+  /// Close payment loading
   void _closePaymentLoading() {
     paymentId = null;
     if (_cancelLoading != null) {
@@ -154,7 +154,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  /// 开始支付中的 loading
+  /// Start payment loading
   void _startPaymentLoading() {
     _cancelLoading = BotToast.showCustomLoading(
       toastBuilder: (cancel) {
@@ -201,18 +201,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
           //   ),
           //   onPressed: () {
           //     _startPaymentLoading();
-          //     // 恢复购买
+          //     // Restore purchases
           //     InAppPurchase.instance.restorePurchases().whenComplete(() {
           //       _closePaymentLoading();
-          //       showSuccessMessage('恢复完成');
+          //       showSuccessMessage('Restore completed');
           //     });
           //   },
           //   child: Text(
-          //     '恢复购买',
+          //     'Restore Purchases',
           //     style: TextStyle(color: customColors.weakLinkColor),
           //     textScaleFactor: 0.9,
           //   ),
           // ),
+
         ],
       ),
       backgroundColor: customColors.backgroundContainerColor,
@@ -229,7 +230,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     showErrorMessage(resolveError(context, state.error!));
                   } else {
                     if (state.localProducts.isEmpty) {
-                      showErrorMessage('暂无可购买的产品');
+                      showErrorMessage('No products available for purchase');
                     } else {
                       final recommends = state.localProducts
                           .where((e) => e.recommend)
@@ -305,11 +306,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             '${AppLocale.toPay.getString(context)}   ${selectedProduct?.price ?? ''}',
                         onPressed: () async {
                           if (state.loading) {
-                            showErrorMessage('价格加载中，请稍后');
+                            showErrorMessage('Price is loading, please wait');
                             return;
                           }
                           if (selectedProduct == null) {
-                            showErrorMessage('请选择购买的产品');
+                            showErrorMessage('Please select a product to purchase');
                             return;
                           }
 
@@ -333,8 +334,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             openListSelectDialog(
                               context,
                               <SelectorItem>[
-                                SelectorItem(const Text('支付宝电脑端（扫码支付）'), 'web'),
-                                SelectorItem(const Text('支付宝手机端'), 'wap'),
+                                SelectorItem(const Text('Alipay Desktop (QR Code Payment)'), 'web'),
+                                SelectorItem(const Text('Alipay Mobile'), 'wap'),
                               ],
                               (value) {
                                 _startPaymentLoading();
@@ -346,7 +347,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                                 return true;
                               },
-                              title: '请选择支付方式',
+                              title: 'Please select payment method',
                               heightFactor: 0.3,
                             );
                           }
@@ -363,7 +364,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              '   购买说明：',
+                              '   Purchase Instructions:',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: customColors.paymentItemTitleColor
@@ -391,17 +392,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  /// 创建苹果应用内支付
+  /// Create Apple In-App Purchase
   Future<void> createAppApplePay() async {
-    // 创建支付，服务端保存支付信息，创建支付订单
+    // Create payment, server saves payment information, create payment order
     paymentId = await APIServer().createApplePay(selectedProduct!.id);
-    // 发起 Apple 支付
+    // Initiate Apple payment
     InAppPurchase.instance.buyConsumable(
       purchaseParam: PurchaseParam(productDetails: selectedProduct!),
     );
   }
 
-  /// 创建支付宝付款（Web 或 Wap）
+  /// Create Alipay payment (Web or Wap)
   Future<void> createWebOrWapAlipay({required String source}) async {
     final created = await APIServer().createAlipay(
       selectedProduct!.id,
@@ -409,31 +410,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
     paymentId = created.paymentId;
 
-    // 调起支付宝支付
+    // Initiate Alipay payment
     launchUrlString(created.params).then((value) {
       _closePaymentLoading();
       openConfirmDialog(
         context,
-        '请确认支付宝支付是否已完成',
+        'Please confirm if the Alipay payment has been completed',
         () async {
           _startPaymentLoading();
           try {
             final resp =
                 await APIServer().queryPaymentStatus(created.paymentId);
             if (resp.success) {
-              showSuccessMessage(resp.note ?? '支付成功');
+              showSuccessMessage(resp.note ?? 'Payment successful');
               _closePaymentLoading();
             } else {
-              // 支付失败，延迟 5s 再次查询支付状态
+              // Payment failed, delay 5s then query payment status again
               await Future.delayed(const Duration(seconds: 5), () async {
                 try {
                   final value =
                       await APIServer().queryPaymentStatus(created.paymentId);
 
                   if (value.success) {
-                    showSuccessMessage(value.note ?? '支付成功');
+                    showSuccessMessage(value.note ?? 'Payment successful');
                   } else {
-                    showErrorMessage('支付未完成，我们接收到的状态为：${value.note}');
+                    showErrorMessage('Payment not completed, the status we received is: ${value.note}');
                   }
                   _closePaymentLoading();
                 } catch (e) {
@@ -447,22 +448,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
             showErrorMessage(resolveError(context, e));
           }
         },
-        confirmText: '已完成支付',
-        cancelText: '支付遇到问题，稍后继续',
+        confirmText: 'Payment completed',
+        cancelText: 'Payment encountered problems, continue later',
       );
     });
   }
 
-  /// 创建支付宝付款（App）
+  /// Create Alipay payment (App)
   Future<void> createAppAlipay() async {
-    // 支付宝支付
+    // Alipay payment
     final created = await APIServer().createAlipay(
       selectedProduct!.id,
       source: 'app',
     );
     paymentId = created.paymentId;
 
-    // 调起支付宝支付
+    // Initiate Alipay payment
     final aliPayRes = await aliPay(
       created.params,
       evn: AliPayEvn.ONLINE,
@@ -475,27 +476,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
         aliPayRes.map((key, value) => MapEntry(key.toString(), value)),
       );
 
-      showSuccessMessage('购买成功');
+      showSuccessMessage('Purchase successful');
     } else {
       switch (aliPayRes['resultStatus']) {
         case 8000: // fall through
         case 6004:
-          showErrorMessage('支付处理中，请稍后查看购买历史确认结果');
+          showErrorMessage('Payment processing, please check purchase history later for result');
           break;
         case 4000:
-          showErrorMessage('支付失败');
+          showErrorMessage('Payment failed');
           break;
         case 5000:
-          showErrorMessage('重复请求');
+          showErrorMessage('Repeated request');
           break;
         case 6001:
-          showErrorMessage('支付已取消');
+          showErrorMessage('Payment has been cancelled');
           break;
         case 6002:
-          showErrorMessage('网络连接出错');
+          showErrorMessage('Network connection error');
           break;
         default:
-          showErrorMessage('支付失败');
+          showErrorMessage('Payment failed');
       }
     }
     print("-----------------");
@@ -557,7 +558,7 @@ class PriceBlock extends StatelessWidget {
                       ),
                       const SizedBox(width: 1),
                       Text(
-                        '${product.expirePolicyText}内有效',
+                        '${product.expirePolicyText} valid',
                         style: const TextStyle(
                           fontSize: 11,
                           color: Color.fromARGB(255, 224, 170, 7),
@@ -569,7 +570,7 @@ class PriceBlock extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               loading
-                  ? const Text('加载中...')
+                  ? const Text('Loading...')
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,

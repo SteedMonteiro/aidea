@@ -40,7 +40,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
         appBar: AppBar(
           toolbarHeight: CustomSize.toolbarHeight,
           title: const Text(
-            '账号设置',
+            'Account Settings',
             style: TextStyle(fontSize: CustomSize.appBarTitleSize),
           ),
           centerTitle: true,
@@ -48,7 +48,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
             EnhancedPopupMenu(
               items: [
                 EnhancedPopupMenuItem(
-                  title: '注销账号',
+                  title: 'Logout',
                   icon: Icons.delete_forever,
                   iconColor: Colors.red,
                   onTap: (ctx) {
@@ -75,16 +75,16 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
               if (state is AccountLoaded) {
                 return buildSettingsList([
                   SettingsSection(
-                    title: const Text('基础信息'),
+                    title: const Text('Basic Information'),
                     tiles: [
                       SettingsTile(
-                        title: const Text('昵称'),
+                        title: const Text('Nickname'),
                         trailing: Row(
                           children: [
                             Text(
                               state.user!.user.name == null ||
                                       state.user!.user.name == ''
-                                  ? '未设置'
+                                  ? 'Not Set'
                                   : state.user!.user.name!,
                               style: TextStyle(
                                 color:
@@ -102,8 +102,8 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                         onPressed: (context) {
                           openTextFieldDialog(
                             context,
-                            title: '设置昵称',
-                            hint: '请输入你的昵称',
+                            title: 'Set Nickname',
+                            hint: 'Enter your nickname',
                             maxLine: 1,
                             maxLength: 30,
                             defaultValue: state.user?.user.name,
@@ -117,13 +117,13 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                         },
                       ),
                       SettingsTile(
-                        title: const Text('手机号'),
+                        title: const Text('Phone Number'),
                         trailing: Row(
                           children: [
                             Text(
                               state.user!.user.phone == null ||
                                       state.user!.user.phone == ''
-                                  ? '绑定'
+                                  ? 'Bind'
                                   : state.user!.user.phone!,
                               style: TextStyle(
                                 color:
@@ -152,8 +152,8 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                       ),
                       SettingsTile(
                         title: Text(state.user!.control.isSetPassword
-                            ? '修改密码'
-                            : '设置密码'),
+                            ? 'Change Password'
+                            : 'Set Password'),
                         trailing: Icon(
                           CupertinoIcons.chevron_forward,
                           size: MediaQuery.of(context).textScaleFactor * 18,

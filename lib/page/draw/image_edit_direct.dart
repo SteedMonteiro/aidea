@@ -41,7 +41,7 @@ class _ImageEditDirectScreenState extends State<ImageEditDirectScreen> {
   String? selectedImagePath;
   Uint8List? selectedImageData;
 
-  /// 是否停止周期性查询任务执行状态
+  /// Whether to stop periodic query task execution status
   var stopPeriodQuery = false;
 
   @override
@@ -94,7 +94,7 @@ class _ImageEditDirectScreenState extends State<ImageEditDirectScreen> {
             innerPanding: 10,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             children: [
-              // 上传图片
+              // Upload image
               ImageSelector(
                 onImageSelected: ({path, data}) {
                   if (path != null) {
@@ -116,7 +116,7 @@ class _ImageEditDirectScreenState extends State<ImageEditDirectScreen> {
               ),
             ],
           ),
-          // 生成按钮
+          // Generate button
           const SizedBox(height: 20),
           Row(
             children: [
@@ -140,7 +140,7 @@ class _ImageEditDirectScreenState extends State<ImageEditDirectScreen> {
     HapticFeedbackHelper.mediumImpact();
 
     if (selectedImagePath == null && selectedImageData == null) {
-      showErrorMessage('请先选择要处理的图片');
+      showErrorMessage('Please select an image to process');
       return;
     }
 
@@ -149,7 +149,7 @@ class _ImageEditDirectScreenState extends State<ImageEditDirectScreen> {
     final cancelOutside = BotToast.showCustomLoading(
       toastBuilder: (cancel) {
         return const LoadingIndicator(
-          message: '思考中，请稍候...',
+          message: 'Thinking, please wait...',
         );
       },
       allowClick: false,
@@ -163,7 +163,7 @@ class _ImageEditDirectScreenState extends State<ImageEditDirectScreen> {
         final cancel = BotToast.showCustomLoading(
           toastBuilder: (cancel) {
             return const LoadingIndicator(
-              message: '正在上传图片，请稍后...',
+              message: 'Uploading image, please wait...',
             );
           },
           allowClick: false,

@@ -11,7 +11,7 @@ class EmptyPreview extends StatefulWidget {
     required this.examples,
     required this.onSubmit,
   }) {
-    // 示例问题随机排序
+    // Randomly shuffle the example questions
     if (examples.isNotEmpty) {
       examples.shuffle();
     }
@@ -34,7 +34,7 @@ class _EmptyPreviewState extends State<EmptyPreview> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(height: 30),
-          // 示例内容区域
+          // Example content area
           Container(
             decoration: BoxDecoration(
               color: customColors.backgroundColor?.withAlpha(200),
@@ -54,7 +54,7 @@ class _EmptyPreviewState extends State<EmptyPreview> {
                         width: 20, height: 20),
                     const SizedBox(width: 5),
                     const Text(
-                      '可以这样问我：',
+                      'You can ask me like this:',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -106,7 +106,7 @@ class _EmptyPreviewState extends State<EmptyPreview> {
                         ),
                         const SizedBox(width: 3),
                         Text(
-                          '换一换',
+                          'Shuffle',
                           style: TextStyle(
                             color: customColors.chatExampleItemText,
                           ),

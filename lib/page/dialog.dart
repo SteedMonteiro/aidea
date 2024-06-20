@@ -22,13 +22,13 @@ showErrorMessageEnhanced(
 }) {
   if (message is LanguageText) {
     switch (message.action) {
-      // 智慧果不足，支付页面
+      // Insufficient wisdom fruit, payment page
       case 'payment':
         showBeautyDialog(
           context,
           type: QuickAlertType.warning,
           text: message.message.getString(context),
-          confirmBtnText: '立即购买',
+          confirmBtnText: 'Buy Now',
           showCancelBtn: true,
           onConfirmBtnTap: () {
             context.pop();
@@ -36,13 +36,13 @@ showErrorMessageEnhanced(
           },
         );
         return;
-      // 需要重新登录
+      // Need to re-login
       case 're-signin':
         showBeautyDialog(
           context,
           type: QuickAlertType.warning,
           text: message.message.getString(context),
-          confirmBtnText: '重新登录',
+          confirmBtnText: 'Re-login',
           showCancelBtn: true,
           onConfirmBtnTap: () {
             context.pop();
@@ -50,7 +50,7 @@ showErrorMessageEnhanced(
           },
         );
         return;
-      // 需要登录
+      // Need to login
       case 'sign-in':
         context.push('/login');
         return;
@@ -67,7 +67,7 @@ showBeautyDialog(
   BuildContext context, {
   required QuickAlertType type,
   required String text,
-  String confirmBtnText = '确定',
+  String confirmBtnText = 'Confirm',
   String? cancelBtnText,
   Function()? onConfirmBtnTap,
   Function()? onCancelBtnTap,
@@ -80,7 +80,7 @@ showBeautyDialog(
     type: type,
     text: text,
     width: MediaQuery.of(context).size.width > 600 ? 400 : null,
-    barrierDismissible: false, // 禁止点击外部关闭
+    barrierDismissible: false, // Prohibit clicking outside to close
     showCancelBtn: showCancelBtn,
     confirmBtnText: confirmBtnText,
     cancelBtnText: cancelBtnText ?? AppLocale.cancel.getString(context),
@@ -462,7 +462,7 @@ openListSelectDialog(
   );
 }
 
-/// 弹出一个输入框
+/// Pop up an input box
 openTextFieldDialog(
   BuildContext context, {
   required String title,
@@ -618,7 +618,7 @@ class _FullScreenDialog extends StatelessWidget {
   final List<Widget>? actions;
 
   const _FullScreenDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.actions,

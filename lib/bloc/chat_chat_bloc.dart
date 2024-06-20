@@ -11,7 +11,7 @@ part 'chat_chat_state.dart';
 class ChatChatBloc extends Bloc<ChatChatEvent, ChatChatState> {
   final ChatMessageRepository _chatMessageRepository;
   ChatChatBloc(this._chatMessageRepository) : super(ChatChatInitial()) {
-    // 加载最近的历史记录
+    // Load recent chat histories
     on<ChatChatLoadRecentHistories>((event, emit) async {
       final histories = await _chatMessageRepository.recentChatHistories(
         chatAnywhereRoomId,
@@ -20,7 +20,7 @@ class ChatChatBloc extends Bloc<ChatChatEvent, ChatChatState> {
       );
 
       var examples = await APIServer().example('openai:$defaultChatModel');
-      // examples 随机排序
+      // Shuffle examples
       examples.shuffle();
 
       emit(ChatChatRecentHistoriesLoaded(
@@ -29,7 +29,7 @@ class ChatChatBloc extends Bloc<ChatChatEvent, ChatChatState> {
       ));
     });
 
-    // 删除历史记录
+    // Delete chat history
     on<ChatChatDeleteHistory>((event, emit) async {
       await _chatMessageRepository.deleteChatHistory(event.chatId);
       add(ChatChatLoadRecentHistories());

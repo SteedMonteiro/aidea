@@ -59,7 +59,7 @@ class ImageStyleSelector extends StatelessWidget {
               children: [
                 for (var item in [
                   CreativeIslandImageFilter(
-                      id: 0, name: '自动', previewImage: ''),
+                      id: 0, name: 'Auto', previewImage: ''),
                   ...styles
                 ])
                   InkWell(

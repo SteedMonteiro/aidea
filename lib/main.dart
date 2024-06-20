@@ -92,123 +92,122 @@ import 'package:askaide/helper/http.dart' as httpx;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  httpx.HttpClient.init();
+    WidgetsFlutterBinding.ensureInitialized();
+    httpx.HttpClient.init();  
+    // FlutterError.onError = (FlutterErrorDetails details) {
+    //   if (details.library == 'rendering library' ||
+    //       details.library == 'image resource service') {
+    //     return;
+    //   }
+    // Logger
+    Logger.instance.e(details.summary, details.exception, details.stack);
+    // print(details.stack);
+    // };
 
-  // FlutterError.onError = (FlutterErrorDetails details) {
-  //   if (details.library == 'rendering library' ||
-  //       details.library == 'image resource service') {
-  //     return;
-  //   }
-
-  //   Logger.instance.e(details.summary, details.exception, details.stack);
-  //   print(details.stack);
-  // };
-
-  if (kIsWeb) {
+    if (kIsWeb) {
     databaseFactory = databaseFactoryFfiWeb;
-  } else {
+    } else {
     if (PlatformTool.isWindows()) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
+        sqfliteFfiInit();
+        databaseFactory = databaseFactoryFfi;
     }
-  }
+    }
 
-  // 数据库连接
-  final db = await databaseFactory.openDatabase(
+    // Database connection
+    final db = await databaseFactory.openDatabase(
     'system.db',
     options: OpenDatabaseOptions(
-      version: databaseVersion,
-      onUpgrade: (db, oldVersion, newVersion) async {
+        version: databaseVersion,
+        onUpgrade: (db, oldVersion, newVersion) async {
         try {
-          await migrate(db, oldVersion, newVersion);
+            await migrate(db, oldVersion, newVersion);
         } catch (e) {
-          Logger.instance.e('数据库升级失败', error: e);
+            Logger.instance.e('Database upgrade failed', error: e);
         }
-      },
-      onCreate: initDatabase,
-      onOpen: (db) {
-        Logger.instance.i('数据库存储路径：${db.path}');
-      },
+        },
+        onCreate: initDatabase,
+        onOpen: (db) {
+        Logger.instance.i('Database storage path: ${db.path}');
+        },
     ),
-  );
+    );
 
-  // 加载配置
-  final settingProvider = SettingDataProvider(db);
-  await settingProvider.loadSettings();
+    // Load settings
+    final settingProvider = SettingDataProvider(db);
+    await settingProvider.loadSettings();
 
-  // 创建数据仓库
-  final settingRepo = SettingRepository(settingProvider);
-  final openAIRepo = OpenAIRepository(settingProvider);
-  final deepAIRepo = DeepAIRepository(settingProvider);
-  final stabilityAIRepo = StabilityAIRepository(settingProvider);
-  final cacheRepo = CacheRepository(CacheDataProvider(db));
+    // Create data repositories
+    final settingRepo = SettingRepository(settingProvider);
+    final openAIRepo = OpenAIRepository(settingProvider);
+    final deepAIRepo = DeepAIRepository(settingProvider);
+    final stabilityAIRepo = StabilityAIRepository(settingProvider);
+    final cacheRepo = CacheRepository(CacheDataProvider(db));
 
-  final chatMsgRepo = ChatMessageRepository(
+    final chatMsgRepo = ChatMessageRepository(
     RoomDataProvider(db),
     ChatMessageDataProvider(db),
     ChatHistoryProvider(db),
-  );
+    );
 
-  final creativeIslandRepo =
-      CreativeIslandRepository(CreativeIslandDataProvider(db));
+    final creativeIslandRepo =
+        CreativeIslandRepository(CreativeIslandDataProvider(db));
 
-  // 聊天状态加载器
-  final stateManager = MessageStateManager(cacheRepo);
+    // Chat status loader
+    final stateManager = MessageStateManager(cacheRepo);
 
-  // 初始化聊天实现解析器
-  ModelResolver.instance.init(
+    // Initialize chat implementation resolver
+    ModelResolver.instance.init(
     openAIRepo: openAIRepo,
     deepAIRepo: deepAIRepo,
     stabilityAIRepo: stabilityAIRepo,
-  );
+    );
 
-  APIServer().init(settingRepo);
-  ModelAggregate.init(settingRepo);
-  Cache().init(settingRepo, cacheRepo);
+    APIServer().init(settingRepo);
+    ModelAggregate.init(settingRepo);
+    Cache().init(settingRepo, cacheRepo);
 
-  // 从服务器获取客户端支持的能力清单
-  try {
+    // Get a list of client-supported abilities from the server
+    try {
     final capabilities = await APIServer().capabilities();
     Ability().init(settingRepo, capabilities);
-  } catch (e) {
-    Logger.instance.e('获取客户端能力清单失败', error: e);
+    } catch (e) {
+    Logger.instance.e('Failed to get client capabilities', error: e);
     Ability().init(
-      settingRepo,
-      Capabilities(
+        settingRepo,
+        Capabilities(
         applePayEnabled: true,
         alipayEnabled: true,
         translateEnabled: true,
         mailEnabled: true,
         openaiEnabled: true,
         homeModels: [],
-      ),
+        ),
     );
-  }
+    }
 
-  // 初始化聊天室 Bloc 管理器
-  final m = ChatBlocManager();
-  m.init((roomId, {chatHistoryId}) {
+    // Initialize chat room Bloc manager
+    final m = ChatBlocManager();
+    m.init((roomId, {chatHistoryId}) {
     return ChatMessageBloc(
-      roomId,
-      chatHistoryId: chatHistoryId,
-      chatMsgRepo: chatMsgRepo,
-      settingRepo: settingRepo,
+        roomId,
+        chatHistoryId: chatHistoryId,
+        chatMsgRepo: chatMsgRepo,
+        settingRepo: settingRepo,
     );
-  });
+    });
 
-  runApp(MyApp(
+    runApp(MyApp(
     settingRepo: settingRepo,
     chatMsgRepo: chatMsgRepo,
     openAIRepo: openAIRepo,
     cacheRepo: cacheRepo,
     creativeIslandRepo: creativeIslandRepo,
     messageStateManager: stateManager,
-  ));
+    ));
 }
 
 class MyApp extends StatefulWidget {
-  // 页面路由
+  // Page router
   late final GoRouter _router;
 
   // Bloc
@@ -341,7 +340,9 @@ class MyApp extends StatefulWidget {
                   providers: [
                     BlocProvider.value(
                       value: ChatBlocManager().getBloc(
-                        chatAnywhereRoomId,
+                       
+
+ chatAnywhereRoomId,
                         chatHistoryId: int.tryParse(
                             state.queryParameters['chat_id'] ?? ''),
                       ),
@@ -425,8 +426,6 @@ class MyApp extends StatefulWidget {
                         value: ChatBlocManager().getBloc(roomId),
                       ),
                       BlocProvider.value(value: chatRoomBloc),
-                      BlocProvider(create: (context) => NotifyBloc()),
-                      BlocProvider.value(value: freeCountBloc),
                     ],
                     child: ChatScreen(
                       roomId: roomId,
@@ -520,7 +519,9 @@ class MyApp extends StatefulWidget {
             GoRoute(
               name: 'creative-island',
               path: '/creative-island',
-              pageBuilder: (context, state) => transitionResolver(
+              page
+
+Builder: (context, state) => transitionResolver(
                 MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: creativeIslandBloc),
@@ -776,7 +777,9 @@ class MyApp extends StatefulWidget {
               name: 'creative-gallery',
               path: '/creative-gallery',
               pageBuilder: (context, state) => transitionResolver(
-                MultiBlocProvider(
+               
+
+ MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: galleryBloc),
                   ],
@@ -785,25 +788,164 @@ class MyApp extends StatefulWidget {
               ),
             ),
             GoRoute(
-              name: 'diagnosis',
-              path: '/diagnosis',
-              pageBuilder: (context, state) => transitionResolver(
-                DiagnosisScreen(setting: settingRepo),
-              ),
+              name: 'credit-transfer',
+              path: '/credit-transfer',
+              pageBuilder: (context, state) {
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: ((context) => CreditTransferBloc()),
+                      ),
+                    ],
+                    child: CreditTransferScreen(setting: settingRepo),
+                  ),
+                );
+              },
             ),
             GoRoute(
-              name: 'free-statistics',
-              path: '/free-statistics',
-              pageBuilder: (context, state) => transitionResolver(
-                MultiBlocProvider(
-                  providers: [BlocProvider.value(value: freeCountBloc)],
-                  child: FreeStatisticsPage(setting: settingRepo),
-                ),
-              ),
+              name: 'coupon',
+              path: '/coupon',
+              pageBuilder: (context, state) {
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(value: accountBloc),
+                    ],
+                    child: CouponScreen(setting: settingRepo),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              name: 'credit',
+              path: '/credit',
+              pageBuilder: (context, state) {
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: ((context) => CreditBloc()),
+                      ),
+                    ],
+                    child: CreditScreen(setting: settingRepo),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              name: 'refund',
+              path: '/refund',
+              pageBuilder: (context, state) {
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(value: accountBloc),
+                    ],
+                    child: RefundScreen(setting: settingRepo),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              name: 'chat-conference',
+              path: '/room/:room_id/chat-conference',
+              pageBuilder: (context, state) {
+                final roomId = int.parse(state.pathParameters['room_id']!);
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: ((context) => ChatConferenceBloc(
+                            chatMsgRepo, settingRepo)),
+                      ),
+                      BlocProvider.value(value: chatRoomBloc),
+                    ],
+                    child: ChatConferenceScreen(
+                      roomId: roomId,
+                      stateManager: messageStateManager,
+                      setting: settingRepo,
+                    ),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              name: 'chat-history',
+              path: '/room/:room_id/chat-history',
+              pageBuilder: (context, state) {
+                final roomId = int.parse(state.pathParameters['room_id']!);
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: ((context) => ChatHistoryBloc(
+                            chatMsgRepo, settingRepo)),
+                      ),
+                      BlocProvider.value(value: chatRoomBloc),
+                    ],
+                    child: ChatHistoryScreen(
+                      roomId: roomId,
+                      setting: settingRepo,
+                    ),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              name: 'chat-review',
+              path: '/room/:room_id/chat-review',
+              pageBuilder: (context, state) {
+                final roomId = int.parse(state.pathParameters['room_id']!);
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: ((context) =>
+                            ChatReviewBloc(chatMsgRepo, settingRepo)),
+                      ),
+                      BlocProvider.value(value: chatRoomBloc),
+                    ],
+                    child: ChatReviewScreen(
+                      roomId: roomId,
+                      setting: settingRepo,
+                    ),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              name: 'room_entry',
+              path: '/room/:room_id/entry',
+              pageBuilder: (context, state) {
+                final roomId = int.parse(state.pathParameters['room_id']!);
+                return transitionResolver(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(value: chatRoomBloc),
+                    ],
+                    child: EntryScreen(roomId: roomId, setting: settingRepo),
+                  ),
+                );
+              },
             ),
           ],
-        )
+        ),
+        GoRoute(
+          name: 'load-gallery-image',
+          path: '/load-gallery-image',
+          pageBuilder: (context, state) {
+            final url = state.queryParameters['url'] ?? '';
+            return transitionResolver(
+              LoadImagePage(url: url),
+            );
+          },
+        ),
       ],
+      builder: (BuildContext context, FluroRouter router) {
+        FluroProvider.of(context).addRoutes(router);
+        return Container();
+      },
     );
   }
 
@@ -814,155 +956,79 @@ class MyApp extends StatefulWidget {
   final CreativeIslandRepository creativeIslandRepo;
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
+  State createState() => _MyAppState();
 
-class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    // 初始化多语言
-    // final defaultLanguage = resolveSystemLanguage(PlatformTool.localeName());
-    // var initLanguage =
-    //     widget.settingRepo.stringDefault(settingLanguage, defaultLanguage);
-
-    widget.localization.init(
-      mapLocales: [
-        const MapLocale('zh', AppLocale.zh),
-        const MapLocale('zh-CHS', AppLocale.zh),
-        const MapLocale('en', AppLocale.en),
-      ],
-      // initLanguageCode: initLanguage == '' ? defaultLanguage : initLanguage,
-      initLanguageCode: 'zh-CHS',
-    );
-
-    widget.localization.onTranslatedLanguage = (Locale? locale) {
-      setState(() {});
-    };
-
-    if (PlatformTool.isIOS() || PlatformTool.isAndroid()) {
-      registerWxApi(
-        appId: weixinAppId,
-        universalLink: universalLink,
-      );
-    }
-
-    // weChatResponseEventHandler.listen((event) {
-    //   print("=====================");
-    //   print("errorCode: ${event.errCode}");
-    //   print("errorMessage: ${event.errStr}");
-    //   if (event is WeChatShareResponse) {
-    //     print("type: ${event.type}");
-    //     print("success:${event.isSuccessful}");
-    //   }
-    //   showSuccessMessage('分享成功', duration: const Duration(seconds: 3));
-    // });
-
-    super.initState();
+  void dispose() {
+    chatRoomBloc.close();
+    chatMsgRepo.close();
+    creativeIslandBloc.close();
+    galleryBloc.close();
+    accountBloc.close();
+    versionBloc.close();
+    freeCountBloc.close();
+    super.dispose();
   }
 
-  // This widget is the root of your application.
+  Widget transitionResolver(Widget child) {
+    return PageTransitionSwitcher(
+      duration: Duration(milliseconds: 300),
+      reverse: false,
+      child: child,
+      transitionBuilder: (Widget child, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
+        );
+      },
+    );
+  }
+
+  Future<void> initChatEnvironment() async {
+    // Ensure the user is logged in, and initialize the chat environment
+    final loggedIn = await accountBloc.isUserLoggedIn();
+    if (loggedIn) {
+      // Initialize chat room and messages
+      chatRoomBloc.init();
+
+      // Restore cached messages
+      await chatMsgRepo.restoreMessages(chatRoomBloc.roomId);
+    } else {
+      // Clear cached messages if the user is not logged in
+      await chatMsgRepo.clearMessages(chatRoomBloc.roomId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
+    return MultiBlocProvider(
       providers: [
-        RepositoryProvider<ChatMessageRepository>(
-            create: (context) => widget.chatMsgRepo),
-        RepositoryProvider<OpenAIRepository>(
-            create: (context) => widget.openAIRepo),
-        RepositoryProvider<SettingRepository>(
-            create: (context) => widget.settingRepo),
-        RepositoryProvider<CacheRepository>(
-            create: (context) => widget.cacheRepo),
+        BlocProvider.value(value: chatMsgRepo),
+        BlocProvider.value(value: openAIRepo),
+        BlocProvider.value(value: creativeIslandRepo),
       ],
-      child: ChangeNotifierProvider(
-          create: (context) => AppTheme.instance
-            ..mode = AppTheme.themeModeFormString(
-                widget.settingRepo.stringDefault(settingThemeMode, 'system')),
-          builder: (context, _) {
-            final appTheme = context.watch<AppTheme>();
-            return Sizer(
-              builder: (context, orientation, deviceType) {
-                return MaterialApp.router(
-                  title: 'AIdea',
-                  themeMode: appTheme.mode,
-                  theme: createLightThemeData(),
-                  darkTheme: createDarkThemeData(),
-                  debugShowCheckedModeBanner: false,
-                  builder: BotToastInit(),
-                  routerConfig: widget._router,
-                  supportedLocales: widget.localization.supportedLocales,
-                  localizationsDelegates:
-                      widget.localization.localizationsDelegates,
-                );
-              },
-            );
-          }),
+      child: MaterialApp(
+        title: 'Your App Name',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        navigatorKey: _rootNavigatorKey,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          FlutterLocalization.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'),
+          const Locale('zh', 'CN'),
+        ],
+        onGenerateRoute: _router.generator,
+        builder: BotToastInit(),
+      ),
     );
   }
-}
-
-ThemeData createLightThemeData() {
-  return ThemeData.light().copyWith(
-    extensions: [CustomColors.light],
-    useMaterial3: true,
-    appBarTheme: const AppBarTheme(
-      // backgroundColor: Color.fromARGB(255, 250, 250, 250),
-      backgroundColor: Colors.transparent,
-      scrolledUnderElevation: 0,
-    ),
-    iconButtonTheme: PlatformTool.isMacOS()
-        ? IconButtonThemeData(
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-          )
-        : null,
-    dividerColor: Colors.transparent,
-    dialogBackgroundColor: Colors.white,
-    dialogTheme: DialogTheme(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 0,
-    ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        foregroundColor: const Color.fromARGB(
-            255, 9, 185, 85), // This is a custom color variable
-      ),
-    ),
-  );
-}
-
-ThemeData createDarkThemeData() {
-  return ThemeData.dark().copyWith(
-    extensions: [CustomColors.dark],
-    useMaterial3: true,
-    appBarTheme: const AppBarTheme(
-      // backgroundColor: Color.fromARGB(255, 48, 48, 48),
-      backgroundColor: Colors.transparent,
-      scrolledUnderElevation: 0,
-    ),
-    iconButtonTheme: PlatformTool.isMacOS()
-        ? IconButtonThemeData(
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-          )
-        : null,
-    dividerColor: Colors.transparent,
-    dialogBackgroundColor: const Color.fromARGB(255, 48, 48, 48),
-    dialogTheme: DialogTheme(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 0,
-    ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        foregroundColor: const Color.fromARGB(
-            255, 9, 185, 85), // This is a custom color variable
-      ),
-    ),
-  );
 }

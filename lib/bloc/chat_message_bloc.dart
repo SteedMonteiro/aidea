@@ -58,9 +58,9 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
     ));
   }
 
-  /// 设置上下文清理标识
+  /// Set context break flag
   Future<void> _breakContextEventHandler(event, emit) async {
-    // 查询当前 Room 信息
+    // Query current Room information
     final room = await queryRoomById(chatMsgRepo, roomId);
     if (room == null) {
       emit(ChatMessagesLoaded(
@@ -68,7 +68,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
           roomId,
           userId: APIServer().localUserID(),
         ),
-        error: '选择的数字人不存在',
+        error: 'The selected digital person does not exist',
       ));
       return;
     }
@@ -110,59 +110,59 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
       );
     }
 
-    final messages = await chatMsgRepo.getRecentMessages(
-      roomId,
+  final messages = await chatMsgRepo.getRecentMessages(
+     roomId,
       userId: APIServer().localUserID(),
     );
     emit(ChatMessagesLoaded(messages));
     emit(ChatMessageUpdated(messages.last));
   }
 
-  /// 清空消息事件处理
-  Future<void> _clearAllEventHandler(event, emit) async {
-    // 查询当前 Room 信息
-    final room = await queryRoomById(chatMsgRepo, roomId);
-    if (room == null) {
-      emit(ChatMessagesLoaded(
-        await chatMsgRepo.getRecentMessages(
-          roomId,
-          userId: APIServer().localUserID(),
-        ),
-        error: '选择的数字人不存在',
-      ));
-      return;
-    }
-
-    await chatMsgRepo.clearMessages(
-      roomId,
-      userId: APIServer().localUserID(),
-    );
-
-    if (room.initMessage != null && room.initMessage != '') {
-      await chatMsgRepo.sendMessage(
+  /// Message clearing event handler
+Future<void> _clearAllEventHandler(event, emit) async {
+  // Query current Room information
+  final room = await queryRoomById(chatMsgRepo, roomId);
+  if (room == null) {
+    emit(ChatMessagesLoaded(
+      await chatMsgRepo.getRecentMessages(
         roomId,
-        Message(
-          Role.receiver,
-          room.initMessage!,
-          ts: DateTime.now(),
-          type: MessageType.initMessage,
-          roomId: roomId,
-          userId: APIServer().localUserID(),
-        ),
+        userId: APIServer().localUserID(),
+      ),
+      error: '选择的数字人不存在',
+    ));
+    return;
+  }
+
+await chatMsgRepo.clearMessages(
+    roomId,
+    userId: APIServer().localUserID(),
+  );
+
+if (room.initMessage != null && room.initMessage != '') {
+    await chatMsgRepo.sendMessage(
+      roomId,
+      Message(
+        Role.receiver,
+        room.initMessage!,
+        ts: DateTime.now(),
+        type: MessageType.initMessage,
+        roomId: roomId,
+        userId: APIServer().localUserID(),
+       ),
       );
     }
 
     emit(ChatMessagesLoaded(await chatMsgRepo.getRecentMessages(
-      roomId,
-      userId: APIServer().localUserID(),
-    )));
-  }
+    roomId,
+    userId: APIServer().localUserID(),
+  )));
+}
 
-  /// 页面加载事件处理
+  /// Page load event handler
   Future<void> _getRecentEventHandler(event, emit) async {
-    ChatHistory? his;
+    ChatHistory? history;
     if (event.chatHistoryId != null && event.chatHistoryId! > 0) {
-      his = await chatMsgRepo.getChatHistory(event.chatHistoryId!);
+      history = await chatMsgRepo.getChatHistory(event.chatHistoryId!);
     }
 
     emit(ChatMessagesLoaded(
@@ -171,11 +171,11 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
         userId: APIServer().localUserID(),
         chatHistoryId: event.chatHistoryId,
       ),
-      chatHistory: his,
+      chatHistory: history,
     ));
   }
 
-  /// 消息发送事件处理
+  /// Message send event handler
   Future<void> _messageSendEventHandler(event, emit) async {
     if (event.message is! Message) {
       return;
@@ -184,7 +184,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
     Message message = event.message as Message;
     ChatHistory? localChatHistory;
 
-    // 如果是聊一聊，自动创建聊天记录历史
+    // Automatically create chat record history if it's a chat session
     if (roomId == chatAnywhereRoomId) {
       if (message.chatHistoryId == null || message.chatHistoryId! <= 0) {
         final chatHistory = await chatMsgRepo.createChatHistory(
@@ -203,7 +203,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
 
     int? localChatHistoryId = message.chatHistoryId;
 
-    // 查询当前 Room 信息
+    // Query current Room information
     final room = await queryRoomById(chatMsgRepo, roomId);
     if (room == null) {
       emit(ChatMessagesLoaded(
@@ -212,7 +212,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
           userId: APIServer().localUserID(),
           chatHistoryId: localChatHistoryId,
         ),
-        error: '选择的数字人不存在',
+        error: 'Selected digital entity does not exist',
         chatHistory: localChatHistory,
       ));
       return;
@@ -228,10 +228,10 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
       }
     }
 
-    // 查询最后一条消息
-    // 如果最后一条消息符合以下情况，则创建时间线
-    //  1. 最后一条消息不存在
-    //  2. 最后一条消息的时间距离当前时间超过 3 小时
+    // Query the last message
+    // If the last message meets the following conditions, create a timeline
+    //  1. The last message does not exist
+    //  2. The time difference between the last message and the current time is more than 3 hours
     var last = await chatMsgRepo.getLastMessage(
       roomId,
       chatHistoryId: localChatHistoryId,
@@ -240,7 +240,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
     if (last == null ||
         last.ts == null ||
         DateTime.now().difference(last.ts!).inMinutes > 60 * 3) {
-      // 发送时间线消息
+      // Send a timeline message
       await chatMsgRepo.sendMessage(
         roomId,
         Message(
@@ -255,31 +255,31 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
       );
     }
 
-    // 发送当前用户消息
+    // Send the current user's message
     message.model = room.model;
     message.userId = APIServer().localUserID();
     message.status = 0;
 
-    // 聊天历史记录中，所有发送状态为 pending 状态的消息，全部设置为失败
+    // Set all pending messages in chat history to failed
     await chatMsgRepo.fixMessageStatus(roomId);
 
-    // 记录当前消息
+    // Record the current message
     final sentMessageId = await chatMsgRepo.sendMessage(roomId, message);
 
-    // 更新 Room 最后活跃时间
-    // 这里没有使用 await，因为不需要等待更新完成，让 room 的更新异步的去处理吧
+    // Update the Room's last active time
+    // This is not awaited because we don't need to wait for the update to complete asynchronously
     if (!Ability().supportAPIServer()) {
       chatMsgRepo.updateRoomLastActiveTime(roomId);
     }
 
-    // 重新查询消息列表，此时包含了刚刚发送的消息+机器人思考中消息
+    // Re-query the message list, now including the message just sent + the message being considered by the bot
     final messages = await chatMsgRepo.getRecentMessages(
       roomId,
       userId: APIServer().localUserID(),
       chatHistoryId: localChatHistoryId,
     );
 
-    // 创建机器人思考中系统消息
+    // Create a system message for the bot's consideration
     Message waitMessage = Message(
       Role.receiver,
       '',
@@ -292,7 +292,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
       chatHistoryId: localChatHistoryId,
     );
 
-    // 回写消息 ID
+    // Set the message ID
     waitMessage.id = await chatMsgRepo.sendMessage(roomId, waitMessage);
     waitMessage.isReady = false;
 
@@ -302,7 +302,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
         processing: true, chatHistory: localChatHistory));
     emit(ChatMessageUpdated(waitMessage, processing: true));
 
-    // 等待监听机器人应答消息
+    // Wait for the bot's response message
     final queue = GracefulQueue<ChatStreamRespData>();
     try {
       var listener = queue.listen(const Duration(milliseconds: 10), (items) {
@@ -325,7 +325,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
               waitMessage.quotaConsumed = quotaConsumed;
               waitMessage.tokenConsumed = tokenConsumed;
             } catch (e) {
-              // ignore: avoid_print
+              // Ignore errors
             }
           }
         }
@@ -348,11 +348,11 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
 
       await listener;
 
-      // 机器人应答完成，将最后一条机器人应答消息更新到数据库，替换掉思考中消息
+      // Bot response is complete, update the last bot response message in the database, replacing the thinking message
       waitMessage.isReady = true;
       await chatMsgRepo.updateMessage(roomId, waitMessage.id!, waitMessage);
 
-      // 更新聊天问题的服务端 ID 和消息状态
+      // Update the server ID and message status of the chat question
       var sentMessageParts = <MessagePart>[];
       sentMessageParts.add(MessagePart('status', 1));
       if (message.serverId != null && message.serverId! > 0) {
@@ -368,17 +368,17 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
       if (room.id == chatAnywhereRoomId &&
           localChatHistoryId != null &&
           localChatHistoryId > 0) {
-        // 更新聊天历史纪录最后一条消息
+        // Update the last message of the chat history record
         final chatHistory =
             await chatMsgRepo.getChatHistory(localChatHistoryId);
         if (chatHistory != null) {
           chatHistory.lastMessage = waitMessage.text;
-          // 异步处理就好，不需要等待
+          // Handle asynchronously, no need to wait
           chatMsgRepo.updateChatHistory(localChatHistoryId, chatHistory);
         }
       }
 
-      // 重新查询消息列表，此时包含了刚刚发送的消息+机器人应答消息
+      // Re-query the message list, now including the message just sent + the bot's response message
       emit(ChatMessagesLoaded(
         await chatMsgRepo.getRecentMessages(
           roomId,
@@ -433,7 +433,7 @@ class ChatMessageBloc extends BlocExt<ChatMessageEvent, ChatMessageState> {
     }
 
     emit(ChatMessageUpdated(waitMessage));
-  }
+  } 
 }
 
 Future<Room?> queryRoomById(
@@ -463,3 +463,4 @@ Future<Room?> queryRoomById(
 
   return room;
 }
+

@@ -59,7 +59,7 @@ class PlatformTool {
     try {
       return Platform.localeName;
     } catch (e) {
-      return 'zh_Hans_CN';
+      return 'en_US';
     }
   }
 }

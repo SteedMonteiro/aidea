@@ -52,7 +52,7 @@ Future<void> shareTo(
                     Image.asset('assets/friendroom.png', width: 40),
                     const SizedBox(height: 10),
                     const Text(
-                      '分享到朋友圈',
+                      'Share to Moments',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -81,7 +81,7 @@ Future<void> shareTo(
                     Image.asset('assets/wechat.png', width: 40),
                     const SizedBox(height: 10),
                     const Text(
-                      '分享到微信',
+                      'Share to WeChat',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -111,7 +111,7 @@ Future<void> shareTo(
                     Image.asset('assets/share.png', width: 40),
                     const SizedBox(height: 10),
                     const Text(
-                      '分享到其它应用',
+                      'Share to Other Apps',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],

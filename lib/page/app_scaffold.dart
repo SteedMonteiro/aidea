@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 class AppScaffold extends StatefulWidget {
   final SettingRepository settingRepo;
   const AppScaffold({
-    Key? key,
+    super.key,
     required this.child,
     required this.settingRepo,
   }) : super(key: key);

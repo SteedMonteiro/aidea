@@ -115,7 +115,7 @@ class _CreativeIslandHistoryPreviewState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '想法',
+                                  'Thoughts',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _CreativeIslandHistoryPreviewState
       return [
         TextButton(
           onPressed: () {
-            openConfirmDialog(context, '确定封禁该项目？', () {
+            openConfirmDialog(context, 'Are you sure you want to ban this item?', () {
               APIServer()
                   .forbidCreativeHistoryItem(historyId: state.item!.id)
                   .then((value) {
@@ -185,7 +185,7 @@ class _CreativeIslandHistoryPreviewState
               ),
               const SizedBox(width: 5),
               Text(
-                '封禁',
+                'Ban',
                 style: TextStyle(
                   color: customColors.weakLinkColor,
                   fontSize: 12,
@@ -231,7 +231,7 @@ class _CreativeIslandHistoryPreviewState
             }
           },
           child: Text(
-            state.item!.isShared ? '设为私有' : '设为公开',
+            state.item!.isShared ? 'Set as Private' : 'Set as Public',
             style: TextStyle(
               color: customColors.weakLinkColor,
               fontSize: 12,
@@ -257,7 +257,7 @@ class _CreativeIslandHistoryPreviewState
             ),
             const SizedBox(height: 10),
             const Text(
-              '创作失败',
+              'Creation Failed',
               style: TextStyle(color: Colors.red),
               textAlign: TextAlign.center,
             ),
@@ -265,7 +265,7 @@ class _CreativeIslandHistoryPreviewState
             SelectableText(
               widget.showErrorMessage
                   ? '${state.item!.answer}'
-                  : '错误代码：${state.item!.errorCode}',
+                  : 'Error Code: ${state.item!.errorCode}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 10,
@@ -289,7 +289,7 @@ class _CreativeIslandHistoryPreviewState
           ),
           const SizedBox(height: 10),
           Text(
-            '创作中，请稍后...',
+            'En cours de création, veuillez patienter...',
             style: TextStyle(
               color: customColors.backgroundInvertedColor,
             ),
@@ -334,7 +334,7 @@ class _CreativeIslandHistoryPreviewState
     //       crossAxisAlignment: CrossAxisAlignment.start,
     //       children: [
     //         Text(
-    //           'AI 模型',
+    //           'AI Modèle',
     //           style: TextStyle(
     //             fontSize: 15,
     //             fontWeight: FontWeight.bold,
@@ -359,7 +359,7 @@ class _CreativeIslandHistoryPreviewState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '风格',
+              'Style',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -409,7 +409,7 @@ class _CreativeIslandHistoryPreviewState
     //       crossAxisAlignment: CrossAxisAlignment.start,
     //       children: [
     //         Text(
-    //           '原图',
+    //           'Image d'origine',
     //           style: TextStyle(
     //             fontSize: 15,
     //             fontWeight: FontWeight.bold,

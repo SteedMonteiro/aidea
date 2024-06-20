@@ -19,7 +19,7 @@ Object resolveErrorMessage(dynamic e) {
 Object? resolveHTTPStatusCode(int statusCode) {
   switch (statusCode) {
     case 400:
-      return const LanguageText('请求参数错误');
+      return const LanguageText('Request parameter error');
     case 401:
       if (Ability().supportLocalOpenAI()) {
         return const LanguageText(AppLocale.openAIAuthFailed);

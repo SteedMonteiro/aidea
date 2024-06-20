@@ -115,7 +115,7 @@ class _GalleryItemScreenState extends State<GalleryItemScreen> {
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
-                                        state.item.username ?? '匿名',
+                                        state.item.username ?? 'Anonymous',
                                         style: TextStyle(
                                           color: customColors.weakTextColor,
                                           fontSize: 12,
@@ -170,7 +170,7 @@ class _GalleryItemScreenState extends State<GalleryItemScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   EnhancedButton(
-                                    title: '分享',
+                                    title: 'Share',
                                     icon: const Icon(Icons.share, size: 14),
                                     width: 100,
                                     color: customColors.backgroundInvertedColor,
@@ -195,7 +195,7 @@ class _GalleryItemScreenState extends State<GalleryItemScreen> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: EnhancedButton(
-                                      title: '制作同款',
+                                      title: 'Create Similar',
                                       onPressed: () {
                                         if (Ability().supportAPIServer()) {
                                           context.push(
@@ -282,7 +282,7 @@ class _TextItemState extends State<TextItem> {
                     TextButton.icon(
                       onPressed: () {
                         FlutterClipboard.copy(widget.value).then((value) {
-                          showSuccessMessage('已复制到剪贴板');
+                          showSuccessMessage('Copied to clipboard');
                         });
                         cancel();
                       },
@@ -296,7 +296,7 @@ class _TextItemState extends State<TextItem> {
                             size: 14,
                           ),
                           Text(
-                            "复制",
+                            "Copy",
                             style: TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ],
@@ -324,7 +324,7 @@ class _TextItemState extends State<TextItem> {
                             size: 14,
                           ),
                           Text(
-                            '翻译',
+                            'Translate',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -360,7 +360,7 @@ class _TextItemState extends State<TextItem> {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    '中文翻译 ↓',
+                    'Chinese Translation ↓',
                     style: TextStyle(
                       fontSize: 12,
                       color: customColors.weakTextColor,
@@ -389,7 +389,7 @@ class _TextItemState extends State<TextItem> {
                             onPressed: () {
                               FlutterClipboard.copy(valueTranslated)
                                   .then((value) {
-                                showSuccessMessage('已复制到剪贴板');
+                                showSuccessMessage('Copied to clipboard');
                               });
                               cancel();
                             },
@@ -403,7 +403,7 @@ class _TextItemState extends State<TextItem> {
                                   size: 14,
                                 ),
                                 Text(
-                                  "复制",
+                                  "Copy",
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.white),
                                 ),

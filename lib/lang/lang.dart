@@ -28,7 +28,6 @@ mixin AppLocale {
   static const String account = 'account';
   static const String usedUp = 'used_up';
   static const String expired = 'expired';
-
   static const String save = 'save';
   static const String ok = 'ok';
   static const String cancel = 'cancel';
@@ -43,7 +42,6 @@ mixin AppLocale {
   static const String histories = 'histories';
   static const String enable = 'enable';
   static const String disable = 'disable';
-
   static const String newChat = 'new-chat';
   static const String clearChatHistory = 'clear-chat-history';
   static const String examples = 'examples';
@@ -58,7 +56,6 @@ mixin AppLocale {
   static const String questionExamples = 'question-examples';
   static const String noRecords = 'no-records';
   static const String contextBreakMessage = 'context-break-message';
-
   static const String room = "room";
   static const String createRoom = "create-room";
   static const String model = "model";
@@ -72,7 +69,6 @@ mixin AppLocale {
   static const String backgroundSetting = "background-setting";
   static const String roomSetting = "room-setting";
   static const String chatHistory = "chat-history";
-
   static const String noMessageSelected = 'no-message-selected';
   static const String modelUsage = 'model-usage';
   static const String promptUsage = 'prompt-usage';
@@ -90,11 +86,9 @@ mixin AppLocale {
   static const String confirmToDeleteRoom = 'confirm-to-delete-room';
   static const String confirmSend = 'confirm-send';
   static const String openAIAuthFailed = 'openai-auth-failed';
-
   static const String nameRequiredMessage = 'name-required-message';
   static const String promptFormatError = 'prompt-format-error';
   static const String modelRequiredMessage = 'model-required-message';
-
   static const String writeYourIdeas = 'write-your-ideas';
   static const String describeYourImages = 'describe-your-images';
   static const String excludeContents = 'exclude-contents';
@@ -146,11 +140,9 @@ mixin AppLocale {
   static const String referenceImageNote = 'reference-image-note';
   static const String selectReferenceImage = 'select-reference-image';
   static const String random = 'random';
-
   static const String followSystem = 'follow-system';
   static const String darkThemeMode = 'dark-theme-mode';
   static const String lightThemeMode = 'light-theme-mode';
-
   static const String forgotPassword = 'forgot-password';
   static const String createAccount = 'create-account';
   static const String useAsClient = 'use-as-client';
@@ -187,7 +179,6 @@ mixin AppLocale {
   static const String inviteCodeInputTips = 'invite-code-input-tips';
   static const String inviteCodeFormatError = 'invite-code-format-error';
   static const String enableCustomOpenAI = 'enable-custom-openai';
-
   static const String me = 'me';
   static const String coinsUsage = 'coins-usage';
   static const String updateCheck = 'update-check';
@@ -198,7 +189,7 @@ mixin AppLocale {
   static const String toPay = 'to-pay';
   static const String discover = 'discover';
 
-  static const Map<String, dynamic> zh = {
+static const Map<String, dynamic> zh = {
     required: '必填',
     systemInfo: '系统信息',
     save: '保存',
@@ -390,43 +381,42 @@ mixin AppLocale {
 
   static const Map<String, dynamic> en = {
     required: 'Required',
-    systemInfo: 'System',
+    systemInfo: 'System Info',
     save: 'Save',
     ok: 'OK',
     cancel: 'Cancel',
     select: 'Select',
     tips: 'Tips',
-    basicInfo: 'Basic',
+    basicInfo: 'Basic Info',
     delete: 'Delete',
     edit: 'Edit',
-    selectAll: 'Select all',
-    unselectAll: 'Cancel',
+    selectAll: 'Select All',
+    unselectAll: 'Unselect All',
     share: 'Share',
     histories: 'Histories',
     enable: 'Enable',
     disable: 'Disable',
     newChat: 'New Chat',
-    clearChatHistory: 'Clear Chat Histories',
+    clearChatHistory: 'Clear Chat History',
     examples: 'Examples',
     continueMessage: 'Continue',
     messageInputTips: 'Ask me something...',
-    uploadImage: 'Upload',
-    longPressSpeak: 'Long press to speak',
+    uploadImage: 'Upload Image',
+    longPressSpeak: 'Long Press to Speak',
     send: 'Send',
     uploading: 'Uploading...',
-    robotIsThinkingMessage: 'Thinking...',
-    robotHasSomeError:
-        'There seems to be something wrong, Do you want to resend the message?',
-    appName: 'AIdea',
-    chatAnywhere: 'Chat',
-    homeTitle: 'Characters',
-    creativeIsland: 'Creative',
-    settings: 'Setting',
+    robotIsThinkingMessage: 'Robot is thinking...',
+    robotHasSomeError: 'Robot has encountered an error',
+    appName: 'App Name',
+    chatAnywhere: 'Chat Anywhere',
+    homeTitle: 'Home Title',
+    creativeIsland: 'Creative Island',
+    settings: 'Settings',
     language: 'Language',
-    themeMode: 'Theme',
+    themeMode: 'Theme Mode',
     accountInfo: 'Account Info',
     accountSettings: 'Account Settings',
-    usage: 'Coins',
+    usage: 'Usage',
     validBefore: 'Valid Before',
     custom: 'Custom',
     clearCache: 'Clear Cache',
@@ -439,7 +429,7 @@ mixin AppLocale {
     signUp: 'Sign Up',
     password: 'Password',
     passwordConfirm: 'Confirm Password',
-    retrievePassword: 'Forgot Password',
+    retrievePassword: 'Retrieve Password',
     newPassword: 'New Password',
     account: 'Account',
     usedUp: 'Used Up',
@@ -593,13 +583,12 @@ mixin AppLocale {
 }
 
 class LanguageText {
-  final String message;
-  final String? action;
-  const LanguageText(this.message, {this.action});
+final String message;
+final String? action;
+const LanguageText(this.message, {this.action});
 }
 
 final languages = <String, String>{
-  'zh_Hans_': 'zh-CHS',
   'en': 'en',
 };
 
@@ -612,3 +601,4 @@ String resolveSystemLanguage(String deviceLocale) {
 
   return 'en';
 }
+

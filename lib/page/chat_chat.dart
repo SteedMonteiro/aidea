@@ -70,23 +70,23 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
     ModelIndicatorInfo(
       modelId: "gpt-3.5-turbo",
       modelName: 'GPT-3.5',
-      description: '速度快，成本低',
+      description: 'Fast speed, low cost',
       icon: Icons.bolt,
       activeColor: Colors.green,
     ),
     ModelIndicatorInfo(
       modelId: "gpt-4",
       modelName: 'GPT-4',
-      description: '能力强，更精准',
+      description: 'Strong ability, more accurate',
       icon: Icons.auto_awesome,
       activeColor: const Color.fromARGB(255, 120, 73, 223),
     ),
   ];
 
-  /// 是否显示提示消息对话框
+  /// Whether to show the prompt message dialog
   bool showFreeModelNotifyMessage = false;
 
-  /// 促销事件
+  /// Promotion event
   PromotionEvent? promotionEvent;
 
   @override
@@ -112,7 +112,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
           .toList();
     }
 
-    // 是否显示免费模型提示消息
+    // Whether to show free model prompt message
     Cache().boolGet(key: 'show_home_free_model_message').then((show) async {
       if (show) {
         final promotions = await APIServer().notificationPromotionEvents();
@@ -121,7 +121,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
           return;
         }
 
-        // 多个促销事件，则随机选择一个
+        // If there are multiple promotion events, randomly select one
         promotionEvent = promotions['chat_page']![
             Random().nextInt(promotions['chat_page']!.length)];
       }
@@ -139,7 +139,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
       currentModel = models[0];
     });
 
-    // 加载免费模型剩余使用次数
+    // Load the remaining usage times of the free model
     if (currentModel != null) {
       context
           .read<FreeCountBloc>()
@@ -152,15 +152,15 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
           context,
           type: QuickAlertType.info,
           text:
-              '恭喜您，账号创建成功！${(widget.reward != null && widget.reward! > 0) ? '\n\n为了庆祝这一时刻，我们向您的账户赠送了 ${widget.reward} 个智慧果。' : ''}',
-          confirmBtnText: '开始使用',
+              'Congratulations, your account has been successfully created! ${(widget.reward != null && widget.reward! > 0) ? '\n\nTo celebrate this moment, we have added ${widget.reward} wisdom fruits to your account.' : ''}',
+          confirmBtnText: 'Start using',
           onConfirmBtnTap: () {
             context.pop();
           },
         );
       });
     } else {
-      // 版本检查
+      // Version check
       APIServer().versionCheck().then((resp) {
         final lastVersion = widget.setting.get('last_server_version');
         if (resp.serverVersion == lastVersion && !resp.forceUpdate) {
@@ -172,11 +172,11 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
             context,
             type: QuickAlertType.success,
             text: resp.message,
-            confirmBtnText: '去更新',
+            confirmBtnText: 'Update',
             onConfirmBtnTap: () {
               launchUrlString(resp.url, mode: LaunchMode.externalApplication);
             },
-            cancelBtnText: '暂不更新',
+            cancelBtnText: 'Update later',
             showCancelBtn: true,
           );
         }
@@ -242,7 +242,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
                                   margin:
                                       const EdgeInsets.only(top: 20, left: 15),
                                   child: Text(
-                                    '历史记录',
+                                    'History',
                                     style: TextStyle(
                                       color: customColors.weakTextColor
                                           ?.withAlpha(100),
@@ -301,10 +301,10 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 首页通知消息组件
+          // Home notification message component
           if (showFreeModelNotifyMessage && promotionEvent != null)
             buildNotifyMessageWidget(context),
-          // 模型选择
+          // Model selection
           Container(
             margin: const EdgeInsets.only(
               left: 10,
@@ -335,7 +335,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
                 currentModel =
                     models.firstWhere((element) => element.modelId == value);
 
-                // 重新读取模型的免费使用次数
+                // Reload the free usage count of the model
                 context
                     .read<FreeCountBloc>()
                     .add(FreeCountReloadEvent(model: value));
@@ -344,7 +344,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
               },
             ),
           ),
-          // 聊天内容输入框
+          // Chat content input box
           Padding(
             padding: const EdgeInsets.only(
               left: 10,
@@ -362,7 +362,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 聊天问题输入框
+                    // Chat question input box
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -394,7 +394,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
                         ),
                       ],
                     ),
-                    // 聊天控制工具栏
+                    // Chat control toolbar
                     Container(
                       padding: const EdgeInsets.only(bottom: 5),
                       child: _buildSendOrVoiceButton(
@@ -407,7 +407,7 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
               ],
             ),
           ),
-          // 问题示例
+          // Question example
           if (state.examples != null &&
               state.examples!.isNotEmpty &&
               state.histories.isEmpty)
@@ -556,243 +556,254 @@ class _ChatChatScreenState extends State<ChatChatScreen> {
               onTap: () {
                 switch (promotionEvent!.clickButtonType) {
                   case PromotionEventClickButtonType.url:
-                    if (promotionEvent!.clickValue != null &&
-                        promotionEvent!.clickValue!.isNotEmpty) {
-                      launchUrlString(promotionEvent!.clickValue!,
-                          mode: LaunchMode.externalApplication);
-                    }
-                    break;
-                  case PromotionEventClickButtonType.inAppRoute:
-                    if (promotionEvent!.clickValue != null &&
-                        promotionEvent!.clickValue!.isNotEmpty) {
-                      context.push(promotionEvent!.clickValue!);
-                    }
+  if (promotionEvent!.clickValue != null &&
+      promotionEvent!.clickValue!.isNotEmpty) {
+    launchUrlString(promotionEvent!.clickValue!,
+        mode: LaunchMode.externalApplication);
+  }
+  break;
+  case PromotionEventClickButtonType.inAppRoute:
+  if (promotionEvent!.clickValue != null &&
+      promotionEvent!.clickValue!.isNotEmpty) {
+    context.push(promotionEvent!.clickValue!);
+  }
+  break;
+  case PromotionEventClickButtonType.none:
+  }if (promotionEvent!.clickValue != null &&
+    promotionEvent!.clickValue!.isNotEmpty) {
+  launchUrlString(promotionEvent!.clickValue!,
+      mode: LaunchMode.externalApplication);
+}
+break;
+case PromotionEventClickButtonType.inAppRoute:
+if (promotionEvent!.clickValue != null &&
+    promotionEvent!.clickValue!.isNotEmpty) {
+  context.push(promotionEvent!.clickValue!);
+}
+break;
+case PromotionEventClickButtonType.none:
+}
+},
+child: Row(
+children: [
+Text(
+  'Details',
+  style: TextStyle(
+    color: stringToColor(
+        promotionEvent!.clickButtonColor ?? 'FFFFFFFF'),
+    fontSize: 14,
+  ),
+),
+const SizedBox(width: 5),
+Icon(
+  Icons.keyboard_double_arrow_right,
+  size: 16,
+  color: stringToColor(
+      promotionEvent!.clickButtonColor ?? 'FFFFFFFF'),
+),
+],
+),
+),
+],
+),
+);
 
-                    break;
-                  case PromotionEventClickButtonType.none:
-                }
-              },
-              child: Row(
-                children: [
-                  Text(
-                    '详情',
-                    style: TextStyle(
-                      color: stringToColor(
-                          promotionEvent!.clickButtonColor ?? 'FFFFFFFF'),
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Icon(
-                    Icons.keyboard_double_arrow_right,
-                    size: 16,
-                    color: stringToColor(
-                        promotionEvent!.clickButtonColor ?? 'FFFFFFFF'),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
+/// Build send or voice button
+Widget _buildSendOrVoiceButton(
+BuildContext context,
+CustomColors customColors,
+) {
+return Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+crossAxisAlignment: CrossAxisAlignment.center,
+children: [
+InkWell(
+onTap: () {
+HapticFeedbackHelper.mediumImpact();
+
+openModalBottomSheet(
+  context,
+  (context) {
+    return VoiceRecord(
+      onFinished: (text) {
+        _textController.text = _textController.text + text;
+        Navigator.pop(context);
+      },
+      onStart: () {},
     );
-  }
-
-  /// 构建发送或者语音按钮
-  Widget _buildSendOrVoiceButton(
-    BuildContext context,
-    CustomColors customColors,
-  ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () {
-            HapticFeedbackHelper.mediumImpact();
-
-            openModalBottomSheet(
-              context,
-              (context) {
-                return VoiceRecord(
-                  onFinished: (text) {
-                    _textController.text = _textController.text + text;
-                    Navigator.pop(context);
-                  },
-                  onStart: () {},
-                );
-              },
-              isScrollControlled: false,
-              heightFactor: 0.8,
-            );
-          },
-          child: Icon(
-            Icons.mic,
-            color: customColors.chatInputPanelText,
-            size: 28,
-          ),
+  },
+  isScrollControlled: false,
+  heightFactor: 0.8,
+);
+},
+child: Icon(
+Icons.mic,
+color: customColors.chatInputPanelText,
+size: 28,
+),
+),
+BlocBuilder<FreeCountBloc, FreeCountState>(
+buildWhen: (previous, current) => current is FreeCountLoadedState,
+builder: (context, state) {
+if (state is FreeCountLoadedState) {
+  if (currentModel != null) {
+    final matched = state.model(currentModel!.modelId);
+    if (matched != null &&
+        matched.leftCount > 0 &&
+        matched.maxCount > 0) {
+      return Text(
+        'Today you can still enjoy ${matched.leftCount} times for free',
+        style: TextStyle(
+          color: customColors.weakTextColor?.withAlpha(120),
+          fontSize: 11,
         ),
-        BlocBuilder<FreeCountBloc, FreeCountState>(
-          buildWhen: (previous, current) => current is FreeCountLoadedState,
-          builder: (context, state) {
-            if (state is FreeCountLoadedState) {
-              if (currentModel != null) {
-                final matched = state.model(currentModel!.modelId);
-                if (matched != null &&
-                    matched.leftCount > 0 &&
-                    matched.maxCount > 0) {
-                  return Text(
-                    '今日还可免费畅享 ${matched.leftCount} 次',
-                    style: TextStyle(
-                      color: customColors.weakTextColor?.withAlpha(120),
-                      fontSize: 11,
-                    ),
-                  );
-                }
-              }
-            }
-            return const SizedBox();
-          },
-        ),
-        InkWell(
-          onTap: () {
-            if (_textController.text.trim().isEmpty) {
-              return;
-            }
-
-            onSubmit(context, _textController.text.trim());
-          },
-          child: Icon(
-            Icons.send,
-            color: _textController.text.trim().isNotEmpty
-                ? customColors.linkColor ??
-                    const Color.fromARGB(255, 70, 165, 73)
-                : customColors.chatInputPanelText,
-            size: 26,
-          ),
-        )
-      ],
-    );
+      );
+    }
   }
+}
+return const SizedBox();
+},
+),
+InkWell(
+onTap: () {
+if (_textController.text.trim().isEmpty) {
+  return;
+}
 
-  void onSubmit(BuildContext context, String text) {
-    context
-        .push(Uri(path: '/chat-anywhere', queryParameters: {
-      'init_message': text,
-      'model': currentModel?.modelId,
-    }).toString())
-        .whenComplete(() {
-      _textController.clear();
-      FocusScope.of(context).requestFocus(FocusNode());
-      context.read<ChatChatBloc>().add(ChatChatLoadRecentHistories());
-    });
-  }
+onSubmit(context, _textController.text.trim());
+},
+child: Icon(
+Icons.send,
+color: _textController.text.trim().isNotEmpty
+    ? customColors.linkColor ??
+        const Color.fromARGB(255, 70, 165, 73)
+    : customColors.chatInputPanelText,
+size: 26,
+),
+)
+],
+);
+}
+
+void onSubmit(BuildContext context, String text) {
+context
+.push(Uri(path: '/chat-anywhere', queryParameters: {
+'init_message': text,
+'model': currentModel?.modelId,
+}).toString())
+.whenComplete(() {
+_textController.clear();
+FocusScope.of(context).requestFocus(FocusNode());
+context.read<ChatChatBloc>().add(ChatChatLoadRecentHistories());
+});
+}
 }
 
 class ChatHistoryItem extends StatelessWidget {
-  const ChatHistoryItem({
-    super.key,
-    required this.history,
-    required this.customColors,
-    required this.onTap,
-  });
+const ChatHistoryItem({
+super.key,
+required this.history,
+required this.customColors,
+required this.onTap,
+});
 
-  final ChatHistory history;
-  final CustomColors customColors;
-  final VoidCallback onTap;
+final ChatHistory history;
+final CustomColors customColors;
+final VoidCallback onTap;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 5,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const ScrollMotion(),
-          children: [
-            const SizedBox(width: 10),
-            SlidableAction(
-              label: AppLocale.delete.getString(context),
-              borderRadius: BorderRadius.circular(10),
-              backgroundColor: Colors.red,
-              icon: Icons.delete,
-              onPressed: (_) {
-                openConfirmDialog(
-                  context,
-                  AppLocale.confirmDelete.getString(context),
-                  () {
-                    context
-                        .read<ChatChatBloc>()
-                        .add(ChatChatDeleteHistory(history.id!));
-                  },
-                  danger: true,
-                );
-              },
-            ),
-          ],
-        ),
-        child: Material(
-          color: customColors.backgroundColor?.withAlpha(200),
-          borderRadius: BorderRadius.all(
-            Radius.circular(customColors.borderRadius ?? 8),
-          ),
-          child: InkWell(
-            child: ListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(customColors.borderRadius ?? 8),
-              ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      (history.title ?? '未命名').trim(),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: customColors.weakTextColor,
-                        fontSize: 15,
-                      ),
-                      maxLines: 1,
-                    ),
-                  ),
-                  Text(
-                    humanTime(history.updatedAt),
-                    style: TextStyle(
-                      color: customColors.weakTextColor?.withAlpha(65),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              dense: true,
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  (history.lastMessage ?? '暂无内容').trim().replaceAll("\n", " "),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: customColors.weakTextColor?.withAlpha(150),
-                    fontSize: 12,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-              onTap: () {
-                HapticFeedbackHelper.lightImpact();
-                onTap();
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+@override
+Widget build(BuildContext context) {
+return Container(
+margin: const EdgeInsets.symmetric(
+horizontal: 15,
+vertical: 5,
+),
+decoration: BoxDecoration(
+borderRadius: BorderRadius.circular(10),
+),
+child: Slidable(
+endActionPane: ActionPane(
+motion: const ScrollMotion(),
+children: [
+const SizedBox(width: 10),
+SlidableAction(
+label: AppLocale.delete.getString(context),
+borderRadius: BorderRadius.circular(10),
+backgroundColor: Colors.red,
+icon: Icons.delete,
+onPressed: (_) {
+openConfirmDialog(
+  context,
+  AppLocale.confirmDelete.getString(context),
+  () {
+    context
+        .read<ChatChatBloc>()
+        .add(ChatChatDeleteHistory(history.id!));
+  },
+  danger: true,
+);
+},
+),
+],
+),
+child: Material(
+color: customColors.backgroundColor?.withAlpha(200),
+borderRadius: BorderRadius.all(
+Radius.circular(customColors.borderRadius ?? 8),
+),
+child: InkWell(
+child: ListTile(
+contentPadding:
+const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+shape: RoundedRectangleBorder(
+borderRadius:
+    BorderRadius.circular(customColors.borderRadius ?? 8),
+),
+title: Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
+Expanded(
+  child: Text(
+    (history.title ?? 'Unnamed').trim(),
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(
+      color: customColors.weakTextColor,
+      fontSize: 15,
+    ),
+    maxLines: 1,
+  ),
+),
+Text(
+  humanTime(history.updatedAt),
+  style: TextStyle(
+    color: customColors.weakTextColor?.withAlpha(65),
+    fontSize: 12,
+  ),
+),
+],
+),
+dense: true,
+subtitle: Padding(
+padding: const EdgeInsets.only(top: 5),
+child: Text(
+  (history.lastMessage ?? 'No content yet').trim().replaceAll("\n", " "),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+  style: TextStyle(
+    color: customColors.weakTextColor?.withAlpha(150),
+    fontSize: 12,
+    overflow: TextOverflow.ellipsis,
+  ),
+),
+),
+onTap: () {
+HapticFeedbackHelper.lightImpact();
+onTap();
+},
+),
+),
+),
+),
+);
+}
 }

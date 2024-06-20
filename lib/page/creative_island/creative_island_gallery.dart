@@ -38,7 +38,7 @@ class _CreativeIslandGalleryScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '创作岛 Gallery',
+          'Creative Island Gallery',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
-/// 带搜索框的列表选择器
+/// List selector with search box
 class ItemSearchSelector extends StatefulWidget {
   final List<SelectorItem> items;
   final bool Function(SelectorItem item) onSelected;
@@ -107,7 +107,7 @@ class _ItemSearchSelectorState extends State<ItemSearchSelector> {
 
     return Column(
       children: [
-        // 搜索框
+        // Search box
         if (widget.enableSearch)
           Container(
             alignment: Alignment.center,
@@ -130,7 +130,7 @@ class _ItemSearchSelectorState extends State<ItemSearchSelector> {
               ),
             ),
           ),
-        // 列表部分
+        // List section
         Expanded(
           child: ListView.separated(
             itemCount: items.length,

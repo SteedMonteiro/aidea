@@ -17,13 +17,13 @@ class DeepAIRepository {
 
   DeepAIRepository(this.settings) {
     selfHosted = settings.getDefaultBool(settingDeepAISelfHosted, false);
-    language = settings.getDefault(settingLanguage, 'zh');
+    language = settings.getDefault(settingLanguage, 'en');
 
     _reloadServerConfig();
 
     settings.listen((settings, key, value) {
       selfHosted = settings.getDefaultBool(settingDeepAISelfHosted, false);
-      language = settings.getDefault(settingLanguage, 'zh');
+      language = settings.getDefault(settingLanguage, 'en');
 
       _reloadServerConfig();
     });
@@ -53,175 +53,175 @@ class DeepAIRepository {
   //       'text2img',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '根据文本描述创建图像',
+  //       description: 'Generate images based on text description',
   //     ),
   //     Model(
   //       'cute-creature-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成可爱的动物图像',
+  //       description: 'Generate cute animal images',
   //     ),
   //     Model(
   //       'fantasy-world-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成奇幻世界图像',
+  //       description: 'Generate fantasy world images',
   //     ),
   //     Model(
   //       'cyberpunk-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成未来科幻图像',
+  //       description: 'Generate futuristic cyberpunk images',
   //     ),
   //     Model(
   //       'anime-portrait-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成动漫人物图像',
+  //       description: 'Generate anime character images',
   //     ),
   //     Model(
   //       'old-style-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成老式风格图像',
+  //       description: 'Generate vintage style images',
   //     ),
   //     Model(
   //       'renaissance-painting-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成文艺复兴风格图像',
+  //       description: 'Generate renaissance style images',
   //     ),
   //     Model(
   //       'abstract-painting-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成抽象风格图像',
+  //       description: 'Generate abstract style images',
   //     ),
   //     Model(
   //       'impressionism-painting-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成印象派风格图像',
+  //       description: 'Generate impressionism style images',
   //     ),
   //     Model(
   //       'surreal-graphics-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成超现实风格图像',
+  //       description: 'Generate surreal style images',
   //     ),
   //     Model(
   //       '3d-objects-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成3D物体图像',
+  //       description: 'Generate 3D object images',
   //     ),
   //     Model(
   //       'origami-3d-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成折纸风格图像',
+  //       description: 'Generate origami style images',
   //     ),
   //     Model(
   //       'hologram-3d-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成全息图像',
+  //       description: 'Generate hologram images',
   //     ),
   //     Model(
   //       '3d-character-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成3D人物图像',
+  //       description: 'Generate 3D character images',
   //     ),
   //     Model(
   //       'watercolor-painting-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成水彩风格图像',
+  //       description: 'Generate watercolor style images',
   //     ),
   //     Model(
   //       'pop-art-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成流行艺术风格图像',
+  //       description: 'Generate pop art style images',
   //     ),
   //     Model(
   //       'contemporary-architecture-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成现代建筑图像',
+  //       description: 'Generate modern architecture images',
   //     ),
   //     Model(
   //       'future-architecture-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成未来建筑图像',
+  //       description: 'Generate futuristic architecture images',
   //     ),
   //     Model(
   //       'watercolor-architecture-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成水彩建筑图像',
+  //       description: 'Generate watercolor architecture images',
   //     ),
   //     Model(
   //       'fantasy-character-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成奇幻人物图像',
+  //       description: 'Generate fantasy character images',
   //     ),
   //     Model(
   //       'steampunk-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成蒸汽朋克风格图像',
+  //       description: 'Generate steampunk style images',
   //     ),
   //     Model(
   //       'logo-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成Logo图像',
+  //       description: 'Generate logo images',
   //     ),
   //     Model(
   //       'pixel-art-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成像素风格图像',
+  //       description: 'Generate pixel art style images',
   //     ),
   //     Model(
   //       'street-art-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成街头艺术风格图像',
+  //       description: 'Generate street art style images',
   //     ),
   //     Model(
   //       'surreal-portrait-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成超现实人物图像',
+  //       description: 'Generate surreal portrait images',
   //     ),
   //     Model(
   //       'anime-world-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成动漫世界图像',
+  //       description: 'Generate anime world images',
   //     ),
   //     Model(
   //       'fantasy-portrait-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成奇幻人物图像',
+  //       description: 'Generate fantasy portrait images',
   //     ),
   //     Model(
   //       'comics-portrait-generator',
   //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成漫画人物图像',
+  //       description: 'Generate comics portrait images',
   //     ),
   //     Model(
   //       'cyberpunk-portrait-generator',
-  //       'deepai',
+ //       'deepai',
   //       category: modelTypeDeepAI,
-  //       description: '生成未来科幻人物图像',
+  //       description: 'Generate futuristic sci-fi character images',
   //     ),
   //   ];
   // }

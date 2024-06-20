@@ -25,7 +25,7 @@ class ImageUploader {
   Future<UploadedFile> upload(String path, {String? usage}) async {
     Uint8List? data = await _imageCompress(path);
     if (data == null || data.isEmpty) {
-      throw Exception('图片读取失败');
+      throw Exception('Failed to read image');
     }
 
     return _qiniuUploader!.upload(path, data, usage: usage);
@@ -34,7 +34,7 @@ class ImageUploader {
   Future<UploadedFile> uploadData(Uint8List imageData, {String? usage}) async {
     Uint8List? data = await _imageDataCompress(imageData);
     if (data == null || data.isEmpty) {
-      throw Exception('图片读取失败');
+      throw Exception('Failed to read image');
     }
 
     return _qiniuUploader!.upload("${randomId()}.jpg", data, usage: usage);
@@ -42,7 +42,7 @@ class ImageUploader {
 
   Future<Uint8List?> _imageDataCompress(Uint8List imageData) async {
     Uint8List? data = imageData;
-    // 优先使用平台支持的压缩工具
+    // Use platform-supported compression tools first
     if (PlatformTool.isAndroid() || PlatformTool.isIOS()) {
       try {
         data = await FlutterImageCompress.compressWithList(
@@ -76,7 +76,7 @@ class ImageUploader {
       }
     }
 
-    // 压缩失败，尝试 Dart 内置的图片压缩库
+    // If compression fails, try using the built-in Dart image compression library
     if (data == null || data.isEmpty) {
       try {
         Image? img = decodeImage(data!);
@@ -94,7 +94,7 @@ class ImageUploader {
       }
     }
 
-    // 再次压缩失败，返回原始数据
+    // If compression fails again, return the original data
     if (data == null || data.isEmpty) {
       data = imageData;
     }
@@ -105,7 +105,7 @@ class ImageUploader {
   Future<Uint8List?> _imageCompress(String path) async {
     Uint8List? data;
 
-    // 优先使用平台支持的压缩工具
+    // Use platform-supported compression tools first
     if (PlatformTool.isAndroid() || PlatformTool.isIOS()) {
       try {
         data = await FlutterImageCompress.compressWithFile(
@@ -139,7 +139,7 @@ class ImageUploader {
       }
     }
 
-    // 压缩失败，尝试 Dart 内置的图片压缩库
+    // If compression fails, try using the built-in Dart image compression library
     if (data == null || data.isEmpty) {
       try {
         Image? img = decodeImage(File(path).readAsBytesSync());
@@ -164,7 +164,7 @@ class ImageUploader {
       }
     }
 
-    // 再次压缩失败，返回原始数据
+    // If compression fails again, return the original data
     if (data == null || data.isEmpty) {
       data = await File(path).readAsBytes();
     }

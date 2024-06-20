@@ -17,7 +17,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
           emit(PaymentAppleProductsLoaded(
             const <ProductDetails>[],
             note: products.note,
-            error: '没有任何可购买的项目',
+            error: 'No items available for purchase',
             localProducts: const [],
             loading: false,
           ));
@@ -49,7 +49,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
             const <ProductDetails>[],
             note: products.note,
             localProducts: products.consume,
-            error: '没有任何可购买的项目',
+            error: 'No items available for purchase',
             loading: false,
           ));
           return;
@@ -74,7 +74,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
           emit(PaymentAppleProductsLoaded(
             const <ProductDetails>[],
             note: products.note,
-            error: '没有任何可购买的项目',
+            error: 'No items available for purchase',
             localProducts: const [],
             loading: false,
           ));

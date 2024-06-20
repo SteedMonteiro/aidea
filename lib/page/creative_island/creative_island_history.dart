@@ -97,7 +97,7 @@ class _CreativeIslandHistoryPageState extends State<CreativeIslandHistoryPage> {
     );
   }
 
-  /// 构建历史项目列表
+  /// Build history items list
   Widget _buildHistoryItems(
     CreativeIslandHistoriesLoaded state,
     CustomColors customColors,
@@ -241,14 +241,14 @@ class _CreativeIslandHistoryPageState extends State<CreativeIslandHistoryPage> {
   ) {
     if (item.isFailed) {
       return Text(
-        '创作失败',
+        'Creation Failed',
         style: Theme.of(context).textTheme.bodySmall,
       );
     }
 
     if (item.isProcessing) {
       return Text(
-        '创作中',
+        'Creating...',
         style: Theme.of(context).textTheme.bodySmall,
       );
     }
@@ -265,7 +265,7 @@ class _CreativeIslandHistoryPageState extends State<CreativeIslandHistoryPage> {
     );
   }
 
-  /// 打开历史项目详情对话框
+  /// Open history item dialog
   _openHistoryItemDialog(
     BuildContext context,
     CreativeIslandHistoriesLoaded state,
@@ -325,7 +325,7 @@ class _CreativeIslandHistoryPageState extends State<CreativeIslandHistoryPage> {
     }
 
     if (his.isProcessing) {
-      return const Icon(
+         return const Icon(
         Icons.hourglass_top,
         size: 18,
         color: Colors.blue,

@@ -56,7 +56,7 @@ class ImageSelector extends StatelessWidget {
               //   },
               //   icon: const Icon(Icons.refresh),
               //   iconSize: 15,
-              //   tooltip: '重置',
+              //   tooltip: 'Reset',
               // )
             ],
           ),
@@ -150,7 +150,7 @@ class ImageSelector extends StatelessWidget {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      '点击此处更换图片',
+                                      'Click here to change image',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,

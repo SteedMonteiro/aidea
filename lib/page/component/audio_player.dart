@@ -153,7 +153,7 @@ class EnhancedAudioPlayer extends StatelessWidget {
             color: customColors.weakLinkColor,
           ),
           label: Text(
-            '停止',
+            'Stop',
             style: TextStyle(
               color: customColors.weakLinkColor,
               fontSize: 12,

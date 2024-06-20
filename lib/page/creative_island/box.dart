@@ -7,7 +7,7 @@ import 'package:askaide/repo/api/creative.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// 创作岛列表项目
+/// Creative Island List Item
 class CreativeIslandBox extends StatelessWidget {
   final CreativeIslandItem item;
   final Color? backgroundColor;

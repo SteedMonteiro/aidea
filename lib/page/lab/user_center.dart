@@ -39,7 +39,7 @@ class _UserCenterScreenState extends State<UserCenterScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            '我的信息',
+            'My Information',
             style: TextStyle(fontSize: CustomSize.appBarTitleSize),
           ),
           centerTitle: true,
@@ -123,4 +123,3 @@ class _UserCenterScreenState extends State<UserCenterScreen> {
       ),
     );
   }
-}

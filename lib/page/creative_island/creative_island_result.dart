@@ -84,7 +84,7 @@ class _CreativeIslandResultDialogState
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        '创作失败',
+                        'Creation Failed',
                         style: TextStyle(color: Colors.red),
                       ),
                       const SizedBox(height: 10),
@@ -132,7 +132,7 @@ class _CreativeIslandResultDialogState
                         }
 
                         if (restartCounterValue == defaultCounterRestartValue) {
-                          showSuccessMessage('当前排队人数较多，还需要等待一下哦');
+                          showSuccessMessage('The queue is long, please wait a moment');
                         }
 
                         controller.restart(duration: restartCounterValue);
@@ -143,14 +143,14 @@ class _CreativeIslandResultDialogState
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '正在打造神奇...',
+                      'Creating Magic...',
                       style: TextStyle(
                         color: customColors.backgroundInvertedColor,
                       ),
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      '如队列太长，将会有数分钟等待时间',
+                      'If the queue is too long, there will be a few minutes of waiting time',
                       style: TextStyle(
                         color: customColors.backgroundInvertedColor
                             ?.withAlpha(150),

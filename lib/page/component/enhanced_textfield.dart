@@ -135,7 +135,7 @@ class _EnhancedTextFieldState extends State<EnhancedTextField> {
   Widget build(BuildContext context) {
     if ((widget.labelText != null || widget.labelWidget != null) &&
         widget.labelPosition != LabelPosition.inner) {
-      // 上下结构
+      // Top and bottom structure
       if (widget.labelPosition == LabelPosition.top) {
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -170,7 +170,7 @@ class _EnhancedTextFieldState extends State<EnhancedTextField> {
         );
       }
 
-      // 左右结构
+      // Left and right structure
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -200,7 +200,7 @@ class _EnhancedTextFieldState extends State<EnhancedTextField> {
       );
     }
 
-    // 无标题结构
+    // No title structure
     return _buildTextField();
   }
 

@@ -18,7 +18,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class APIServer {
-  /// 单例
+  /// Singleton
   static final APIServer _instance = APIServer._internal();
   APIServer._internal();
 
@@ -32,7 +32,7 @@ class APIServer {
 
   init(SettingRepository setting) {
     apiToken = setting.stringDefault(settingAPIServerToken, '');
-    language = setting.stringDefault(settingLanguage, 'zh');
+    language = setting.stringDefault(settingLanguage, 'en');
     url = setting.stringDefault(settingServerURL, apiServerURL);
 
     setting.listen((settings, key, value) {
@@ -41,7 +41,7 @@ class APIServer {
       }
 
       if (key == settingLanguage) {
-        language = settings.getDefault(settingLanguage, 'zh');
+        language = settings.getDefault(settingLanguage, 'en');
       }
 
       if (key == settingServerURL) {
@@ -56,7 +56,7 @@ class APIServer {
     DioErrorType.receiveTimeout,
   ];
 
-  /// 异常处理
+  /// Exception handling
   Object _exceptionHandle(Object e) {
     Logger.instance.e(e);
 
@@ -79,7 +79,7 @@ class APIServer {
       }
 
       if (_retryableErrors.contains(e.type)) {
-        return '请求超时，请重试';
+        return 'Request timed out, please try again';
       }
     }
 
@@ -112,13 +112,13 @@ class APIServer {
     return headers;
   }
 
-  /// 获取用户 ID，如果未登录则返回 null
+  /// Get user ID, if not logged in, return null
   int? localUserID() {
     if (apiToken == '') {
       return null;
     }
 
-    // 从 Jwt Token 中获取用户 ID
+    // Get user ID from Jwt Token
     final parts = apiToken.split('.');
     if (parts.length != 3) {
       return null;
@@ -261,7 +261,7 @@ class APIServer {
     return 'local-uid=$localUserId';
   }
 
-  /// 用户配额详情
+  /// User quota details
   Future<QuotaResp?> quotaDetails() async {
     return sendGetRequest(
       '/v1/users/quota',
@@ -269,7 +269,7 @@ class APIServer {
     );
   }
 
-  /// 用户信息
+  /// User information
   Future<UserInfo?> userInfo({bool cache = true}) async {
     return sendCachedGetRequest(
       '/v1/users/current',
@@ -280,7 +280,7 @@ class APIServer {
     );
   }
 
-  /// 检查手机号是否存在
+  /// Check if phone number exists
   Future<UserExistenceResp> checkPhoneExists(String username) async {
     return sendPostRequest(
       '/v1/auth/2in1/check',
@@ -291,7 +291,7 @@ class APIServer {
     );
   }
 
-  /// 手机登录或者注册账号
+  /// Sign in or register account with phone
   Future<SignInResp> signInOrUp({
     required String username,
     required String verifyCodeId,
@@ -310,7 +310,7 @@ class APIServer {
     );
   }
 
-  /// 使用密码登录
+  /// Sign in with password
   Future<SignInResp> signInWithPassword(
       String username, String password) async {
     return sendPostRequest(
@@ -323,7 +323,7 @@ class APIServer {
     );
   }
 
-  /// 使用 Apple 账号登录
+  /// Sign in with Apple account
   Future<SignInResp> signInWithApple({
     required String userIdentifier,
     String? givenName,
@@ -347,7 +347,7 @@ class APIServer {
     );
   }
 
-  /// 获取代理服务器列表
+  /// Get proxy server list
   Future<List<String>> proxyServers(String service) async {
     return sendCachedGetRequest(
       '/v1/proxy/servers',
@@ -357,7 +357,7 @@ class APIServer {
     );
   }
 
-  /// 获取模型列表
+  /// Get model list
   Future<List<Model>> models() async {
     return sendCachedGetRequest(
       '/v1/models',
@@ -373,7 +373,7 @@ class APIServer {
     );
   }
 
-  /// 获取系统级提示语列表
+  /// Get system level prompt list
   Future<List<Prompt>> prompts() async {
     return sendCachedGetRequest(
       '/v1/prompts',
@@ -389,7 +389,7 @@ class APIServer {
     );
   }
 
-  /// 获取提示语示例
+  /// Get prompt example
   Future<List<ChatExample>> examples() async {
     return sendCachedGetRequest(
       '/v1/examples',
@@ -409,7 +409,7 @@ class APIServer {
     );
   }
 
-  ///   获取头像列表
+  ///   Get avatar list
   Future<List<String>> avatars() async {
     return sendCachedGetRequest(
       '/v1/images/avatar',
@@ -421,7 +421,7 @@ class APIServer {
     );
   }
 
-  ///  获取背景图列表
+  ///  Get background image list
   Future<List<BackgroundImage>> backgrounds() async {
     return sendCachedGetRequest(
       '/v1/images/background',
@@ -450,7 +450,7 @@ class APIServer {
     );
   }
 
-  /// 上传初始化
+  /// Upload initialization
   Future<UploadInitResponse> uploadInit(
     String name,
     int filesize, {
@@ -467,7 +467,7 @@ class APIServer {
     );
   }
 
-  /// 获取模型支持的提示语示例
+  /// Get model supported prompt example
   Future<List<ChatExample>> exampleByTag(String tag) async {
     return sendCachedGetRequest(
       '/v1/examples/tags/$tag',
@@ -488,7 +488,7 @@ class APIServer {
     );
   }
 
-  /// 获取模型支持的反向提示语示例
+  /// Get model supported reverse prompt example
   Future<List<ChatExample>> negativePromptExamples(String tag) async {
     return sendCachedGetRequest(
       '/v1/examples/negative-prompts/$tag',
@@ -506,7 +506,7 @@ class APIServer {
     );
   }
 
-  /// 获取模型支持的提示语示例
+  /// Get model supported prompt example
   Future<List<ChatExample>> example(String model) async {
     return sendCachedGetRequest(
       '/v1/examples/$model',
@@ -527,7 +527,7 @@ class APIServer {
     );
   }
 
-  /// 模型风格列表
+  /// Model style list
   Future<List<ModelStyle>> modelStyles(String category) async {
     return sendCachedGetRequest(
       '/v1/models/$category/styles',
@@ -542,7 +542,7 @@ class APIServer {
     );
   }
 
-  /// 创意岛项目列表
+  /// Creative island project list
   Future<CreativeIslandItems> creativeIslandItems({
     required String mode,
     bool cache = true,
@@ -569,7 +569,7 @@ class APIServer {
     );
   }
 
-  /// 创意岛项目
+  /// Creative island project
   Future<CreativeIslandItem> creativeIslandItem(String id) async {
     return sendCachedGetRequest(
       '/v1/creative-island/items/$id',
@@ -579,7 +579,7 @@ class APIServer {
     );
   }
 
-  /// 创作岛生成消耗量预估
+  /// Creative island generate consumption estimate
   Future<QuotaEvaluated> creativeIslandCompletionsEvaluate(
       String id, Map<String, dynamic> params) async {
     return sendPostRequest(
@@ -589,7 +589,7 @@ class APIServer {
     );
   }
 
-  /// 创意岛项目生成数据
+  /// Creative island project generate data
   Future<List<String>> creativeIslandCompletions(
       String id, Map<String, dynamic> params) async {
     return sendPostRequest(
@@ -607,7 +607,7 @@ class APIServer {
     );
   }
 
-  /// 创意岛项目生成数据
+  /// Creative island project generate data
   Future<String> creativeIslandCompletionsAsync(
       String id, Map<String, dynamic> params) async {
     params["mode"] = 'async';
@@ -657,7 +657,7 @@ class APIServer {
     );
   }
 
-  /// 模型风格列表
+  /// Model style list
   Future<List<ModelStyle>> modelStylesV2({String? modelId}) async {
     return sendCachedGetRequest(
       '/v2/models/styles',
@@ -672,9 +672,11 @@ class APIServer {
     );
   }
 
-  /// 创作岛能力
-  Future<CreativeIslandCapacity> creativeIslandCapacity(
-      {required String mode, required String id}) async {
+  /// Creative island capacity
+  Future<CreativeIslandCapacity> creativeIslandCapacity({
+    required String mode,
+    required String id,
+  }) async {
     return sendCachedGetRequest(
       '/v2/creative-island/capacity',
       (resp) {
@@ -684,7 +686,7 @@ class APIServer {
     );
   }
 
-  /// 异步任务执行状态查询
+  /// Asynchronous task execution status query
   Future<AsyncTaskResp> asyncTaskStatus(String taskId) async {
     return sendGetRequest(
       '/v1/tasks/$taskId/status',
@@ -692,7 +694,7 @@ class APIServer {
     );
   }
 
-  /// 发送重置密码验证码
+  /// Send reset password verification code
   Future<String> sendResetPasswordCodeForSignedUser() async {
     return sendPostRequest(
       '/v1/users/reset-password/sms-code',
@@ -700,7 +702,7 @@ class APIServer {
     );
   }
 
-  /// 用户重置密码
+  /// User reset password
   Future<void> resetPasswordByCodeSignedUser({
     required String password,
     required String verifyCodeId,
@@ -717,7 +719,7 @@ class APIServer {
     );
   }
 
-  /// 使用邮箱验证码重置密码
+  /// Reset password with email verification code
   Future<void> resetPasswordByCode({
     required String username,
     required String password,
@@ -736,7 +738,7 @@ class APIServer {
     );
   }
 
-  /// 发送找回密码验证码
+  /// Send reset password verification code
   Future<String> sendResetPasswordCode(
     String username, {
     required String verifyType,
@@ -750,7 +752,7 @@ class APIServer {
     );
   }
 
-  /// 发送注册或者登录短信验证码
+  /// Send sign in or sign up SMS verification code
   Future<String> sendSigninOrSignupVerifyCode(
     String username, {
     required String verifyType,
@@ -763,7 +765,7 @@ class APIServer {
     return sendSigninVerifyCode(username, verifyType: verifyType);
   }
 
-  /// 发送登录验证码
+  /// Send sign in verification code
   Future<String> sendSigninVerifyCode(
     String username, {
     required String verifyType,
@@ -777,7 +779,7 @@ class APIServer {
     );
   }
 
-  /// 发送注册验证码
+  /// Send sign up verification code
   Future<String> sendSignupVerifyCode(
     String username, {
     required String verifyType,
@@ -791,7 +793,7 @@ class APIServer {
     );
   }
 
-  /// 发送绑定手机号码验证码
+  /// Send bind phone number verification code
   Future<String> sendBindPhoneCode(String username) async {
     return sendPostRequest(
       '/v1/auth/bind-phone/sms-code',
@@ -802,7 +804,7 @@ class APIServer {
     );
   }
 
-  /// 绑定手机号
+  /// Bind phone number
   Future<SignInResp> bindPhone({
     required String username,
     required String verifyCodeId,
@@ -821,7 +823,7 @@ class APIServer {
     );
   }
 
-  /// 注册账号
+  /// Register account
   Future<SignInResp> signupWithPassword({
     required String username,
     required String password,
@@ -842,7 +844,7 @@ class APIServer {
     );
   }
 
-  /// 发送账号销毁手机验证码
+  /// Send account destroy phone verification code
   Future<String> sendDestroyAccountSMSCode() async {
     return sendPostRequest(
       '/v1/users/destroy/sms-code',
@@ -850,7 +852,7 @@ class APIServer {
     );
   }
 
-  /// 账号销毁
+  /// Account destroy
   Future<void> destroyAccount({
     required String verifyCodeId,
     required String verifyCode,
@@ -865,7 +867,7 @@ class APIServer {
     );
   }
 
-  /// 版本检查
+  /// Version check
   Future<VersionCheckResp> versionCheck({bool cache = true}) async {
     return sendCachedGetRequest(
       '/public/info/version-check',
@@ -880,7 +882,7 @@ class APIServer {
     );
   }
 
-  /// Apple 支付项目列表
+  /// Apple Pay product list
   Future<ApplePayProducts> applePayProducts() async {
     return sendGetRequest(
       '/v1/payment/apple/products',
@@ -888,7 +890,7 @@ class APIServer {
     );
   }
 
-  /// 支付宝支付项目列表
+  /// Alipay product list
   Future<ApplePayProducts> alipayProducts() async {
     return sendGetRequest(
       '/v1/payment/alipay/products',
@@ -896,7 +898,7 @@ class APIServer {
     );
   }
 
-  /// 发起 Apple Pay
+  /// Initiate Apple Pay
   Future<String> createApplePay(String productId) async {
     return sendPostRequest(
       '/v1/payment/apple',
@@ -907,7 +909,7 @@ class APIServer {
     );
   }
 
-  /// 发起 Alipay
+  /// Initiate Alipay
   Future<AlipayCreatedReponse> createAlipay(String productId,
       {required String source}) async {
     return sendPostRequest(
@@ -920,7 +922,7 @@ class APIServer {
     );
   }
 
-  /// 支付宝支付客户端确认
+  /// Alipay payment client confirmation
   Future<String> alipayClientConfirm(Map<String, dynamic> params) async {
     return sendPostRequest(
       '/v1/payment/alipay/client-confirm',
@@ -929,7 +931,7 @@ class APIServer {
     );
   }
 
-  /// 查询支付状态
+  /// Query payment status
   Future<PaymentStatus> queryPaymentStatus(String paymentId) async {
     return sendGetRequest(
       '/v1/payment/status/$paymentId',
@@ -937,7 +939,7 @@ class APIServer {
     );
   }
 
-  /// 更新 Apple Pay 支付信息
+  /// Update Apple Pay payment information
   Future<String> updateApplePay(
     String paymentId, {
     required String productId,
@@ -957,7 +959,7 @@ class APIServer {
     );
   }
 
-  /// 验证 Apple Pay 支付结果
+  /// Verify Apple Pay payment result
   Future<String> verifyApplePay(
     String paymentId, {
     required String productId,
@@ -983,7 +985,7 @@ class APIServer {
     );
   }
 
-  /// 取消 Apple Pay
+  /// Cancel Apple Pay
   Future<String> cancelApplePay(String paymentId, {String? reason}) async {
     return sendDeleteRequest(
       '/v1/payment/apple/$paymentId',
@@ -994,7 +996,7 @@ class APIServer {
     );
   }
 
-  /// 获取房间列表
+  /// Get room list
   Future<RoomsResponse> rooms({bool cache = true}) async {
     return sendCachedGetRequest(
       '/v2/rooms',
@@ -1006,7 +1008,7 @@ class APIServer {
     );
   }
 
-  /// 获取单个房间信息
+  /// Get single room information
   Future<RoomInServer> room({required roomId, bool cache = true}) async {
     return sendCachedGetRequest(
       '/v1/rooms/$roomId',
@@ -1017,7 +1019,7 @@ class APIServer {
     );
   }
 
-  /// 创建房间
+  /// Create room
   Future<int> createRoom({
     required String name,
     required String model,
@@ -1050,7 +1052,7 @@ class APIServer {
     );
   }
 
-  /// 更新房间信息
+  /// Update room information
   Future<RoomInServer> updateRoom({
     required int roomId,
     required String name,
@@ -1086,7 +1088,7 @@ class APIServer {
     );
   }
 
-  /// 删除房间
+  /// Delete room
   Future<void> deleteRoom({required int roomId}) async {
     return sendDeleteRequest(
       '/v1/rooms/$roomId',
@@ -1100,7 +1102,7 @@ class APIServer {
     );
   }
 
-  /// 创作岛 Gallery
+  /// Creative island Gallery
   Future<List<CreativeItemInServer>> creativeUserGallery({
     required String mode,
     String? model,
@@ -1122,7 +1124,7 @@ class APIServer {
     );
   }
 
-  /// 图片模型列表
+  /// Image model list
   Future<List<ImageModel>> imageModels() async {
     return sendCachedGetRequest(
       '/v2/creative-island/models',
@@ -1138,7 +1140,7 @@ class APIServer {
     );
   }
 
-  /// 图片模型滤镜列表（风格）
+  /// Image model filter list (style)
   Future<List<ImageModelFilter>> imageModelFilters() async {
     return sendCachedGetRequest(
       '/v2/creative-island/filters',
@@ -1154,7 +1156,7 @@ class APIServer {
     );
   }
 
-  /// 创作岛历史记录（全量）
+  /// Creative island history (full)
   Future<PagedData<CreativeItemInServer>> creativeHistories({
     String? mode,
     bool cache = true,
@@ -1195,7 +1197,7 @@ class APIServer {
     );
   }
 
-  /// 分享创作岛历史记录到 Gallery
+  /// Share creative island history to Gallery
   Future<void> shareCreativeHistoryToGallery({required int historyId}) {
     return sendPostRequest(
       '/v2/creative-island/histories/$historyId/share',
@@ -1203,7 +1205,7 @@ class APIServer {
     );
   }
 
-  /// 取消分享创作岛历史记录到 Gallery
+  /// Cancel share creative island history to Gallery
   Future<void> cancelShareCreativeHistoryToGallery({required int historyId}) {
     return sendDeleteRequest(
       '/v2/creative-island/histories/$historyId/share',
@@ -1211,7 +1213,7 @@ class APIServer {
     );
   }
 
-  /// 封禁创作岛历史记录
+  /// Forbid creative island history item
   Future<void> forbidCreativeHistoryItem({required int historyId}) {
     return sendPutRequest(
       '/v1/admin/creative-island/histories/$historyId/forbid',
@@ -1219,7 +1221,7 @@ class APIServer {
     );
   }
 
-  /// 创作岛历史记录
+  /// Creative island history
   Future<List<CreativeItemInServer>> creativeItemHistories(String islandId,
       {bool cache = true}) async {
     return sendCachedGetRequest(
@@ -1238,7 +1240,7 @@ class APIServer {
     );
   }
 
-  /// 获取创作岛项目历史详情
+  /// Get creative island project history details
   Future<CreativeItemInServer> creativeHistoryItem({
     required hisId,
     bool cache = true,
@@ -1252,7 +1254,7 @@ class APIServer {
     );
   }
 
-  /// 删除创作岛项目历史记录
+  /// Delete creative island project history record
   Future<void> deleteCreativeHistoryItem(String islandId,
       {required hisId}) async {
     return sendDeleteRequest(
@@ -1261,7 +1263,7 @@ class APIServer {
     );
   }
 
-  /// 获取用户智慧果消耗历史记录
+  /// Get user wisdom fruit consumption history record
   Future<List<QuotaUsageInDay>> quotaUsedStatistics({bool cache = true}) async {
     return sendCachedGetRequest(
       '/v1/users/quota/usage-stat',
@@ -1321,7 +1323,7 @@ class APIServer {
     );
   }
 
-  /// 文本转语音
+  /// Text to voice
   Future<List<String>> textToVoice({required String text}) async {
     return sendPostRequest(
       '/v1/voice/text2voice',
@@ -1332,9 +1334,9 @@ class APIServer {
     );
   }
 
-  /// 故障日志上报
+  /// Fault log upload
   Future<void> diagnosisUpload({required String data}) async {
-    // data 从尾部开始截取 5000 个字符
+    // data from the tail cut 5000 characters
     if (data.length > 5000) {
       data = data.substring(data.length - 5000);
     }
@@ -1346,7 +1348,7 @@ class APIServer {
     );
   }
 
-  /// 获取分享信息
+  /// Get share information
   Future<ShareInfo> shareInfo() async {
     return sendCachedGetRequest(
       '/public/share/info',
@@ -1401,7 +1403,7 @@ class APIServer {
     );
   }
 
-  /// 绘图提示语 Tags
+  /// Drawing prompt Tags
   Future<List<PromptCategory>> drawPromptTags({bool cache = true}) async {
     return sendCachedGetRequest(
       '/v1/examples/draw/prompt-tags',
@@ -1410,6 +1412,7 @@ class APIServer {
         for (var item in resp.data['data']) {
           items.add(PromptCategory.fromJson(item));
         }
+
         return items;
       },
       subKey: _cacheSubKey(),
@@ -1417,7 +1420,7 @@ class APIServer {
     );
   }
 
-  /// 更新用户头像
+  /// Update user avatar
   Future<void> updateUserAvatar({required String avatarURL}) async {
     return sendPostRequest(
       '/v1/users/current/avatar',
@@ -1430,7 +1433,7 @@ class APIServer {
     );
   }
 
-  /// 更新用户昵称
+  /// Update user nickname
   Future<void> updateUserRealname({required String realname}) async {
     return sendPostRequest(
       '/v1/users/current/realname',
@@ -1443,7 +1446,7 @@ class APIServer {
     );
   }
 
-  /// 服务器支持的能力
+  /// Server supported capabilities
   Future<Capabilities> capabilities() async {
     return sendGetRequest(
       '/public/info/capabilities',
@@ -1452,7 +1455,7 @@ class APIServer {
     );
   }
 
-  /// 用户免费聊天次数统计
+  /// User free chat count statistics
   Future<List<FreeModelCount>> userFreeStatistics() async {
     return sendGetRequest(
       '/v1/users/stat/free-chat-counts',
@@ -1466,7 +1469,7 @@ class APIServer {
     );
   }
 
-  /// 用户免费聊天次数统计(单个模型)
+  /// User free chat count statistics (single model)
   Future<FreeModelCount> userFreeStatisticsForModel(
       {required String model}) async {
     return sendGetRequest(
@@ -1474,8 +1477,9 @@ class APIServer {
       (resp) => FreeModelCount.fromJson(resp.data),
     );
   }
+}
 
-  /// 通知信息（促销事件）
+/// Notification information (promotion events)
   Future<Map<String, List<PromotionEvent>>> notificationPromotionEvents(
       {bool cache = true}) async {
     return sendCachedGetRequest(

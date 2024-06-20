@@ -76,14 +76,14 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               TextButton(
                 onPressed: () {
                   if (isUploaded) {
-                    showSuccessMessage('已上报');
+                    showSuccessMessage('Already reported');
                     return;
                   }
 
                   APIServer()
                       .diagnosisUpload(data: diagnosisInfo)
                       .then((value) {
-                    showSuccessMessage('上报成功');
+                    showSuccessMessage('Reported successfully');
                     setState(() {
                       isUploaded = true;
                     });

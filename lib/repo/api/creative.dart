@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:intl/intl.dart';
 
 class CreativeGallery {
@@ -41,7 +40,6 @@ class CreativeGallery {
     if (meta == null || meta!.isEmpty) {
       return {};
     }
-
     return jsonDecode(meta!);
   }
 
@@ -59,22 +57,22 @@ class CreativeGallery {
   }
 
   toJson() => {
-        'id': id,
-        'user_id': userId,
-        'username': username,
-        'creative_history_id': creativeHistoryId,
-        'creative_type': creativeType,
-        'creative_id': creativeId,
-        'meta': meta,
-        'prompt': prompt,
-        'negative_prompt': negativePrompt,
-        'answer': answer,
-        'ref_count': refCount,
-        'star_level': starLevel,
-        'hot_value': hotValue,
-        'created_at': createdAt?.toIso8601String(),
-        'updated_at': updatedAt?.toIso8601String(),
-      };
+    'id': id,
+    'user_id': userId,
+    'username': username,
+    'creative_history_id': creativeHistoryId,
+    'creative_type': creativeType,
+    'creative_id': creativeId,
+    'meta': meta,
+    'prompt': prompt,
+    'negative_prompt': negativePrompt,
+    'answer': answer,
+    'ref_count': refCount,
+    'star_level': starLevel,
+    'hot_value': hotValue,
+    'created_at': createdAt?.toIso8601String(),
+    'updated_at': updatedAt?.toIso8601String(),
+  };
 
   static CreativeGallery fromJson(Map<String, dynamic> json) {
     return CreativeGallery(
@@ -131,19 +129,19 @@ class CreativeIslandCapacity {
   });
 
   toJson() => {
-        'show_ai_rewrite': showAIRewrite,
-        'show_upscale_by': showUpscaleBy,
-        'show_negative_text': showNegativeText,
-        'show_style': showStyle,
-        'show_seed': showSeed,
-        'show_image_count': showImageCount,
-        'show_prompt_for_image2image': showPromptForImage2Image,
-        'allow_ratios': allowRatios,
-        'vendor_models': vendorModels.map((e) => e.toJson()).toList(),
-        'allow_upscale_by': allowUpscaleBy,
-        'show_image_strength': showImageStrength,
-        'filters': filters.map((e) => e.toJson()).toList(),
-      };
+    'show_ai_rewrite': showAIRewrite,
+    'show_upscale_by': showUpscaleBy,
+    'show_negative_text': showNegativeText,
+    'show_style': showStyle,
+    'show_seed': showSeed,
+    'show_image_count': showImageCount,
+    'show_prompt_for_image2image': showPromptForImage2Image,
+    'allow_ratios': allowRatios,
+    'vendor_models': vendorModels.map((e) => e.toJson()).toList(),
+    'allow_upscale_by': allowUpscaleBy,
+    'show_image_strength': showImageStrength,
+    'filters': filters.map((e) => e.toJson()).toList(),
+  };
 
   static CreativeIslandCapacity fromJson(Map<String, dynamic> json) {
     return CreativeIslandCapacity(
@@ -185,11 +183,11 @@ class CreativeIslandImageFilter {
   });
 
   toJson() => {
-        'id': id,
-        'name': name,
-        'description': description,
-        'preview_image': previewImage,
-      };
+    'id': id,
+    'name': name,
+    'description': description,
+    'preview_image': previewImage,
+  };
 
   static CreativeIslandImageFilter fromJson(Map<String, dynamic> json) {
     return CreativeIslandImageFilter(
@@ -221,14 +219,14 @@ class CreativeIslandVendorModel {
   });
 
   toJson() => {
-        'id': id,
-        'name': name,
-        'vendor': vendor,
-        'upscale': upscale,
-        'show_style': showStyle,
-        'show_image_strength': showImageStrength,
-        'intro_url': introUrl,
-      };
+    'id': id,
+    'name': name,
+    'vendor': vendor,
+    'upscale': upscale,
+    'show_style': showStyle,
+    'show_image_strength': showImageStrength,
+    'intro_url': introUrl,
+  };
 
   static CreativeIslandVendorModel fromJson(Map<String, dynamic> json) {
     return CreativeIslandVendorModel(
@@ -255,10 +253,10 @@ class CreativeIslandCompletionResp {
   });
 
   toJson() => {
-        'content': content,
-        'type': type,
-        'resources': resources,
-      };
+    'content': content,
+    'type': type,
+    'resources': resources,
+  };
 
   static CreativeIslandCompletionResp fromJson(Map<String, dynamic> json) {
     return CreativeIslandCompletionResp(
@@ -266,8 +264,8 @@ class CreativeIslandCompletionResp {
       type: json['type'],
       resources: json['resources'] != null
           ? (json['resources'] as List<dynamic>)
-              .map((e) => e.toString())
-              .toList()
+          .map((e) => e.toString())
+          .toList()
           : [],
     );
   }
@@ -293,10 +291,10 @@ class CreativeIslandItemExtSize {
   });
 
   toJson() => {
-        'width': width,
-        'height': height,
-        'aspect_ratio': aspectRatio,
-      };
+    'width': width,
+    'height': height,
+    'aspect_ratio': aspectRatio,
+  };
 
   static CreativeIslandItemExtSize fromJson(Map<String, dynamic> json) {
     return CreativeIslandItemExtSize(
@@ -325,13 +323,13 @@ class CreativeIslandItemExtension {
   });
 
   toJson() => {
-        'ai_rewrite': aiRewrite,
-        'show_ai_rewrite': showAIRewrite,
-        'upscale_by': upscaleBy,
-        'show_negative_text': showNegativeText,
-        'allow_sizes': allowSizes?.map((e) => e.toJson()).toList(),
-        'show_advance_button': showAdvanceButton,
-      };
+    'ai_rewrite': aiRewrite,
+    'show_ai_rewrite': showAIRewrite,
+    'upscale_by': upscaleBy,
+    'show_negative_text': showNegativeText,
+    'allow_sizes': allowSizes?.map((e) => e.toJson()).toList(),
+    'show_advance_button': showAdvanceButton,
+  };
 
   static CreativeIslandItemExtension fromJson(Map<String, dynamic> json) {
     return CreativeIslandItemExtension(
@@ -342,8 +340,8 @@ class CreativeIslandItemExtension {
       showAdvanceButton: json['show_advance_button'],
       allowSizes: json['allow_sizes'] != null
           ? (json['allow_sizes'] as List<dynamic>)
-              .map((e) => CreativeIslandItemExtSize.fromJson(e))
-              .toList()
+          .map((e) => CreativeIslandItemExtSize.fromJson(e))
+          .toList()
           : null,
     );
   }
@@ -372,48 +370,43 @@ class CreativeIslandItem {
   int? wordCount;
   CreativeIslandItemExtension? extension;
 
-  /// 是否显示高级按钮
+  /// Whether to show the advanced button
   bool get showAdvanceButton {
     if (extension != null && extension!.showAdvanceButton != null) {
       return extension!.showAdvanceButton!;
     }
-
     return false;
   }
 
-  /// 返回支持的图片尺寸
+  /// Returns supported image sizes
   List<CreativeIslandItemExtSize> get imageAllowSizes {
     if (extension != null && extension!.allowSizes != null) {
       return extension!.allowSizes!;
     }
-
     return [];
   }
 
-  /// 是否启用 AI 优化的默认值
+  /// Default value for AI rewrite
   bool get aiRewriteDefaultValue {
     if (extension != null && extension!.aiRewrite != null) {
       return extension!.aiRewrite!;
     }
-
     return false;
   }
 
-  /// 是否显示反向提示语输入框
+  /// Whether to show the negative text input field
   bool get isShowNegativeText {
     if (extension != null && extension!.showNegativeText != null) {
       return extension!.showNegativeText!;
     }
-
     return false;
   }
 
-  /// 是否显示 AI 重写按钮
+  /// Whether to show the AI rewrite button
   bool get isShowAIRewrite {
     if (extension != null && extension!.showAIRewrite != null) {
       return extension!.showAIRewrite!;
     }
-
     return false;
   }
 
@@ -441,27 +434,27 @@ class CreativeIslandItem {
   });
 
   toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'support_stream': supportStream,
-        'model_type': modelType, // 'text-generation' | 'image-generation'
-        'vendor': vendor,
-        'categories': categories,
-        'bg_image': bgImage,
-        'bg_embedded_image': bgEmbeddedImage,
-        'label': label,
-        'label_color': labelColor,
-        'title_color': titleColor,
-        'hint': hint,
-        'word_count': wordCount,
-        'submit_btn_text': submitBtnText,
-        'prompt_input_title': promptInputTitle,
-        'wait_seconds': waitSeconds,
-        'show_image_style_selector': showImageStyleSelector,
-        'no_prompt': noPrompt,
-        'extension': extension?.toJson(),
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'support_stream': supportStream,
+    'model_type': modelType, // 'text-generation' | 'image-generation'
+    'vendor': vendor,
+    'categories': categories,
+    'bg_image': bgImage,
+    'bg_embedded_image': bgEmbeddedImage,
+    'label': label,
+    'label_color': labelColor,
+    'title_color': titleColor,
+    'hint': hint,
+    'word_count': wordCount,
+    'submit_btn_text': submitBtnText,
+    'prompt_input_title': promptInputTitle,
+    'wait_seconds': waitSeconds,
+    'show_image_style_selector': showImageStyleSelector,
+    'no_prompt': noPrompt,
+    'extension': extension?.toJson(),
+  };
 
   static fromJson(Map<String, dynamic> json) {
     return CreativeIslandItem(

@@ -234,7 +234,7 @@ class SliverTabComponent extends StatelessWidget {
                             (BuildContext context, int index) {
                               return items[index];
                             },
-                            childCount: items.length, //内部控件数量
+                            childCount: items.length, // Number of inner widgets
                           ),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(

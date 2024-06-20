@@ -18,7 +18,7 @@ class LoadingIndicator extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          message ?? "加载中，请稍后...",
+          message ?? "Loading, please wait...",
           style: TextStyle(
             color: customColors.backgroundInvertedColor ?? Colors.white,
           ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ColumnBlock extends StatelessWidget {
   final List<Widget> children;
-  final double? innerPanding;
+  final double? innerPadding;
   final Color? backgroundColor;
   final BoxBorder? border;
   final EdgeInsets? padding;
@@ -14,7 +14,7 @@ class ColumnBlock extends StatelessWidget {
   const ColumnBlock({
     super.key,
     required this.children,
-    this.innerPanding,
+    this.innerPadding,
     this.backgroundColor,
     this.border,
     this.padding,
@@ -36,7 +36,7 @@ class ColumnBlock extends StatelessWidget {
       items.add(children[i]);
       if (i < children.length - 1 && showDivider) {
         items.add(Container(
-          padding: EdgeInsets.symmetric(vertical: innerPanding ?? 0),
+          padding: EdgeInsets.symmetric(vertical: innerPadding ?? 0),
           child: Divider(
             color: customColors.columnBlockDividerColor,
             height: 1,

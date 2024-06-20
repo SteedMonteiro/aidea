@@ -27,7 +27,7 @@ class HelpTips extends StatelessWidget {
                 customColors, context, onSubmitMessage!))
     ];
 
-    // 随机取一个 builder
+    // Randomly select a builder
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: children[Random().nextInt(children.length)],
@@ -40,7 +40,7 @@ class HelpTips extends StatelessWidget {
         text: TextSpan(
       children: [
         TextSpan(
-          text: '想要开启新的聊天？试试 ',
+          text: 'Want to start a new chat? Try ',
           style: TextStyle(
             color: customColors.dialogDefaultTextColor,
             fontSize: 12,
@@ -63,7 +63,7 @@ class HelpTips extends StatelessWidget {
         text: TextSpan(
       children: [
         TextSpan(
-          text: '想要更多内容？试着对我说 ',
+          text: 'Want more content? Try saying ',
           style: TextStyle(
             color: customColors.dialogDefaultTextColor,
             fontSize: 12,

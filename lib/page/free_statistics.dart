@@ -16,7 +16,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 class FreeStatisticsPage extends StatefulWidget {
   final SettingRepository setting;
 
-  const FreeStatisticsPage({super.key, required this.setting});
+  const FreeStatisticsPage({super.key, required this.setting}) : super(key: key);
 
   @override
   State<FreeStatisticsPage> createState() => _FreeStatisticsPageState();
@@ -38,7 +38,7 @@ class _FreeStatisticsPageState extends State<FreeStatisticsPage> {
       appBar: AppBar(
         toolbarHeight: CustomSize.toolbarHeight,
         title: const Text(
-          '免费畅享额度',
+          'Free Usage Statistics',
           style: TextStyle(fontSize: CustomSize.appBarTitleSize),
         ),
         centerTitle: true,
@@ -65,7 +65,7 @@ class _FreeStatisticsPageState extends State<FreeStatisticsPage> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Center(
                           child: MessageBox(
-                            message: '当前无可用的免费模型。',
+                            message: 'No available free models at the moment.',
                             type: MessageBoxType.warning,
                           ),
                         ),
@@ -76,7 +76,7 @@ class _FreeStatisticsPageState extends State<FreeStatisticsPage> {
                       child: Column(
                         children: [
                           const MessageBox(
-                            message: '以下模型享有每日免费额度。',
+                            message: 'The following models have daily free usage.',
                             type: MessageBoxType.info,
                           ),
                           const SizedBox(height: 10),
@@ -89,7 +89,7 @@ class _FreeStatisticsPageState extends State<FreeStatisticsPage> {
                                   children: [
                                     Expanded(
                                         child: Text(
-                                      '模型',
+                                      'Model',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
@@ -98,7 +98,7 @@ class _FreeStatisticsPageState extends State<FreeStatisticsPage> {
                                     Row(
                                       children: [
                                         Text(
-                                          '今日可用',
+                                          'Available Today',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -177,7 +177,7 @@ class _FreeStatisticsPageState extends State<FreeStatisticsPage> {
 
   Widget buildLeftCountWidget({required int leftCount, required int maxCount}) {
     return Text(
-      '$leftCount 次',
+      '$leftCount times',
       style: const TextStyle(
         fontSize: 14,
       ),
